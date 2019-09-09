@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TempPlayer : MonoBehaviour
 {
+    public GameObject coin;
     // Start is called before the first frame update
     void Start()
     {
@@ -41,5 +42,10 @@ public class TempPlayer : MonoBehaviour
 			vec.y -= 1.0f;
 			transform.position = vec;
 		}
+        if (Input.GetKeyDown("space"))
+        {
+            GameObject instance = Instantiate(coin, transform.position, transform.rotation);
+            Destroy(instance, 2.0f);
+        }
 	}
 }
