@@ -8,11 +8,15 @@ public class Knight : MonoBehaviour
     private Vector3 targetPosition;
     private Vector3 moveTotalVector;
     private bool isMoving;
+
+    private Animator animator;
     // Start is called before the first frame update
     void Start()
     {
         targetPosition = transform.position;
         isMoving = false;
+        animator = GetComponent<Animator>();
+        animator.SetBool("isMoving", false);
     }
 
     // Update is called once per frame
@@ -24,6 +28,7 @@ public class Knight : MonoBehaviour
             {
                 targetPosition = transform.position + new Vector3(0.0f, 1.0f, 0.0f);
                 isMoving = true;
+                animator.SetBool("isMoving", true);
                 moveTotalVector = targetPosition - transform.position;
                 //transform.position = transform.position + new Vector3(0.0f, 1.0f, 0.0f);
             }
@@ -31,6 +36,7 @@ public class Knight : MonoBehaviour
             {
                 targetPosition = transform.position + new Vector3(0.0f, -1.0f, 0.0f);
                 isMoving = true;
+                animator.SetBool("isMoving", true);
                 moveTotalVector = targetPosition - transform.position;
                 //transform.position = transform.position + new Vector3(0.0f, -1.0f, 0.0f);
             }
@@ -38,6 +44,7 @@ public class Knight : MonoBehaviour
             {
                 targetPosition = transform.position + new Vector3(-1.0f, 0.0f, 0.0f);
                 isMoving = true;
+                animator.SetBool("isMoving", true);
                 moveTotalVector = targetPosition - transform.position;
                 //transform.position = transform.position + new Vector3(-1.0f, 0.0f, 0.0f);
             }
@@ -45,6 +52,7 @@ public class Knight : MonoBehaviour
             {
                 targetPosition = transform.position + new Vector3(1.0f, 0.0f, 0.0f);
                 isMoving = true;
+                animator.SetBool("isMoving", true);
                 moveTotalVector = targetPosition - transform.position;
                 //transform.position = transform.position + new Vector3(1.0f, 0.0f, 0.0f);
             }
@@ -52,13 +60,14 @@ public class Knight : MonoBehaviour
 
         if (isMoving)
         {
-             transform.position = transform.position + moveTotalVector * (moveSpeed * Time.deltaTime);
+            transform.position = transform.position + moveTotalVector * (moveSpeed * Time.deltaTime);
             Debug.Log("transform.position : " + transform.position + "targetPosition : " + targetPosition);
             Debug.Log(Vector3.Distance(transform.position, targetPosition));
-            if (Vector3.Distance(transform.position, targetPosition) < 0.02f)
+            if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
             {
                 transform.position = targetPosition;
                 isMoving = false;
+                animator.SetBool("isMoving", false);
             }
         }
     }
