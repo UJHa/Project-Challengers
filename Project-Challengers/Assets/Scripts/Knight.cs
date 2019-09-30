@@ -9,6 +9,9 @@ public class Knight : MonoBehaviour
     private Vector3 moveTotalVector;
     private bool isMoving;
 
+	private enum Direction { LEFT, RIGHT };
+	private Direction direction;
+
     private Animator animator;
     // Start is called before the first frame update
     void Start()
@@ -17,7 +20,10 @@ public class Knight : MonoBehaviour
         isMoving = false;
         animator = GetComponent<Animator>();
         animator.SetBool("isMoving", false);
-    }
+
+		direction = Direction.RIGHT;
+		transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+	}
 
     // Update is called once per frame
     void Update()
@@ -26,36 +32,40 @@ public class Knight : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
-                targetPosition = transform.position + new Vector3(0.0f, 1.0f, 0.0f);
+                targetPosition = transform.position + new Vector3(-1.0f, 0.5f, 0.0f);
                 isMoving = true;
                 animator.SetBool("isMoving", true);
                 moveTotalVector = targetPosition - transform.position;
-                //transform.position = transform.position + new Vector3(0.0f, 1.0f, 0.0f);
-            }
+				direction = Direction.LEFT;
+				transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
+			}
             if (Input.GetKeyDown(KeyCode.DownArrow))
             {
-                targetPosition = transform.position + new Vector3(0.0f, -1.0f, 0.0f);
+                targetPosition = transform.position + new Vector3(1.0f, -0.5f, 0.0f);
                 isMoving = true;
                 animator.SetBool("isMoving", true);
                 moveTotalVector = targetPosition - transform.position;
-                //transform.position = transform.position + new Vector3(0.0f, -1.0f, 0.0f);
-            }
+				direction = Direction.RIGHT;
+				transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+			}
             if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
-                targetPosition = transform.position + new Vector3(-1.0f, 0.0f, 0.0f);
+                targetPosition = transform.position + new Vector3(-1.0f, -0.5f, 0.0f);
                 isMoving = true;
                 animator.SetBool("isMoving", true);
                 moveTotalVector = targetPosition - transform.position;
-                //transform.position = transform.position + new Vector3(-1.0f, 0.0f, 0.0f);
-            }
+				direction = Direction.LEFT;
+				transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
+			}
             if (Input.GetKeyDown(KeyCode.RightArrow))
             {
-                targetPosition = transform.position + new Vector3(1.0f, 0.0f, 0.0f);
+                targetPosition = transform.position + new Vector3(1.0f, 0.5f, 0.0f);
                 isMoving = true;
                 animator.SetBool("isMoving", true);
                 moveTotalVector = targetPosition - transform.position;
-                //transform.position = transform.position + new Vector3(1.0f, 0.0f, 0.0f);
-            }
+				direction = Direction.RIGHT;
+				transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+			}
         }
 
         if (isMoving)
