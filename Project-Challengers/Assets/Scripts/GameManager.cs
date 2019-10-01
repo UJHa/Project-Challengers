@@ -5,11 +5,20 @@ using UnityEngine.Tilemaps;
 
 public class GameManager : MonoBehaviour
 {
-	public Tilemap tilemap;
+    public static GameManager gameInstance;
+
+    public Tilemap tilemap;
+    private int[,] array2D = new int[8, 8];
 
     private Sprite[] sprites;
     public GameObject character;
+    public Vector3Int charPosition;
     // Start is called before the first frame update
+    private void Awake()
+    {
+        gameInstance = this;
+    }
+
     void Start()
     {
         Debug.Log("Start GameManager!!!");
@@ -19,19 +28,20 @@ public class GameManager : MonoBehaviour
         //cube.transform.position = new Vector3(x, y, 0);
         GameObject player = Instantiate(character);
 
-		Debug.Log("bounds START");
-		BoundsInt bounds = tilemap.cellBounds;
-		Debug.Log("bounds : " + bounds);
-		Debug.Log("bounds.min : " + bounds.min);
-		Debug.Log("bounds.max : " + bounds.max);
-		Debug.Log("cell world bounds.min : " + tilemap.CellToWorld(bounds.min));
-		Debug.Log("cell world bounds.max : " + tilemap.CellToWorld(bounds.max));
-		Debug.Log("tilemap.origin.x : " + tilemap.origin.x);
-		Debug.Log("tilemap.origin.y : " + tilemap.origin.y);
-		TileBase[] allTiles = tilemap.GetTilesBlock(bounds);
-		TileBase tile = tilemap.GetTile(new Vector3Int(0, 0, 0));
-		Debug.Log("name : " + tilemap.GetUsedTilesCount());
-	}
+        //타일 데이터 관련 진행 예정
+        //for (int i = 0; i < 8; i++)
+        //{
+        //    for (int j = 0; j < 8; j++)
+        //    {
+        //        array2D[i, j] = 0;
+        //    }
+        //}
+        //
+        //array2D[3, 4] = 1;
+
+        player.transform.position = tilemap.layoutGrid.CellToWorld(charPosition);
+
+    }
 
     // Update is called once per frame
     void Update()
