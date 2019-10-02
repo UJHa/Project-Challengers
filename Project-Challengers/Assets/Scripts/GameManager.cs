@@ -10,9 +10,8 @@ public class GameManager : MonoBehaviour
     public Tilemap tilemap;
     private int[,] array2D = new int[8, 8];
 
-    private Sprite[] sprites;
-    public GameObject character;
-    public Vector3Int charPosition;
+    //public GameObject character;
+    //public Vector3Int charPosition;
     // Start is called before the first frame update
     private void Awake()
     {
@@ -23,29 +22,33 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Start GameManager!!!");
 
-        sprites = Resources.LoadAll<Sprite>("0x72_16x16DungeonTileset.v4");
-        Debug.Log("sprites : "+sprites.Length);
-        //cube.transform.position = new Vector3(x, y, 0);
-        GameObject player = Instantiate(character);
+		SpawnCharacter("Prefabs/Knight", 6, 3, true);
+		SpawnCharacter("Prefabs/Knight", 5, 3, false);
 
-        //타일 데이터 관련 진행 예정
-        //for (int i = 0; i < 8; i++)
-        //{
-        //    for (int j = 0; j < 8; j++)
-        //    {
-        //        array2D[i, j] = 0;
-        //    }
-        //}
-        //
-        //array2D[3, 4] = 1;
-
-        player.transform.position = tilemap.layoutGrid.CellToWorld(charPosition);
-
-    }
+		//타일 데이터 관련 진행 예정
+		//for (int i = 0; i < 8; i++)
+		//{
+		//    for (int j = 0; j < 8; j++)
+		//    {
+		//        array2D[i, j] = 0;
+		//    }
+		//}
+		//
+		//array2D[3, 4] = 1;
+	}
 
     // Update is called once per frame
     void Update()
     {
         
     }
+
+	private void SpawnCharacter(string path, int tileX, int tileY, bool isPlayer)
+	{
+		GameObject player = Instantiate(Resources.Load(path)) as GameObject;
+		Knight knight = player.GetComponent<Knight>();
+		knight.tileX = tileX;
+		knight.tileY = tileY;
+		knight.IsPlayer(isPlayer);
+	}
 }

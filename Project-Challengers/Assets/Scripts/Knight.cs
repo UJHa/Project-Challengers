@@ -10,8 +10,8 @@ public class Knight : MonoBehaviour
     private Vector3 moveTotalVector;
     private bool isMoving;
 
-    private int tileX;
-    private int tileY;
+    public int tileX;
+    public int tileY;
 
 	private enum Direction { LEFT, RIGHT };
 	private Direction direction;
@@ -19,9 +19,12 @@ public class Knight : MonoBehaviour
     private Animator animator;
 
     private Tilemap tilemap;
-    // Start is called before the first frame update
-    void Start()
+
+	private bool canInput = false;
+	// Start is called before the first frame update
+	void Start()
     {
+		Debug.Log("Start Knight");
         targetPosition = transform.position;
         isMoving = false;
         animator = GetComponent<Animator>();
@@ -29,42 +32,44 @@ public class Knight : MonoBehaviour
 
 		direction = Direction.RIGHT;
 		transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-        tilemap = GameManager.gameInstance.tilemap;
-        tileX = tilemap.layoutGrid.WorldToCell(transform.position).x;
-        tileY = tilemap.layoutGrid.WorldToCell(transform.position).y;
-        Debug.Log("tileX : " + tileX);
-        Debug.Log("tileY : " + tileY);
-    }
+
+		tilemap = GameManager.gameInstance.tilemap;
+		transform.position = tilemap.layoutGrid.CellToWorld(new Vector3Int(tileX, tileY, 0));
+		Debug.Log("Start Position tileX : " + tileX + " | tileY : " + tileY);
+	}
 
     // Update is called once per frame
     void Update()
     {
         if(!isMoving)
         {
-            if (Input.GetKeyDown(KeyCode.UpArrow))
-            {
-                tileY++;
-                Move();
-                SetDirection(Direction.LEFT);
+			if (canInput)
+			{
+				if (Input.GetKeyDown(KeyCode.UpArrow))
+				{
+					tileY++;
+					Move();
+					SetDirection(Direction.LEFT);
+				}
+				if (Input.GetKeyDown(KeyCode.DownArrow))
+				{
+					tileY--;
+					Move();
+					SetDirection(Direction.RIGHT);
+				}
+				if (Input.GetKeyDown(KeyCode.LeftArrow))
+				{
+					tileX--;
+					Move();
+					SetDirection(Direction.LEFT);
+				}
+				if (Input.GetKeyDown(KeyCode.RightArrow))
+				{
+					tileX++;
+					Move();
+					SetDirection(Direction.RIGHT);
+				}
 			}
-            if (Input.GetKeyDown(KeyCode.DownArrow))
-            {
-                tileY--;
-                Move();
-                SetDirection(Direction.RIGHT);
-            }
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
-            {
-                tileX--;
-                Move();
-                SetDirection(Direction.LEFT);
-            }
-            if (Input.GetKeyDown(KeyCode.RightArrow))
-            {
-                tileX++;
-                Move();
-                SetDirection(Direction.RIGHT);
-            }
         }
 
         if (isMoving)
@@ -103,4 +108,9 @@ public class Knight : MonoBehaviour
                 break;
         }
     }
+
+	public void IsPlayer(bool isPlayer)
+	{
+		canInput = isPlayer;
+	}
 }
