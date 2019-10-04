@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
     public static GameManager gameInstance;
 
     public Tilemap tilemap;
-    private int[,] array2D = new int[8, 8];
+    private int[,] tileDatas = new int[8, 8];
 
     //public GameObject character;
     //public Vector3Int charPosition;
@@ -22,20 +22,22 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Start GameManager!!!");
 
-		SpawnCharacter("Prefabs/Knight", 6, 3, true);
+		SpawnCharacter("Prefabs/Knight", 8, 3, true);
 		SpawnCharacter("Prefabs/Knight", 5, 3, false);
 
-		//타일 데이터 관련 진행 예정
-		//for (int i = 0; i < 8; i++)
-		//{
-		//    for (int j = 0; j < 8; j++)
-		//    {
-		//        array2D[i, j] = 0;
-		//    }
-		//}
-		//
-		//array2D[3, 4] = 1;
-	}
+        Debug.Log("tilemap : " + tilemap.GetTile(new Vector3Int(6, 3, 0)));
+        
+        //타일 데이터 리셋
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                tileDatas[i, j] = 0;
+            }
+        }
+        
+        //tileDatas[3, 4] = 1; //해당 위치에 충돌체 1 추가
+    }
 
     // Update is called once per frame
     void Update()
@@ -47,8 +49,9 @@ public class GameManager : MonoBehaviour
 	{
 		GameObject player = Instantiate(Resources.Load(path)) as GameObject;
 		Knight knight = player.GetComponent<Knight>();
-		knight.tileX = tileX;
-		knight.tileY = tileY;
+        knight.SetTilePosition(new Vector3Int(tileX, tileY, 0));
 		knight.IsPlayer(isPlayer);
-	}
+
+        tileDatas[tileX - 1, tileY - 1] = 1;
+    }
 }
