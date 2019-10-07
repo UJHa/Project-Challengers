@@ -51,7 +51,15 @@ public class GameManager : MonoBehaviour
 		Knight knight = player.GetComponent<Knight>();
         knight.SetTilePosition(new Vector3Int(tileX, tileY, 0));
 		knight.IsPlayer(isPlayer);
+    }
 
-        tileDatas[tileX - 1, tileY - 1] = 1;
+    public void SetTileData(Vector3Int tilePos, int data)
+    {
+        tileDatas[tilePos.x - 1, tilePos.y - 1] = data;
+    }
+
+    public int GetTileData(Vector3Int tilePos)
+    {
+        return tileDatas[tilePos.x - 1, tilePos.y - 1];
     }
 }

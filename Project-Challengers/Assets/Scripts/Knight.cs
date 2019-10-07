@@ -34,7 +34,8 @@ public class Knight : MonoBehaviour
 
 		tilemap = GameManager.gameInstance.tilemap;
 		transform.position = tilemap.layoutGrid.CellToWorld(tilePosition);
-		Debug.Log("Start Position tileX : " + tilePosition.x + " | tileY : " + tilePosition.y);
+        GameManager.gameInstance.SetTileData(tilePosition, 1);
+        Debug.Log("Start Position tileX : " + tilePosition.x + " | tileY : " + tilePosition.y);
 	}
 
     // Update is called once per frame
@@ -44,55 +45,51 @@ public class Knight : MonoBehaviour
         {
             if (canInput)
 			{
-                Vector3Int currentTilePos = tilePosition;
+                Vector3Int prevTilePos = tilePosition;
+                Vector3Int nextTilePos = tilePosition;
                 if (Input.GetKeyDown(KeyCode.UpArrow))
 				{
-                    tilePosition.y++;
-                    if (!CanMoveTile()) //움직일 수 없을 때 원래 위치로 되돌린다.
+                    nextTilePos.y++;
+                    if (CanMoveTile(nextTilePos))
                     {
-                        tilePosition = currentTilePos;
+                        SetTilePosition(nextTilePos);
                     }
-
-                    //Vector3Int currentTilePos = tilePosition;
-                    //currentTilePos.y++;
-                    //if (!CanMoveTile())
-                    //{
-                    //    tilePosition = currentTilePos;
-                    //}
-					Move();
+                    Move();
 					SetDirection(Direction.LEFT);
 				}
 				if (Input.GetKeyDown(KeyCode.DownArrow))
 				{
-                    tilePosition.y--;
-                    if (!CanMoveTile())
+                    nextTilePos.y--;
+                    if (CanMoveTile(nextTilePos))
                     {
-                        tilePosition = currentTilePos;
+                        SetTilePosition(nextTilePos);
                     }
                     Move();
 					SetDirection(Direction.RIGHT);
 				}
 				if (Input.GetKeyDown(KeyCode.LeftArrow))
 				{
-                    tilePosition.x--;
-                    if (!CanMoveTile())
+                    nextTilePos.x--;
+                    if (CanMoveTile(nextTilePos))
                     {
-                        tilePosition = currentTilePos;
+                        SetTilePosition(nextTilePos);
                     }
                     Move();
 					SetDirection(Direction.LEFT);
 				}
 				if (Input.GetKeyDown(KeyCode.RightArrow))
 				{
-                    tilePosition.x++;
-                    if (!CanMoveTile())
+                    nextTilePos.x++;
+                    if (CanMoveTile(nextTilePos))
                     {
-                        tilePosition = currentTilePos;
+                        SetTilePosition(nextTilePos);
                     }
                     Move();
 					SetDirection(Direction.RIGHT);
 				}
-			}
+                GameManager.gameInstance.SetTileData(prevTilePos, 0);
+                GameManager.gameInstance.SetTileData(tilePosition, 1);
+            }
         }
 
         if (isMoving)
@@ -147,10 +144,14 @@ public class Knight : MonoBehaviour
         tilePosition = tilePos;
     }
 
-    private bool CanMoveTile()
+    private bool CanMoveTile(Vector3Int tilePos)
     {
-        if (tilePosition.x < 1 || tilePosition.x > 8
-         || tilePosition.y < 1 || tilePosition.y > 8)
+        if (tilePos.x < 1 || tilePos.x > 8
+         || tilePos.y < 1 || tilePos.y > 8)
+        {
+            return false;
+        }
+        if (GameManager.gameInstance.GetTileData(tilePos) == 1)
         {
             return false;
         }
