@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class Knight : MonoBehaviour
 {
     public float moveSpeed = 1.0f;
+
     private Vector3 targetPosition;
     private Vector3 moveTotalVector;
     private bool isMoving;
@@ -36,7 +38,7 @@ public class Knight : MonoBehaviour
 		transform.position = tilemap.layoutGrid.CellToWorld(tilePosition);
         GameManager.gameInstance.SetTileData(tilePosition, 1);
         Debug.Log("Start Position tileX : " + tilePosition.x + " | tileY : " + tilePosition.y);
-	}
+    }
 
     // Update is called once per frame
     void Update()
@@ -45,50 +47,22 @@ public class Knight : MonoBehaviour
         {
             if (canInput)
 			{
-                Vector3Int prevTilePos = tilePosition;
-                Vector3Int nextTilePos = tilePosition;
                 if (Input.GetKeyDown(KeyCode.UpArrow))
 				{
-                    nextTilePos.y++;
-                    if (CanMoveTile(nextTilePos))
-                    {
-                        SetTilePosition(nextTilePos);
-                    }
-                    Move();
-					SetDirection(Direction.LEFT);
-				}
+                    MoveUp();
+                }
 				if (Input.GetKeyDown(KeyCode.DownArrow))
 				{
-                    nextTilePos.y--;
-                    if (CanMoveTile(nextTilePos))
-                    {
-                        SetTilePosition(nextTilePos);
-                    }
-                    Move();
-					SetDirection(Direction.RIGHT);
-				}
+                    MoveDown();
+                }
 				if (Input.GetKeyDown(KeyCode.LeftArrow))
 				{
-                    nextTilePos.x--;
-                    if (CanMoveTile(nextTilePos))
-                    {
-                        SetTilePosition(nextTilePos);
-                    }
-                    Move();
-					SetDirection(Direction.LEFT);
+                    MoveLeft();
 				}
 				if (Input.GetKeyDown(KeyCode.RightArrow))
 				{
-                    nextTilePos.x++;
-                    if (CanMoveTile(nextTilePos))
-                    {
-                        SetTilePosition(nextTilePos);
-                    }
-                    Move();
-					SetDirection(Direction.RIGHT);
+                    MoveRight();
 				}
-                GameManager.gameInstance.SetTileData(prevTilePos, 0);
-                GameManager.gameInstance.SetTileData(tilePosition, 1);
             }
         }
 
@@ -156,5 +130,81 @@ public class Knight : MonoBehaviour
             return false;
         }
         return true;
+    }
+
+    public void MoveUp()
+    {
+        if (isMoving) return;
+
+        Vector3Int prevTilePos = tilePosition;
+        Vector3Int nextTilePos = tilePosition;
+
+        nextTilePos.y++;
+        if (CanMoveTile(nextTilePos))
+        {
+            SetTilePosition(nextTilePos);
+        }
+        Move();
+        SetDirection(Direction.LEFT);
+
+        GameManager.gameInstance.SetTileData(prevTilePos, 0);
+        GameManager.gameInstance.SetTileData(tilePosition, 1);
+    }
+
+    public void MoveDown()
+    {
+        if (isMoving) return;
+
+        Vector3Int prevTilePos = tilePosition;
+        Vector3Int nextTilePos = tilePosition;
+
+        nextTilePos.y--;
+        if (CanMoveTile(nextTilePos))
+        {
+            SetTilePosition(nextTilePos);
+        }
+        Move();
+        SetDirection(Direction.RIGHT);
+
+        GameManager.gameInstance.SetTileData(prevTilePos, 0);
+        GameManager.gameInstance.SetTileData(tilePosition, 1);
+    }
+
+    public void MoveLeft()
+    {
+        if (isMoving) return;
+
+        Vector3Int prevTilePos = tilePosition;
+        Vector3Int nextTilePos = tilePosition;
+
+        nextTilePos.x--;
+        if (CanMoveTile(nextTilePos))
+        {
+            SetTilePosition(nextTilePos);
+        }
+        Move();
+        SetDirection(Direction.LEFT);
+
+        GameManager.gameInstance.SetTileData(prevTilePos, 0);
+        GameManager.gameInstance.SetTileData(tilePosition, 1);
+    }
+
+    public void MoveRight()
+    {
+        if (isMoving) return;
+
+        Vector3Int prevTilePos = tilePosition;
+        Vector3Int nextTilePos = tilePosition;
+
+        nextTilePos.x++;
+        if (CanMoveTile(nextTilePos))
+        {
+            SetTilePosition(nextTilePos);
+        }
+        Move();
+        SetDirection(Direction.RIGHT);
+
+        GameManager.gameInstance.SetTileData(prevTilePos, 0);
+        GameManager.gameInstance.SetTileData(tilePosition, 1);
     }
 }

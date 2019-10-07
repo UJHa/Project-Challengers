@@ -2,10 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager gameInstance;
+
+    public Button upBtn;
+    public Button downBtn;
+    public Button leftBtn;
+    public Button rightBtn;
 
     public Tilemap tilemap;
     private int[,] tileDatas = new int[8, 8];
@@ -35,7 +41,7 @@ public class GameManager : MonoBehaviour
                 tileDatas[i, j] = 0;
             }
         }
-        
+
         //tileDatas[3, 4] = 1; //해당 위치에 충돌체 1 추가
     }
 
@@ -47,10 +53,18 @@ public class GameManager : MonoBehaviour
 
 	private void SpawnCharacter(string path, int tileX, int tileY, bool isPlayer)
 	{
-		GameObject player = Instantiate(Resources.Load(path)) as GameObject;
-		Knight knight = player.GetComponent<Knight>();
+		GameObject character = Instantiate(Resources.Load(path)) as GameObject;
+		Knight knight = character.GetComponent<Knight>();
         knight.SetTilePosition(new Vector3Int(tileX, tileY, 0));
 		knight.IsPlayer(isPlayer);
+
+        if (isPlayer)
+        {
+            upBtn.onClick.AddListener(() => { knight.MoveUp(); });
+            downBtn.onClick.AddListener(() => { knight.MoveDown(); });
+            leftBtn.onClick.AddListener(() => { knight.MoveLeft(); });
+            rightBtn.onClick.AddListener(() => { knight.MoveRight(); });
+        }
     }
 
     public void SetTileData(Vector3Int tilePos, int data)
