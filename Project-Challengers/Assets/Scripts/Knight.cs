@@ -47,21 +47,26 @@ public class Knight : MonoBehaviour
         {
             if (canInput)
 			{
+                Vector3Int movePosition = Vector3Int.zero;
                 if (Input.GetKeyDown(KeyCode.UpArrow))
 				{
-                    MoveUp();
+                    movePosition.y++;
+                    MoveLeftDirection(movePosition);
                 }
 				if (Input.GetKeyDown(KeyCode.DownArrow))
 				{
-                    MoveDown();
+                    movePosition.y--;
+                    MoveRightDirection(movePosition);
                 }
 				if (Input.GetKeyDown(KeyCode.LeftArrow))
 				{
-                    MoveLeft();
+                    movePosition.x--;
+                    MoveLeftDirection(movePosition);
 				}
 				if (Input.GetKeyDown(KeyCode.RightArrow))
 				{
-                    MoveRight();
+                    movePosition.x++;
+                    MoveRightDirection(movePosition);
 				}
             }
         }
@@ -81,7 +86,6 @@ public class Knight : MonoBehaviour
 
     private void Move()
     {
-        targetPosition = tilemap.layoutGrid.CellToWorld(tilePosition);
         isMoving = true;
         animator.SetBool("isMoving", true);
         moveTotalVector = targetPosition - transform.position;
@@ -132,79 +136,48 @@ public class Knight : MonoBehaviour
         return true;
     }
 
-    public void MoveUp()
+    public void MoveLeftDirection(Vector3Int movePos)
     {
         if (isMoving) return;
-
-        Vector3Int prevTilePos = tilePosition;
-        Vector3Int nextTilePos = tilePosition;
-
-        nextTilePos.y++;
-        if (CanMoveTile(nextTilePos))
-        {
-            SetTilePosition(nextTilePos);
-        }
-        Move();
         SetDirection(Direction.LEFT);
 
-        GameManager.gameInstance.SetTileData(prevTilePos, 0);
-        GameManager.gameInstance.SetTileData(tilePosition, 1);
-    }
+        Vector3Int nextTilePos = tilePosition + movePos;
 
-    public void MoveDown()
-    {
-        if (isMoving) return;
-
-        Vector3Int prevTilePos = tilePosition;
-        Vector3Int nextTilePos = tilePosition;
-
-        nextTilePos.y--;
         if (CanMoveTile(nextTilePos))
         {
+            GameManager.gameInstance.SetTileData(tilePosition, 0);
             SetTilePosition(nextTilePos);
+            GameManager.gameInstance.SetTileData(tilePosition, 1);
         }
+        else
+        {
+            return;
+        }
+        targetPosition = tilemap.layoutGrid.CellToWorld(tilePosition);
         Move();
+
+        
+    }
+
+    public void MoveRightDirection(Vector3Int movePos)
+    {
+        if (isMoving) return;
         SetDirection(Direction.RIGHT);
 
-        GameManager.gameInstance.SetTileData(prevTilePos, 0);
-        GameManager.gameInstance.SetTileData(tilePosition, 1);
-    }
+        Vector3Int nextTilePos = tilePosition + movePos;
 
-    public void MoveLeft()
-    {
-        if (isMoving) return;
-
-        Vector3Int prevTilePos = tilePosition;
-        Vector3Int nextTilePos = tilePosition;
-
-        nextTilePos.x--;
         if (CanMoveTile(nextTilePos))
         {
+            GameManager.gameInstance.SetTileData(tilePosition, 0);
             SetTilePosition(nextTilePos);
+            GameManager.gameInstance.SetTileData(tilePosition, 1);
+            
         }
-        Move();
-        SetDirection(Direction.LEFT);
-
-        GameManager.gameInstance.SetTileData(prevTilePos, 0);
-        GameManager.gameInstance.SetTileData(tilePosition, 1);
-    }
-
-    public void MoveRight()
-    {
-        if (isMoving) return;
-
-        Vector3Int prevTilePos = tilePosition;
-        Vector3Int nextTilePos = tilePosition;
-
-        nextTilePos.x++;
-        if (CanMoveTile(nextTilePos))
+        else
         {
-            SetTilePosition(nextTilePos);
+            return;
         }
+        targetPosition = tilemap.layoutGrid.CellToWorld(tilePosition);
         Move();
-        SetDirection(Direction.RIGHT);
-
-        GameManager.gameInstance.SetTileData(prevTilePos, 0);
-        GameManager.gameInstance.SetTileData(tilePosition, 1);
     }
 }
