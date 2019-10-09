@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 public class Knight : MonoBehaviour
 {
+    public GameObject weapon;
+    private GameObject weaponObject;
+
     public float moveSpeed = 1.0f;
 
     private Vector3 targetPosition;
@@ -13,7 +16,7 @@ public class Knight : MonoBehaviour
 
     private Vector3Int tilePosition;
 
-    private enum State { IDLE, MOVE };
+    private enum State { IDLE, MOVE, ATTACK };
     private State eState;
 
 	private enum Direction { LEFT, RIGHT };
@@ -30,7 +33,7 @@ public class Knight : MonoBehaviour
     {
 		Debug.Log("Start Knight");
 
-        // 이동 데이터들 초기 세팅
+        // 데이터들 초기 세팅
         targetPosition = transform.position;
         animator = GetComponent<Animator>();
         animator.SetBool("isMoving", false);
@@ -42,6 +45,11 @@ public class Knight : MonoBehaviour
         transform.position = tilemap.layoutGrid.CellToWorld(tilePosition);
         Debug.Log("Start Position tileX : " + tilePosition.x + " | tileY : " + tilePosition.y);
         GameManager.gameInstance.SetTileData(tilePosition, 1);
+
+        // 무기 초기 세팅
+        weaponObject = Instantiate(weapon) as GameObject;
+        weaponObject.transform.parent = transform;
+        weaponObject.transform.localPosition = weaponObject.transform.position;
 
         eState = State.IDLE;
     }
@@ -78,6 +86,8 @@ public class Knight : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     Debug.Log("space!!!");
+                    weaponObject.transform.localEulerAngles = Vector3.zero;
+                    eState = State.ATTACK;
                 }
             }
         }
@@ -91,6 +101,17 @@ public class Knight : MonoBehaviour
             {
                 transform.position = targetPosition;
                 animator.SetBool("isMoving", false);
+                eState = State.IDLE;
+            }
+        }
+
+        if (State.ATTACK == eState)
+        {
+            weaponObject.transform.localEulerAngles = Vector3.Lerp(weaponObject.transform.localEulerAngles, new Vector3(0, 0, -90), Time.deltaTime * 1.0f);
+            Debug.Log("attacking log : " + weaponObject.transform.localEulerAngles.z);
+            if (weaponObject.transform.localEulerAngles.z < 260)
+            {
+                weaponObject.transform.localEulerAngles = weapon.transform.eulerAngles;
                 eState = State.IDLE;
             }
         }
