@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("Start GameManager!!!");
 
 		SpawnCharacter("Prefabs/Knight", 8, 3, true);   //player
-		SpawnCharacter("Prefabs/Knight", 1, 3, false);
+        SpawnCharacter("Prefabs/Knight", 1, 3, false);
         SpawnCharacter("Prefabs/Knight", 3, 3, false);
 
         Debug.Log("tilemap : " + tilemap.GetTile(new Vector3Int(6, 3, 0)));

@@ -10,9 +10,11 @@ public class Knight : MonoBehaviour
 
     private Vector3 targetPosition;
     private Vector3 moveTotalVector;
-    private bool isMoving;
 
     private Vector3Int tilePosition;
+
+    private enum State { IDLE, MOVE };
+    private State eState;
 
 	private enum Direction { LEFT, RIGHT };
 	private Direction direction;
@@ -22,28 +24,33 @@ public class Knight : MonoBehaviour
     private Tilemap tilemap;
 
 	private bool canInput = false;
-	// Start is called before the first frame update
-	void Start()
+
+    // Start is called before the first frame update
+    void Start()
     {
 		Debug.Log("Start Knight");
+
+        // 이동 데이터들 초기 세팅
         targetPosition = transform.position;
-        isMoving = false;
         animator = GetComponent<Animator>();
         animator.SetBool("isMoving", false);
 
-		direction = Direction.RIGHT;
-		transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+        direction = Direction.RIGHT;
+        transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
 
-		tilemap = GameManager.gameInstance.tilemap;
-		transform.position = tilemap.layoutGrid.CellToWorld(tilePosition);
-        GameManager.gameInstance.SetTileData(tilePosition, 1);
+        tilemap = GameManager.gameInstance.tilemap;
+        transform.position = tilemap.layoutGrid.CellToWorld(tilePosition);
         Debug.Log("Start Position tileX : " + tilePosition.x + " | tileY : " + tilePosition.y);
+        GameManager.gameInstance.SetTileData(tilePosition, 1);
+
+        eState = State.IDLE;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(!isMoving)
+        //if(!isMoving)   // 대기 상태
+        if(State.IDLE == eState)
         {
             if (canInput)
 			{
@@ -68,27 +75,33 @@ public class Knight : MonoBehaviour
                     movePosition.x++;
                     MoveRightDirection(movePosition);
 				}
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    Debug.Log("space!!!");
+                }
             }
         }
 
-        if (isMoving)
+        //if (isMoving)   // 이동 상태
+        if(State.MOVE == eState)
         {
             transform.position = transform.position + moveTotalVector * (moveSpeed * Time.deltaTime);
             //Debug.Log(Vector3.Distance(transform.position, targetPosition));
             if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
             {
                 transform.position = targetPosition;
-                isMoving = false;
                 animator.SetBool("isMoving", false);
+                eState = State.IDLE;
             }
         }
     }
 
-    private void Move()
+    private void MoveStart()
     {
-        isMoving = true;
+        targetPosition = tilemap.layoutGrid.CellToWorld(tilePosition);
         animator.SetBool("isMoving", true);
         moveTotalVector = targetPosition - transform.position;
+        eState = State.MOVE;
     }
 
     private void SetDirection(Direction direct)
@@ -120,6 +133,7 @@ public class Knight : MonoBehaviour
     public void SetTilePosition(Vector3Int tilePos)
     {
         tilePosition = tilePos;
+        GameManager.gameInstance.SetTileData(tilePosition, 1);
     }
 
     private bool CanMoveTile(Vector3Int tilePos)
@@ -138,7 +152,6 @@ public class Knight : MonoBehaviour
 
     public void MoveLeftDirection(Vector3Int movePos)
     {
-        if (isMoving) return;
         SetDirection(Direction.LEFT);
 
         Vector3Int nextTilePos = tilePosition + movePos;
@@ -147,21 +160,12 @@ public class Knight : MonoBehaviour
         {
             GameManager.gameInstance.SetTileData(tilePosition, 0);
             SetTilePosition(nextTilePos);
-            GameManager.gameInstance.SetTileData(tilePosition, 1);
+            MoveStart();
         }
-        else
-        {
-            return;
-        }
-        targetPosition = tilemap.layoutGrid.CellToWorld(tilePosition);
-        Move();
-
-        
     }
 
     public void MoveRightDirection(Vector3Int movePos)
     {
-        if (isMoving) return;
         SetDirection(Direction.RIGHT);
 
         Vector3Int nextTilePos = tilePosition + movePos;
@@ -170,14 +174,7 @@ public class Knight : MonoBehaviour
         {
             GameManager.gameInstance.SetTileData(tilePosition, 0);
             SetTilePosition(nextTilePos);
-            GameManager.gameInstance.SetTileData(tilePosition, 1);
-            
+            MoveStart();
         }
-        else
-        {
-            return;
-        }
-        targetPosition = tilemap.layoutGrid.CellToWorld(tilePosition);
-        Move();
     }
 }
