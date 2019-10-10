@@ -17,7 +17,7 @@ public class Knight : MonoBehaviour
     private Vector3Int tilePosition;
 
     private enum eState { IDLE, MOVE, ATTACK, MaxSize };
-    private eState state;
+    private eState _state;
 
     private Dictionary<eState, State> stateMap;
 
@@ -53,7 +53,7 @@ public class Knight : MonoBehaviour
         weaponObject.transform.parent = transform;
         weaponObject.transform.localPosition = weaponObject.transform.position;
 
-        state = eState.IDLE;
+        SetState(eState.IDLE);
 
         stateMap = new Dictionary<eState, State>();
         stateMap[eState.IDLE] = new IdleState();
@@ -70,7 +70,7 @@ public class Knight : MonoBehaviour
     void Update()
     {
         {
-            stateMap[state].UpdateState();
+            stateMap[_state].UpdateState();
         }
         //// 대기 상태
         //if(eState.IDLE == state)
@@ -96,7 +96,7 @@ public class Knight : MonoBehaviour
         targetPosition = tilemap.layoutGrid.CellToWorld(tilePosition);
         animator.SetBool("isMoving", true);
         moveTotalVector = targetPosition - transform.position;
-        state = eState.MOVE;
+        SetState(eState.MOVE);
     }
 
     private void SetDirection(Direction direct)
@@ -147,7 +147,7 @@ public class Knight : MonoBehaviour
 
     public void MoveRequest(Vector3Int movePos, Direction direction)
     {
-        if (eState.IDLE != state) return;
+        if (eState.IDLE != _state) return;
 
         SetDirection(direction);
 
@@ -159,6 +159,11 @@ public class Knight : MonoBehaviour
             SetTilePosition(nextTilePos);
             MoveStart();
         }
+    }
+
+    private void SetState(eState state)
+    {
+        _state = state;
     }
 
     public void IdleUpdate()
@@ -185,7 +190,7 @@ public class Knight : MonoBehaviour
             {
                 Debug.Log("space!!!");
                 weaponObject.transform.localEulerAngles = Vector3.zero;
-                state = eState.ATTACK;
+                SetState(eState.ATTACK);
             }
         }
     }
@@ -198,7 +203,7 @@ public class Knight : MonoBehaviour
         {
             transform.position = targetPosition;
             animator.SetBool("isMoving", false);
-            state = eState.IDLE;
+            SetState(eState.IDLE);
         }
     }
 
@@ -209,7 +214,7 @@ public class Knight : MonoBehaviour
         if (weaponObject.transform.localEulerAngles.z < 260)
         {
             weaponObject.transform.localEulerAngles = weapon.transform.eulerAngles;
-            state = eState.IDLE;
+            SetState(eState.IDLE);
         }
     }
 }
