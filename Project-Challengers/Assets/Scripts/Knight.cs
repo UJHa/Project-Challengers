@@ -16,8 +16,10 @@ public class Knight : MonoBehaviour
 
     private Vector3Int tilePosition;
 
-    private enum eState { IDLE, MOVE, ATTACK };
+    private enum eState { IDLE, MOVE, ATTACK, MaxSize };
     private eState state;
+
+    private Dictionary<eState, State> stateMap;
 
 	public enum Direction { LEFT, RIGHT };
 	private Direction direction;
@@ -52,70 +54,41 @@ public class Knight : MonoBehaviour
         weaponObject.transform.localPosition = weaponObject.transform.position;
 
         state = eState.IDLE;
+
+        stateMap = new Dictionary<eState, State>();
+        stateMap[eState.IDLE] = new IdleState();
+        stateMap[eState.MOVE] = new MoveState();
+        stateMap[eState.ATTACK] = new AttackState();
+
+        for (eState i = 0; i < eState.MaxSize; i++)
+        {
+            stateMap[i].SetCharacter(this);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        //if(!isMoving)   // 대기 상태
-        if(eState.IDLE == state)
         {
-            if (canInput)
-			{
-                Vector3Int movePosition = Vector3Int.zero;
-                if (Input.GetKeyDown(KeyCode.UpArrow))
-				{
-                    movePosition.y++;
-                    MoveRequest(movePosition, Direction.LEFT);
-                }
-				if (Input.GetKeyDown(KeyCode.DownArrow))
-				{
-                    movePosition.y--;
-                    MoveRequest(movePosition, Direction.RIGHT);
-                }
-				if (Input.GetKeyDown(KeyCode.LeftArrow))
-				{
-                    movePosition.x--;
-                    MoveRequest(movePosition, Direction.LEFT);
-				}
-				if (Input.GetKeyDown(KeyCode.RightArrow))
-				{
-                    movePosition.x++;
-                    MoveRequest(movePosition, Direction.RIGHT);
-				}
-                if (Input.GetKeyDown(KeyCode.Space))
-                {
-                    Debug.Log("space!!!");
-                    weaponObject.transform.localEulerAngles = Vector3.zero;
-                    state = eState.ATTACK;
-                }
-            }
+            stateMap[state].UpdateState();
         }
-
-        //if (isMoving)   // 이동 상태
-        if(eState.MOVE == state)
-        {
-            transform.position = transform.position + moveTotalVector * (moveSpeed * Time.deltaTime);
-            //Debug.Log(Vector3.Distance(transform.position, targetPosition));
-            if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
-            {
-                transform.position = targetPosition;
-                animator.SetBool("isMoving", false);
-                state = eState.IDLE;
-            }
-        }
-
-        //공격 상태
-        if (eState.ATTACK == state)
-        {
-            weaponObject.transform.localEulerAngles = Vector3.Lerp(weaponObject.transform.localEulerAngles, new Vector3(0, 0, -90), Time.deltaTime * 1.0f);
-            Debug.Log("attacking log : " + weaponObject.transform.localEulerAngles.z);
-            if (weaponObject.transform.localEulerAngles.z < 260)
-            {
-                weaponObject.transform.localEulerAngles = weapon.transform.eulerAngles;
-                state = eState.IDLE;
-            }
-        }
+        //// 대기 상태
+        //if(eState.IDLE == state)
+        //{
+        //    IdleUpdate();
+        //}
+        //
+        //// 이동 상태
+        //if(eState.MOVE == state)
+        //{
+        //    MoveUpdate();
+        //}
+        //
+        ////공격 상태
+        //if (eState.ATTACK == state)
+        //{
+        //    AttackUpdate();
+        //}
     }
 
     private void MoveStart()
@@ -185,6 +158,58 @@ public class Knight : MonoBehaviour
             GameManager.gameInstance.SetTileData(tilePosition, 0);
             SetTilePosition(nextTilePos);
             MoveStart();
+        }
+    }
+
+    public void IdleUpdate()
+    {
+        if (canInput)
+        {
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                MoveRequest(Vector3Int.up, Direction.LEFT);
+            }
+            if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                MoveRequest(Vector3Int.down, Direction.RIGHT);
+            }
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                MoveRequest(Vector3Int.left, Direction.LEFT);
+            }
+            if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                MoveRequest(Vector3Int.right, Direction.RIGHT);
+            }
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                Debug.Log("space!!!");
+                weaponObject.transform.localEulerAngles = Vector3.zero;
+                state = eState.ATTACK;
+            }
+        }
+    }
+
+    public void MoveUpdate()
+    {
+        transform.position = transform.position + moveTotalVector * (moveSpeed * Time.deltaTime);
+        //Debug.Log(Vector3.Distance(transform.position, targetPosition));
+        if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
+        {
+            transform.position = targetPosition;
+            animator.SetBool("isMoving", false);
+            state = eState.IDLE;
+        }
+    }
+
+    public void AttackUpdate()
+    {
+        weaponObject.transform.localEulerAngles = Vector3.Lerp(weaponObject.transform.localEulerAngles, new Vector3(0, 0, -90), Time.deltaTime * 1.0f);
+        Debug.Log("attacking log : " + weaponObject.transform.localEulerAngles.z);
+        if (weaponObject.transform.localEulerAngles.z < 260)
+        {
+            weaponObject.transform.localEulerAngles = weapon.transform.eulerAngles;
+            state = eState.IDLE;
         }
     }
 }
