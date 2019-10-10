@@ -61,10 +61,10 @@ public class GameManager : MonoBehaviour
 
         if (isPlayer)
         {
-            upBtn.onClick.AddListener(() => { knight.MoveLeftDirection(new Vector3Int(0, 1, 0)); });
-            downBtn.onClick.AddListener(() => { knight.MoveRightDirection(new Vector3Int(0, -1, 0)); });
-            leftBtn.onClick.AddListener(() => { knight.MoveLeftDirection(new Vector3Int(-1, 0, 0)); });
-            rightBtn.onClick.AddListener(() => { knight.MoveRightDirection(new Vector3Int(1, 0, 0)); });
+            upBtn.onClick.AddListener(() => { knight.MoveRequest(Vector3Int.up, Knight.Direction.LEFT); });
+            downBtn.onClick.AddListener(() => { knight.MoveRequest(Vector3Int.down, Knight.Direction.RIGHT); });
+            leftBtn.onClick.AddListener(() => { knight.MoveRequest(Vector3Int.left, Knight.Direction.LEFT); });
+            rightBtn.onClick.AddListener(() => { knight.MoveRequest(Vector3Int.right, Knight.Direction.RIGHT); });
         }
     }
 

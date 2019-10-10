@@ -16,10 +16,10 @@ public class Knight : MonoBehaviour
 
     private Vector3Int tilePosition;
 
-    private enum State { IDLE, MOVE, ATTACK };
-    private State eState;
+    private enum eState { IDLE, MOVE, ATTACK };
+    private eState state;
 
-	private enum Direction { LEFT, RIGHT };
+	public enum Direction { LEFT, RIGHT };
 	private Direction direction;
 
     private Animator animator;
@@ -51,14 +51,14 @@ public class Knight : MonoBehaviour
         weaponObject.transform.parent = transform;
         weaponObject.transform.localPosition = weaponObject.transform.position;
 
-        eState = State.IDLE;
+        state = eState.IDLE;
     }
 
     // Update is called once per frame
     void Update()
     {
         //if(!isMoving)   // 대기 상태
-        if(State.IDLE == eState)
+        if(eState.IDLE == state)
         {
             if (canInput)
 			{
@@ -66,34 +66,34 @@ public class Knight : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.UpArrow))
 				{
                     movePosition.y++;
-                    MoveLeftDirection(movePosition);
+                    MoveRequest(movePosition, Direction.LEFT);
                 }
 				if (Input.GetKeyDown(KeyCode.DownArrow))
 				{
                     movePosition.y--;
-                    MoveRightDirection(movePosition);
+                    MoveRequest(movePosition, Direction.RIGHT);
                 }
 				if (Input.GetKeyDown(KeyCode.LeftArrow))
 				{
                     movePosition.x--;
-                    MoveLeftDirection(movePosition);
+                    MoveRequest(movePosition, Direction.LEFT);
 				}
 				if (Input.GetKeyDown(KeyCode.RightArrow))
 				{
                     movePosition.x++;
-                    MoveRightDirection(movePosition);
+                    MoveRequest(movePosition, Direction.RIGHT);
 				}
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     Debug.Log("space!!!");
                     weaponObject.transform.localEulerAngles = Vector3.zero;
-                    eState = State.ATTACK;
+                    state = eState.ATTACK;
                 }
             }
         }
 
         //if (isMoving)   // 이동 상태
-        if(State.MOVE == eState)
+        if(eState.MOVE == state)
         {
             transform.position = transform.position + moveTotalVector * (moveSpeed * Time.deltaTime);
             //Debug.Log(Vector3.Distance(transform.position, targetPosition));
@@ -101,18 +101,19 @@ public class Knight : MonoBehaviour
             {
                 transform.position = targetPosition;
                 animator.SetBool("isMoving", false);
-                eState = State.IDLE;
+                state = eState.IDLE;
             }
         }
 
-        if (State.ATTACK == eState)
+        //공격 상태
+        if (eState.ATTACK == state)
         {
             weaponObject.transform.localEulerAngles = Vector3.Lerp(weaponObject.transform.localEulerAngles, new Vector3(0, 0, -90), Time.deltaTime * 1.0f);
             Debug.Log("attacking log : " + weaponObject.transform.localEulerAngles.z);
             if (weaponObject.transform.localEulerAngles.z < 260)
             {
                 weaponObject.transform.localEulerAngles = weapon.transform.eulerAngles;
-                eState = State.IDLE;
+                state = eState.IDLE;
             }
         }
     }
@@ -122,7 +123,7 @@ public class Knight : MonoBehaviour
         targetPosition = tilemap.layoutGrid.CellToWorld(tilePosition);
         animator.SetBool("isMoving", true);
         moveTotalVector = targetPosition - transform.position;
-        eState = State.MOVE;
+        state = eState.MOVE;
     }
 
     private void SetDirection(Direction direct)
@@ -171,23 +172,11 @@ public class Knight : MonoBehaviour
         return true;
     }
 
-    public void MoveLeftDirection(Vector3Int movePos)
+    public void MoveRequest(Vector3Int movePos, Direction direction)
     {
-        SetDirection(Direction.LEFT);
+        if (eState.IDLE != state) return;
 
-        Vector3Int nextTilePos = tilePosition + movePos;
-
-        if (CanMoveTile(nextTilePos))
-        {
-            GameManager.gameInstance.SetTileData(tilePosition, 0);
-            SetTilePosition(nextTilePos);
-            MoveStart();
-        }
-    }
-
-    public void MoveRightDirection(Vector3Int movePos)
-    {
-        SetDirection(Direction.RIGHT);
+        SetDirection(direction);
 
         Vector3Int nextTilePos = tilePosition + movePos;
 
