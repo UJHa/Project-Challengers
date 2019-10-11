@@ -12,7 +12,6 @@ public class Knight : MonoBehaviour
     public float moveSpeed = 1.0f;
 
     private Vector3 targetPosition;
-    private Vector3 moveTotalVector;
 
     private Vector3Int tilePosition;
 
@@ -69,33 +68,13 @@ public class Knight : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        {
-            stateMap[_state].UpdateState();
-        }
-        //// 대기 상태
-        //if(eState.IDLE == state)
-        //{
-        //    IdleUpdate();
-        //}
-        //
-        //// 이동 상태
-        //if(eState.MOVE == state)
-        //{
-        //    MoveUpdate();
-        //}
-        //
-        ////공격 상태
-        //if (eState.ATTACK == state)
-        //{
-        //    AttackUpdate();
-        //}
+        stateMap[_state].UpdateState();
     }
 
     private void MoveStart()
     {
         targetPosition = tilemap.layoutGrid.CellToWorld(tilePosition);
         animator.SetBool("isMoving", true);
-        moveTotalVector = targetPosition - transform.position;
         SetState(eState.MOVE);
     }
 
@@ -166,7 +145,7 @@ public class Knight : MonoBehaviour
         _state = state;
     }
 
-    public void IdleUpdate()
+    public void MoveInput()
     {
         if (canInput)
         {
@@ -186,6 +165,13 @@ public class Knight : MonoBehaviour
             {
                 MoveRequest(Vector3Int.right, Direction.RIGHT);
             }
+        }
+    }
+
+    public void AttackInput()
+    {
+        if (canInput)
+        {
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 Debug.Log("space!!!");
@@ -197,20 +183,23 @@ public class Knight : MonoBehaviour
 
     public void MoveUpdate()
     {
-        transform.position = transform.position + moveTotalVector * (moveSpeed * Time.deltaTime);
-        //Debug.Log(Vector3.Distance(transform.position, targetPosition));
-        if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
+        transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+        if (Vector3.Distance(transform.position, targetPosition) == 0.0f)
         {
-            transform.position = targetPosition;
-            animator.SetBool("isMoving", false);
-            SetState(eState.IDLE);
+            MoveFinish();
         }
+    }
+
+    private void MoveFinish()
+    {
+        animator.SetBool("isMoving", false);
+        SetState(eState.IDLE);
     }
 
     public void AttackUpdate()
     {
-        weaponObject.transform.localEulerAngles = Vector3.Lerp(weaponObject.transform.localEulerAngles, new Vector3(0, 0, -90), Time.deltaTime * 1.0f);
-        Debug.Log("attacking log : " + weaponObject.transform.localEulerAngles.z);
+        weaponObject.transform.localEulerAngles = Vector3.Slerp(weaponObject.transform.localEulerAngles, new Vector3(0, 0, -90), Time.deltaTime * 1.0f);
+        //Debug.Log("attacking log : " + weaponObject.transform.localEulerAngles.z);
         if (weaponObject.transform.localEulerAngles.z < 260)
         {
             weaponObject.transform.localEulerAngles = weapon.transform.eulerAngles;

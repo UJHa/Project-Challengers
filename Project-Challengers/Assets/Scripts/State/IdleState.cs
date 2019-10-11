@@ -7,6 +7,7 @@ public class IdleState : State
     public override void UpdateState()
     {
         base.UpdateState();
-        character.IdleUpdate();
+        character.MoveInput();
+        character.AttackInput();
     }
 }
