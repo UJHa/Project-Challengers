@@ -7,6 +7,6 @@ public class MoveState : State
     public override void UpdateState()
     {
         base.UpdateState();
-        character.MoveUpdate();
+        _cCharacter.MoveUpdate();
     }
 }

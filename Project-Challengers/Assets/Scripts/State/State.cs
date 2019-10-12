@@ -4,20 +4,32 @@ using UnityEngine;
 
 public class State
 {
-    protected Knight character;
+    protected ChessCharacter _cCharacter;
+    private ChessCharacter.eState currentState;
 
     public State()
     {
 
     }
 
-    public virtual void UpdateState()
+    public void InitState(ChessCharacter cCharacter)
+    {
+        _cCharacter = cCharacter;
+        currentState = _cCharacter.GetState();
+    }
+
+    public virtual void StartState()
     {
 
     }
 
-    public void SetCharacter(Knight knight)
+    public virtual void UpdateState()
     {
-        character = knight;
+        
+    }
+
+    public virtual void EndState()
+    {
+        
     }
 }

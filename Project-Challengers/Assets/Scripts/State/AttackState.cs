@@ -4,9 +4,17 @@ using UnityEngine;
 
 public class AttackState : State
 {
+    public override void StartState()
+    {
+        base.StartState();
+        Debug.Log("atk StartState!!!");
+        _cCharacter.AttackStart();
+    }
+
     public override void UpdateState()
     {
         base.UpdateState();
-        character.AttackUpdate();
+        Debug.Log("atk UpdateState!!!");
+        _cCharacter.AttackUpdate();
     }
 }
