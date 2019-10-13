@@ -28,11 +28,11 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Start GameManager!!!");
 
-		SpawnCharacter("Prefabs/Knight", 8, 3, true);   //player
+		SpawnCharacter("Prefabs/Knight", 7, 3, true);   //player
         SpawnCharacter("Prefabs/Knight", 1, 3, false);
         SpawnCharacter("Prefabs/Knight", 3, 3, false);
 
-        Debug.Log("tilemap : " + tilemap.GetTile(new Vector3Int(6, 3, 0)));
+        Debug.Log("tilemap : " + tilemap.GetTile(new Vector3Int(0, 0, 0)));
         
         //타일 데이터 리셋
         for (int i = 0; i < 8; i++)
@@ -40,10 +40,9 @@ public class GameManager : MonoBehaviour
             for (int j = 0; j < 8; j++)
             {
                 tileDatas[i, j] = 0;
+                tilemap.SetColliderType(new Vector3Int(i, j, 0), Tile.ColliderType.None);
             }
         }
-
-        //tileDatas[3, 4] = 1; //해당 위치에 충돌체 1 추가
     }
 
     // Update is called once per frame
@@ -70,11 +69,17 @@ public class GameManager : MonoBehaviour
 
     public void SetTileData(Vector3Int tilePos, int data)
     {
-        tileDatas[tilePos.x - 1, tilePos.y - 1] = data;
+        tileDatas[tilePos.x, tilePos.y] = data;
+        tilemap.SetColliderType(new Vector3Int(tilePos.x, tilePos.y, 0), (Tile.ColliderType)data);
     }
 
     public int GetTileData(Vector3Int tilePos)
     {
-        return tileDatas[tilePos.x - 1, tilePos.y - 1];
+        return tileDatas[tilePos.x, tilePos.y];
+    }
+
+    public void SendMessageForTile(Vector3Int tilePosition)
+    {
+
     }
 }

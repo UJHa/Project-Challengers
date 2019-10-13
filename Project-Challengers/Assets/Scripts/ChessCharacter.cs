@@ -117,7 +117,7 @@ public class ChessCharacter : MonoBehaviour
         return _direction;
     }
 
-    private Vector3Int GetDirectionVector(Direction direction)
+    public Vector3Int GetDirectionTileNext(Direction direction)
     {
         Vector3Int result = Vector3Int.zero;
         switch (direction)
@@ -158,9 +158,10 @@ public class ChessCharacter : MonoBehaviour
 
     public bool CanMoveTile(Direction direction)
     {
-        Vector3Int tilePos = tilePosition + GetDirectionVector(direction);
-        if (tilePos.x < 1 || tilePos.x > 8
-         || tilePos.y < 1 || tilePos.y > 8)
+        Vector3Int tilePos = tilePosition + GetDirectionTileNext(direction);
+        Debug.Log("GameManager.gameInstance.tileMap data : " + GameManager.gameInstance.tilemap.GetColliderType(new Vector3Int(tilePos.x, tilePos.y, 0)));
+        if (tilePos.x < 0 || tilePos.x > 7
+         || tilePos.y < 0 || tilePos.y > 7)
         {
             return false;
         }
@@ -179,7 +180,7 @@ public class ChessCharacter : MonoBehaviour
         if (CanMoveTile(direction))
         {
             GameManager.gameInstance.SetTileData(tilePosition, 0);
-            SetTilePosition(tilePosition + GetDirectionVector(direction));
+            SetTilePosition(tilePosition + GetDirectionTileNext(direction));
             MoveStart();
         }
     }

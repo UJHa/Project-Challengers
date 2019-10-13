@@ -26,6 +26,7 @@ public class IdleState : State
             else
             {
                 //이동 불가 원인에 따라 대기, 공격 등 구현 예정
+                _cCharacter.SetState(ChessCharacter.eState.ATTACK);
             }
             moveTimer = 0.0f;
         }
