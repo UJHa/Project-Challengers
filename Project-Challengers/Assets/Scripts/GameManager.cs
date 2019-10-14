@@ -29,18 +29,20 @@ public class GameManager : MonoBehaviour
         Debug.Log("Start GameManager!!!");
 
         //타일 데이터 리셋
-        Tile tile = ScriptableObject.CreateInstance<Tile>();
-        tile.sprite = Resources.Load<Sprite>("Blocks/Winter 1");
-        tile.colliderType = Tile.ColliderType.None;
+        //Tile tile = ScriptableObject.CreateInstance<Tile>();
+        //tile.sprite = Resources.Load<Sprite>("Blocks/Winter 1");
+        //tile.colliderType = Tile.ColliderType.None;
 
-        //바닥 타일 생성
-        for (int i = 0; i < 8; i++)
-        {
-            for (int j = 0; j < 8; j++)
-            {
-                tilemap.SetTile(new Vector3Int(i, j, 0), tile);
-            }
-        }
+        ////바닥 타일 생성
+        //for (int i = 0; i < 8; i++)
+        //{
+        //    for (int j = 0; j < 8; j++)
+        //    {
+        //        tilemap.SetTile(new Vector3Int(i, j, 0), tile);
+        //    }
+        //}
+
+        //타일 객체들 생성(타일 위 오브젝트 관리를 위해서...)
         for (int i = 0; i < 8; i++)
         {
             tileCharacters.Add(new List<ChessTile>());
