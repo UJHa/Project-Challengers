@@ -18,18 +18,15 @@ public class IdleState : State
         if (moveTimer >= 1.0f)
         {
             ChessCharacter.Direction direction = (ChessCharacter.Direction)Random.Range(0, 4);
-            Debug.Log(direction);
-            if (_cCharacter.CanMoveTile(direction))
-            {
-                _cCharacter.MoveRequest(direction);
-            }
-            else
-            {
-                //이동 불가 원인에 따라 대기, 공격 등 구현 예정
-                _cCharacter.SetState(ChessCharacter.eState.ATTACK);
-            }
+            _cCharacter.MoveRequest(direction);
             moveTimer = 0.0f;
         }
         moveTimer += Time.deltaTime;
+    }
+
+    public override void EndState()
+    {
+        base.EndState();
+        moveTimer = 0.0f;
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
+using UnityEditor;
 
 public class GameManager : MonoBehaviour
 {
@@ -14,10 +15,9 @@ public class GameManager : MonoBehaviour
     public Button rightBtn;
 
     public Tilemap tilemap;
-    private int[,] tileDatas = new int[8, 8];
 
-    //public GameObject character;
-    //public Vector3Int charPosition;
+    private List<List<ChessTile>> tileCharacters = new List<List<ChessTile>>();
+
     // Start is called before the first frame update
     private void Awake()
     {
@@ -28,58 +28,93 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Start GameManager!!!");
 
-		SpawnCharacter("Prefabs/Knight", 7, 3, true);   //player
-        SpawnCharacter("Prefabs/Knight", 1, 3, false);
-        SpawnCharacter("Prefabs/Knight", 3, 3, false);
-
-        Debug.Log("tilemap : " + tilemap.GetTile(new Vector3Int(0, 0, 0)));
-        
         //타일 데이터 리셋
+        Tile tile = ScriptableObject.CreateInstance<Tile>();
+        tile.sprite = Resources.Load<Sprite>("Blocks/Winter 1");
+        tile.colliderType = Tile.ColliderType.None;
+
+        //바닥 타일 생성
         for (int i = 0; i < 8; i++)
         {
             for (int j = 0; j < 8; j++)
             {
-                tileDatas[i, j] = 0;
-                tilemap.SetColliderType(new Vector3Int(i, j, 0), Tile.ColliderType.None);
+                tilemap.SetTile(new Vector3Int(i, j, 0), tile);
             }
         }
+        for (int i = 0; i < 8; i++)
+        {
+            tileCharacters.Add(new List<ChessTile>());
+            for (int j = 0; j < 8; j++)
+            {
+                tileCharacters[i].Add(new ChessTile());
+                Debug.Log("tileCharacters[i][j];" + tileCharacters[i][j]);
+            }
+        }
+
+        //타일 생성 테스트
+        //tile.sprite = Resources.Load<Sprite>("Blocks/Autumn 1");
+        //tile.colliderType = Tile.ColliderType.None;
+        //tilemap.SetTile(new Vector3Int(7, 0, 1), tile);
+        //Debug.Log(tilemap.GetTile(new Vector3Int(7, 0, 1)));
+
+        SpawnCharacter("Prefabs/Knight", "Player", 7, 3, true);   //player
+        SpawnCharacter("Prefabs/Knight", "Knight(NPC)", 1, 3, false);
+        //SpawnCharacter("Prefabs/Knight", 3, 3, false);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
-	private void SpawnCharacter(string path, int tileX, int tileY, bool isPlayer)
-	{
-		GameObject character = Instantiate(Resources.Load(path)) as GameObject;
-		Knight knight = character.GetComponent<Knight>();
-        knight.SetTilePosition(new Vector3Int(tileX, tileY, 0));
-		knight.IsPlayer(isPlayer);
+    private void SpawnCharacter(string path, string name, int tileX, int tileY, bool isPlayer)
+    {
+        GameObject character = Instantiate(Resources.Load(path)) as GameObject;
+        character.name = name;
+        ChessCharacter cCharacter = character.GetComponent<ChessCharacter>();
+        //Debug.Log("Spawn : " + cCharacter);
+        cCharacter.SetTilePosition(new Vector3Int(tileX, tileY, 0));
+        cCharacter.IsPlayer(isPlayer);
+
+        tileCharacters[tileY][tileX].SetGameObject(character);
 
         if (isPlayer)
         {
-            upBtn.onClick.AddListener(() => { knight.MoveRequest(Knight.Direction.UP); });
-            downBtn.onClick.AddListener(() => { knight.MoveRequest(Knight.Direction.DOWN); });
-            leftBtn.onClick.AddListener(() => { knight.MoveRequest(Knight.Direction.LEFT); });
-            rightBtn.onClick.AddListener(() => { knight.MoveRequest(Knight.Direction.RIGHT); });
+            upBtn.onClick.AddListener(() => { cCharacter.MoveRequest(ChessCharacter.Direction.UP); });
+            downBtn.onClick.AddListener(() => { cCharacter.MoveRequest(ChessCharacter.Direction.DOWN); });
+            leftBtn.onClick.AddListener(() => { cCharacter.MoveRequest(ChessCharacter.Direction.LEFT); });
+            rightBtn.onClick.AddListener(() => { cCharacter.MoveRequest(ChessCharacter.Direction.RIGHT); });
         }
     }
 
-    public void SetTileData(Vector3Int tilePos, int data)
+    public void SetTileObject(Vector3Int tilePosition, GameObject gameObject)
     {
-        tileDatas[tilePos.x, tilePos.y] = data;
-        tilemap.SetColliderType(new Vector3Int(tilePos.x, tilePos.y, 0), (Tile.ColliderType)data);
+        if (tilePosition.x < 0 || tilePosition.x > 7
+         || tilePosition.y < 0 || tilePosition.y > 7)
+        {
+            Debug.Log("Tile 범위 초과 : GetTileObject");
+        }
+        ChessTile chessTile = tileCharacters[tilePosition.y][tilePosition.x];
+        if (chessTile != null)
+        {
+            chessTile.SetGameObject(gameObject);
+        }
     }
 
-    public int GetTileData(Vector3Int tilePos)
+    public GameObject GetTileObject(Vector3Int tilePosition)
     {
-        return tileDatas[tilePos.x, tilePos.y];
-    }
-
-    public void SendMessageForTile(Vector3Int tilePosition)
-    {
-
+        GameObject gameObject = null;
+        if (tilePosition.x < 0 || tilePosition.x > 7
+         || tilePosition.y < 0 || tilePosition.y > 7)
+        {
+            return null;
+        }
+        ChessTile chessTile = tileCharacters[tilePosition.y][tilePosition.x];
+        if (chessTile != null)
+        {
+            gameObject = chessTile.GetGameObject();
+        }
+        return gameObject;
     }
 }

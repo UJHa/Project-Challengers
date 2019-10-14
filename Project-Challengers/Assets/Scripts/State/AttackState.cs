@@ -14,9 +14,19 @@ public class AttackState : State
     public override void UpdateState()
     {
         base.UpdateState();
-        Debug.Log("atk UpdateState!!! + " + _cCharacter.GetDirection());
-        Vector3Int nextTilePosition = _cCharacter.GetTilePosition() + _cCharacter.GetDirectionTileNext(_cCharacter.GetDirection());
-        GameManager.gameInstance.SendMessageForTile(nextTilePosition); // 인자 추가로 보낼 내용 정하자.
         _cCharacter.AttackUpdate();
+    }
+
+    public override void EndState()
+    {
+        base.EndState();
+        Vector3Int nextTilePosition = _cCharacter.GetTilePosition() + _cCharacter.GetDirectionTileNext(_cCharacter.GetDirection());
+        GameObject gameObject = GameManager.gameInstance.GetTileObject(nextTilePosition);
+        if (gameObject != null)
+        {
+            ChessCharacter character = gameObject.GetComponent<ChessCharacter>();
+            Debug.Log("character : " + character);
+            character.SendMessage("AttackDamage", 10);
+        }
     }
 }

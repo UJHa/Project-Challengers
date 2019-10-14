@@ -29,21 +29,27 @@ public class ChessCharacter : MonoBehaviour
 
     protected bool canInput = false;
 
+    void Awake()
+    {
+        Debug.Log("Awake()");
+        tilemap = GameManager.gameInstance.tilemap;
+
+        animator = GetComponent<Animator>();
+        animator.SetBool("isMoving", false);
+    }
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log("Start()");
         // 데이터들 초기 세팅
         targetPosition = transform.position;
-        animator = GetComponent<Animator>();
-        animator.SetBool("isMoving", false);
 
         _direction = Direction.RIGHT;
         transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
 
-        tilemap = GameManager.gameInstance.tilemap;
         transform.position = tilemap.layoutGrid.CellToWorld(tilePosition);
         Debug.Log("Start Position tileX : " + tilePosition.x + " | tileY : " + tilePosition.y);
-        GameManager.gameInstance.SetTileData(tilePosition, 1);
+        tilemap.SetColliderType(tilePosition, Tile.ColliderType.Grid);
 
         // 무기 초기 세팅
         weaponObject = Instantiate(weapon) as GameObject;
@@ -153,19 +159,20 @@ public class ChessCharacter : MonoBehaviour
     public void SetTilePosition(Vector3Int tilePos)
     {
         tilePosition = tilePos;
-        GameManager.gameInstance.SetTileData(tilePosition, 1);
+        tilemap.SetColliderType(tilePosition, Tile.ColliderType.Grid);
+        GameManager.gameInstance.SetTileObject(tilePosition, gameObject);
     }
 
     public bool CanMoveTile(Direction direction)
     {
         Vector3Int tilePos = tilePosition + GetDirectionTileNext(direction);
-        Debug.Log("GameManager.gameInstance.tileMap data : " + GameManager.gameInstance.tilemap.GetColliderType(new Vector3Int(tilePos.x, tilePos.y, 0)));
+        //Debug.Log("GameManager.gameInstance.tileMap data : " + GameManager.gameInstance.tilemap.GetColliderType(new Vector3Int(tilePos.x, tilePos.y, 0)));
         if (tilePos.x < 0 || tilePos.x > 7
          || tilePos.y < 0 || tilePos.y > 7)
         {
             return false;
         }
-        if (GameManager.gameInstance.GetTileData(tilePos) == 1)
+        if ((int)tilemap.GetColliderType(tilePos) > 0)
         {
             return false;
         }
@@ -179,9 +186,16 @@ public class ChessCharacter : MonoBehaviour
         SetDirection(direction);
         if (CanMoveTile(direction))
         {
-            GameManager.gameInstance.SetTileData(tilePosition, 0);
+            Debug.Log(name + " : 이동 성공");
+            tilemap.SetColliderType(tilePosition, Tile.ColliderType.None);
+            GameManager.gameInstance.SetTileObject(tilePosition, null);
             SetTilePosition(tilePosition + GetDirectionTileNext(direction));
             MoveStart();
+        }
+        else
+        {
+            Debug.Log(name + " : 이동 실패");
+            SetState(eState.ATTACK);
         }
     }
 
@@ -224,5 +238,11 @@ public class ChessCharacter : MonoBehaviour
             weaponObject.transform.localEulerAngles = weapon.transform.eulerAngles;
             SetState(eState.IDLE);
         }
+    }
+
+    private void AttackDamage(int damage)
+    {
+        Debug.Log("name : " + name);
+        Debug.Log("데미지 : " + damage);
     }
 }
