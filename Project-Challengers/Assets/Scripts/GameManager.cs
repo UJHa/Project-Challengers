@@ -33,14 +33,15 @@ public class GameManager : MonoBehaviour
         //tile.sprite = Resources.Load<Sprite>("Blocks/Winter 1");
         //tile.colliderType = Tile.ColliderType.None;
 
-        ////바닥 타일 생성
-        //for (int i = 0; i < 8; i++)
-        //{
-        //    for (int j = 0; j < 8; j++)
-        //    {
-        //        tilemap.SetTile(new Vector3Int(i, j, 0), tile);
-        //    }
-        //}
+        //바닥 타일 생성
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                //tilemap.SetTile(new Vector3Int(i, j, 0), tile);
+                tilemap.SetColliderType(new Vector3Int(i, j, 0), Tile.ColliderType.None);
+            }
+        }
 
         //타일 객체들 생성(타일 위 오브젝트 관리를 위해서...)
         for (int i = 0; i < 8; i++)
@@ -59,7 +60,7 @@ public class GameManager : MonoBehaviour
         //tilemap.SetTile(new Vector3Int(7, 0, 1), tile);
         //Debug.Log(tilemap.GetTile(new Vector3Int(7, 0, 1)));
 
-        SpawnCharacter("Prefabs/Knight", "Player", 7, 3, true);   //player
+        SpawnCharacter("Prefabs/Knight", "Player", 3, 3, true);   //player
         SpawnCharacter("Prefabs/Knight", "Knight(NPC)", 1, 3, false);
         //SpawnCharacter("Prefabs/Knight", 3, 3, false);
     }

@@ -166,6 +166,8 @@ public class ChessCharacter : MonoBehaviour
     public bool CanMoveTile(Direction direction)
     {
         Vector3Int tilePos = tilePosition + GetDirectionTileNext(direction);
+        Debug.Log("tilePosition : " + tilePosition);
+        Debug.Log("tilePos : " + tilePos);
         //Debug.Log("GameManager.gameInstance.tileMap data : " + GameManager.gameInstance.tilemap.GetColliderType(new Vector3Int(tilePos.x, tilePos.y, 0)));
         if (tilePos.x < 0 || tilePos.x > 7
          || tilePos.y < 0 || tilePos.y > 7)
@@ -183,6 +185,7 @@ public class ChessCharacter : MonoBehaviour
     {
         if (eState.IDLE != _state) return;
 
+        Debug.Log("direction : " + direction);
         SetDirection(direction);
         if (CanMoveTile(direction))
         {
