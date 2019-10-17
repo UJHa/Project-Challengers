@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5745610224117452543}
   - component: {fileID: 5254092219780326691}
-  m_Layer: 31
+  m_Layer: 0
   m_Name: Block Palette
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55,7 +55,7 @@ GameObject:
   - component: {fileID: 4496782334565200423}
   - component: {fileID: 3413577562069073193}
   - component: {fileID: 8071812795778650453}
-  m_Layer: 31
+  m_Layer: 0
   m_Name: Layer1
   m_TagString: Untagged
   m_Icon: {fileID: 0}

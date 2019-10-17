@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour
             for (int j = 0; j < 8; j++)
             {
                 tileCharacters[i].Add(new ChessTile());
-                Debug.Log("tileCharacters[i][j];" + tileCharacters[i][j]);
+                //Debug.Log("tileCharacters[i][j];" + tileCharacters[i][j]);
             }
         }
 
@@ -60,8 +60,10 @@ public class GameManager : MonoBehaviour
         //tilemap.SetTile(new Vector3Int(7, 0, 1), tile);
         //Debug.Log(tilemap.GetTile(new Vector3Int(7, 0, 1)));
 
-        SpawnCharacter("Prefabs/Knight", "Player", 3, 3, true);   //player
+        SpawnCharacter("Prefabs/Knight", "Player", 0, 3, true);   //player
         SpawnCharacter("Prefabs/Knight", "Knight(NPC)", 1, 3, false);
+        SpawnCharacter("Prefabs/Knight", "Knight(NPC)", 2, 3, false);
+        SpawnCharacter("Prefabs/Knight", "Knight(NPC)", 3, 3, false);
         //SpawnCharacter("Prefabs/Knight", 3, 3, false);
     }
 
@@ -89,6 +91,20 @@ public class GameManager : MonoBehaviour
             leftBtn.onClick.AddListener(() => { cCharacter.MoveRequest(ChessCharacter.Direction.LEFT); });
             rightBtn.onClick.AddListener(() => { cCharacter.MoveRequest(ChessCharacter.Direction.RIGHT); });
         }
+
+        GameObject canvas = GameObject.Find("Canvas");
+        RectTransform canvasRect = canvas.GetComponent<RectTransform>();
+
+        //slider transform 세팅
+        GameObject sliderObject = Instantiate(Resources.Load("Prefabs/HpBar")) as GameObject;
+        sliderObject.transform.parent = canvas.transform;
+        sliderObject.transform.localScale = new Vector3(1,1,1);
+
+        //Vector3 characterPos = tilemap.layoutGrid.CellToWorld(cCharacter.GetTilePosition());
+        //Vector3 characterUiPos = Camera.main.WorldToScreenPoint(characterPos) + new Vector3(canvasRect.rect.x, canvasRect.rect.y, 0);
+        //sliderObject.transform.localPosition = characterUiPos;
+        Slider slider = sliderObject.GetComponent<Slider>();
+        cCharacter.SetHpBar(slider);
     }
 
     public void SetTileObject(Vector3Int tilePosition, GameObject gameObject)

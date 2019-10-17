@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class ChessCharacter : MonoBehaviour
 {
@@ -9,6 +11,8 @@ public class ChessCharacter : MonoBehaviour
     protected GameObject weaponObject;
 
     public float moveSpeed = 1.0f;
+    public float maxHp = 300.0f;
+    private float _hp;
 
     protected Vector3 targetPosition;
 
@@ -31,7 +35,6 @@ public class ChessCharacter : MonoBehaviour
 
     void Awake()
     {
-        Debug.Log("Awake()");
         tilemap = GameManager.gameInstance.tilemap;
 
         animator = GetComponent<Animator>();
@@ -76,11 +79,14 @@ public class ChessCharacter : MonoBehaviour
         {
             stateMap[i].InitState(this);
         }
+
+        _hp = maxHp;
     }
 
     // Update is called once per frame
     void Update()
     {
+        //State update
         if (_state != _currentState)
         {
             stateMap[_state].StartState();
@@ -90,6 +96,16 @@ public class ChessCharacter : MonoBehaviour
         if (_state != _currentState)
         {
             stateMap[_state].EndState();
+        }
+
+        //UI update
+        {
+            GameObject canvas = GameObject.Find("Canvas");
+            RectTransform canvasRect = canvas.GetComponent<RectTransform>();
+            Vector3 characterUiPos = Camera.main.WorldToScreenPoint(transform.position) + new Vector3(canvasRect.rect.x, canvasRect.rect.y, 0);
+            characterUiPos.y += 50;
+            _hpBar.gameObject.transform.localPosition = characterUiPos;
+            _hpBar.value = _hp / maxHp;
         }
     }
 
@@ -174,7 +190,7 @@ public class ChessCharacter : MonoBehaviour
         {
             return false;
         }
-        if ((int)tilemap.GetColliderType(tilePos) > 0)
+        if ((int)tilemap.GetColliderType(tilePos) > (int)Tile.ColliderType.None)
         {
             return false;
         }
@@ -247,5 +263,14 @@ public class ChessCharacter : MonoBehaviour
     {
         Debug.Log("name : " + name);
         Debug.Log("데미지 : " + damage);
+        _hp -= damage;
+    }
+
+    //UI
+    private Slider _hpBar;
+
+    public void SetHpBar(Slider slider)
+    {
+        _hpBar = slider;
     }
 }
