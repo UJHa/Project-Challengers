@@ -39,6 +39,7 @@ public class ChessCharacter : MonoBehaviour
 
         animator = GetComponent<Animator>();
         animator.SetBool("isMoving", false);
+        animator.SetBool("isDead", false);
     }
     // Start is called before the first frame update
     void Start()
@@ -264,6 +265,11 @@ public class ChessCharacter : MonoBehaviour
         Debug.Log("name : " + name);
         Debug.Log("데미지 : " + damage);
         _hp -= damage;
+        if (_hp <= 0)
+        {
+            animator.SetBool("isDead", true);
+            _hp = 0;
+        }
     }
 
     //UI
