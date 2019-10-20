@@ -12,13 +12,14 @@ public class ChessCharacter : MonoBehaviour
 
     public float moveSpeed = 1.0f;
     public float maxHp = 300.0f;
+    public int _attackPower = 10;
     private float _hp;
 
     protected Vector3 targetPosition;
 
     protected Vector3Int tilePosition;
 
-    public enum eState { IDLE, MOVE, ATTACK, MAXSIZE };
+    public enum eState { IDLE, MOVE, ATTACK, DEAD, MAXSIZE };
     protected eState _state;
     protected eState _currentState;
 
@@ -75,6 +76,7 @@ public class ChessCharacter : MonoBehaviour
         
         stateMap[eState.MOVE] = new MoveState();
         stateMap[eState.ATTACK] = new AttackState();
+        stateMap[eState.DEAD] = new DeadState();
 
         for (eState i = 0; i < eState.MAXSIZE; i++)
         {
@@ -269,7 +271,16 @@ public class ChessCharacter : MonoBehaviour
         {
             animator.SetBool("isDead", true);
             _hp = 0;
+            SetState(eState.DEAD);
+            gameObject.SetActive(false);
+            _hpBar.gameObject.SetActive(false);
+            tilemap.SetColliderType(tilePosition, Tile.ColliderType.None);
         }
+    }
+
+    public int GetAttackPower()
+    {
+        return _attackPower;
     }
 
     //UI
