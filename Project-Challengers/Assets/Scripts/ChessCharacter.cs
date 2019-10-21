@@ -7,8 +7,6 @@ using UnityEngine.UI;
 
 public class ChessCharacter : MonoBehaviour
 {
-    public GameObject weapon;
-    protected GameObject weaponObject;
 
     public float moveSpeed = 1.0f;
     public float maxHp = 300.0f;
@@ -37,15 +35,17 @@ public class ChessCharacter : MonoBehaviour
     void Awake()
     {
         tilemap = GameManager.gameInstance.tilemap;
-
-        animator = GetComponent<Animator>();
-        animator.SetBool("isMoving", false);
-        animator.SetBool("isDead", false);
     }
     // Start is called before the first frame update
     void Start()
     {
         Debug.Log("Start()");
+        InitData();
+        InitState();
+    }
+
+    protected virtual void InitData()
+    {
         // 데이터들 초기 세팅
         targetPosition = transform.position;
 
@@ -56,11 +56,15 @@ public class ChessCharacter : MonoBehaviour
         Debug.Log("Start Position tileX : " + tilePosition.x + " | tileY : " + tilePosition.y);
         tilemap.SetColliderType(tilePosition, Tile.ColliderType.Grid);
 
-        // 무기 초기 세팅
-        weaponObject = Instantiate(weapon) as GameObject;
-        weaponObject.transform.parent = transform;
-        weaponObject.transform.localPosition = weaponObject.transform.position;
+        _hp = maxHp;
 
+        animator = GetComponent<Animator>();
+        animator.SetBool("isMoving", false);
+        animator.SetBool("isDead", false);
+    }
+
+    protected virtual void InitState()
+    {
         SetState(eState.IDLE);
         _currentState = eState.IDLE;
 
@@ -73,7 +77,7 @@ public class ChessCharacter : MonoBehaviour
         {
             stateMap[eState.IDLE] = new IdleState();
         }
-        
+
         stateMap[eState.MOVE] = new MoveState();
         stateMap[eState.ATTACK] = new AttackState();
         stateMap[eState.DEAD] = new DeadState();
@@ -82,8 +86,6 @@ public class ChessCharacter : MonoBehaviour
         {
             stateMap[i].InitState(this);
         }
-
-        _hp = maxHp;
     }
 
     // Update is called once per frame
@@ -246,20 +248,14 @@ public class ChessCharacter : MonoBehaviour
         SetState(eState.IDLE);
     }
 
-    public void AttackStart()
+    public virtual void AttackStart()
     {
-        weaponObject.transform.localEulerAngles = Vector3.zero;
+        
     }
 
-    public void AttackUpdate()
+    public virtual void AttackUpdate()
     {
-        weaponObject.transform.localEulerAngles = Vector3.Slerp(weaponObject.transform.localEulerAngles, new Vector3(0, 0, -90), Time.deltaTime * 1.0f);
-        //Debug.Log("attacking log : " + weaponObject.transform.localEulerAngles.z);
-        if (weaponObject.transform.localEulerAngles.z < 260)
-        {
-            weaponObject.transform.localEulerAngles = weapon.transform.eulerAngles;
-            SetState(eState.IDLE);
-        }
+        
     }
 
     private void AttackDamage(int damage)
