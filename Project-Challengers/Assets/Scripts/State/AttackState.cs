@@ -26,7 +26,7 @@ public class AttackState : State
         {
             ChessCharacter character = gameObject.GetComponent<ChessCharacter>();
             Debug.Log("character : " + character);
-            character.SendMessage("AttackDamage", 10);
+            character.SendMessage("AttackDamage", _cCharacter.GetAttackPower());
         }
     }
 }

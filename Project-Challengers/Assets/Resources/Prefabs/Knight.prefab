@@ -95,6 +95,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weapon: {fileID: 761448641156098324, guid: 32d55a1602900a14fab16f144815479c, type: 3}
   moveSpeed: 4
+  maxHp: 100
 --- !u!95 &7733719567690797252
 Animator:
   serializedVersion: 3
