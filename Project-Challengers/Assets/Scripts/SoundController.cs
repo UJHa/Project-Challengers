@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SoundController : MonoBehaviour
 {
-    public GameObject _bgm;
+    public LobbyManager lobbyManager;
     public GameObject _bgmon;
     public GameObject _bgmoff;
 
@@ -12,7 +12,7 @@ public class SoundController : MonoBehaviour
 
     private void Start()
     {
-        sound = _bgm.GetComponent<AudioSource>();
+        sound = lobbyManager.bgm;
     }
 
     public void BgmOff()

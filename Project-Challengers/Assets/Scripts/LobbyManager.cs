@@ -15,14 +15,18 @@ public class LobbyManager : MonoBehaviour
     public Tilemap tilemap;
 
     public GameObject bgmOn, bgmOff;
-    public GameObject _bgm;
+    public AudioSource bgm;
 
     Animator animator;
     DateTime moved = DateTime.Now;
-    Boolean moving = false;
+    bool moving = false;
     Vector3 pos, destination;
     Vector3Int cellpos, target;
-    AudioSource bgm;
+
+    private void Awake()
+    {
+        bgm = GameObject.Find("BGM").GetComponent<AudioSource>();
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -32,7 +36,6 @@ public class LobbyManager : MonoBehaviour
         animator = character.GetComponent<Animator>();
         pos = character.transform.position;
         cellpos = tilemap.WorldToCell(character.transform.position);
-        bgm = _bgm.GetComponent<AudioSource>();
 
         if (PlayerPrefs.GetInt("BGM", 1) == 0)
         {

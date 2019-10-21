@@ -14,4 +14,9 @@ public class ButtonFunction : MonoBehaviour
     {
         SceneManager.LoadScene("LobbyScene");
     }
+
+    public void ToGuidebook()
+    {
+        SceneManager.LoadScene("GuidebookScene");
+    }
 }

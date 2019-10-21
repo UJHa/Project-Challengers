@@ -8,8 +8,14 @@ public class StartController : MonoBehaviour
 {
     public Text nickname;
     public GameObject nickAlert;
+    public GameObject bgm;
 
     Text alertMessage;
+
+    private void Awake()
+    {
+        DontDestroyOnLoad(bgm);
+    }
 
     void Start()
     {
