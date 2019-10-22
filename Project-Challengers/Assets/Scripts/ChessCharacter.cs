@@ -19,7 +19,7 @@ public class ChessCharacter : MonoBehaviour
 
     public enum eState { IDLE, MOVE, ATTACK, DEAD, MAXSIZE };
     protected eState _state;
-    protected eState _currentState;
+    protected eState _prevState;
 
     protected Dictionary<eState, State> stateMap;
 
@@ -66,7 +66,7 @@ public class ChessCharacter : MonoBehaviour
     protected virtual void InitState()
     {
         SetState(eState.IDLE);
-        _currentState = eState.IDLE;
+        _prevState = eState.IDLE;
 
         stateMap = new Dictionary<eState, State>();
         if (canInput)
@@ -92,16 +92,16 @@ public class ChessCharacter : MonoBehaviour
     void Update()
     {
         //State update
-        if (_state != _currentState)
+        if (_state != _prevState)
         {
+            Debug.Log("start : " + _prevState);
+            Debug.Log("start : " + _state);
+            stateMap[_prevState].EndState();
             stateMap[_state].StartState();
-            _currentState = _state;
+            _prevState = _state;
         }
         stateMap[_state].UpdateState();
-        if (_state != _currentState)
-        {
-            stateMap[_state].EndState();
-        }
+        
 
         //UI update
         {
@@ -258,7 +258,7 @@ public class ChessCharacter : MonoBehaviour
         
     }
 
-    private void AttackDamage(int damage)
+    protected virtual void AttackDamage(int damage)
     {
         Debug.Log("name : " + name);
         Debug.Log("데미지 : " + damage);
@@ -268,9 +268,36 @@ public class ChessCharacter : MonoBehaviour
             animator.SetBool("isDead", true);
             _hp = 0;
             SetState(eState.DEAD);
+            tilemap.SetColliderType(tilePosition, Tile.ColliderType.None);
+            
+        }
+    }
+
+    public void AnimateEvent(string message)
+    {
+        if (message.Equals("AttackEnd"))
+        {
+            Debug.Log("TEST!!!!!!");
+            animator.SetBool("isAttack", false);
+            SetState(eState.IDLE);
+        }
+        if (message.Equals("DeadEnd"))
+        {
+            Debug.Log("TEST2!!!!!!");
             gameObject.SetActive(false);
             _hpBar.gameObject.SetActive(false);
-            tilemap.SetColliderType(tilePosition, Tile.ColliderType.None);
+        }
+        if (message.Equals("AttackDamage"))
+        {
+            Debug.Log("TEST3!!!!!!");
+            Vector3Int nextTilePosition = GetTilePosition() + GetDirectionTileNext(GetDirection());
+            GameObject gameObject = GameManager.gameInstance.GetTileObject(nextTilePosition);
+            if (gameObject != null)
+            {
+                ChessCharacter character = gameObject.GetComponent<ChessCharacter>();
+                Debug.Log("character : " + character);
+                character.SendMessage("AttackDamage", GetAttackPower());
+            }
         }
     }
 

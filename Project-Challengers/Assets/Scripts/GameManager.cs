@@ -60,10 +60,10 @@ public class GameManager : MonoBehaviour
         //tilemap.SetTile(new Vector3Int(7, 0, 1), tile);
         //Debug.Log(tilemap.GetTile(new Vector3Int(7, 0, 1)));
 
-        SpawnCharacter("Prefabs/Lizard", "Player", 0, 3, true);   //player
-        SpawnCharacter("Prefabs/Knight", "Knight(NPC)", 1, 3, false);
-        SpawnCharacter("Prefabs/Lizard", "Lizard(NPC)", 2, 3, false);
-        SpawnCharacter("Prefabs/Skeleton", "Skeleton(NPC)", 3, 3, false);
+        SpawnCharacter("Prefabs/Skeleton", "Player", 0, 3, true);   //player
+        //SpawnCharacter("Prefabs/Knight", "Knight(NPC)", 1, 3, false);
+        //SpawnCharacter("Prefabs/Lizard", "Lizard(NPC)", 2, 3, false);
+        //SpawnCharacter("Prefabs/Skeleton", "Skeleton(NPC)", 3, 3, false);
         //SpawnCharacter("Prefabs/Knight", 3, 3, false);
     }
 

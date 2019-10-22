@@ -18,20 +18,6 @@ public class Skeleton : ChessCharacter
 
     public override void AttackUpdate()
     {
-        if (true)
-        {
-            //Debug.Log(animator.GetCurrentAnimatorStateInfo(0).length);
-
-            Debug.Log(animator.GetNextAnimatorStateInfo(0).normalizedTime);
-            if (animator.GetNextAnimatorStateInfo(0).normalizedTime > .1f)
-            {
-                animator.SetBool("isAttack", false);
-                SetState(eState.IDLE);
-            }
-            //Debug.Log(animator.GetCurrentAnimatorStateInfo(0).normalizedTime);
-            //Debug.Log(animator.GetNextAnimatorStateInfo(0).normalizedTime);
-            //animator.SetBool("isAttack", false);
-            //SetState(eState.IDLE);
-        }
+        
     }
 }
