@@ -29,6 +29,10 @@ public class PlayerIdleState : State
         {
             _cCharacter.MoveRequest(ChessCharacter.Direction.RIGHT);
         }
+        if (Input.GetMouseButtonDown(0))
+        {
+            _cCharacter.MouseMoveStart();
+        }
     }
 
     private void AttackInput()

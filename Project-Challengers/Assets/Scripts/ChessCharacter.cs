@@ -14,6 +14,7 @@ public class ChessCharacter : MonoBehaviour
     private float _hp;
 
     protected Vector3 targetPosition;
+    protected Vector3Int mouseTargetTilePosition;
 
     protected Vector3Int tilePosition;
 
@@ -72,13 +73,13 @@ public class ChessCharacter : MonoBehaviour
         if (canInput)
         {
             stateMap[eState.IDLE] = new PlayerIdleState();
+            stateMap[eState.MOVE] = new PlayerMoveState();
         }
         else
         {
             stateMap[eState.IDLE] = new IdleState();
+            stateMap[eState.MOVE] = new MoveState();
         }
-
-        stateMap[eState.MOVE] = new MoveState();
         stateMap[eState.ATTACK] = new AttackState();
         stateMap[eState.DEAD] = new DeadState();
 
@@ -112,13 +113,6 @@ public class ChessCharacter : MonoBehaviour
             _hpBar.gameObject.transform.localPosition = characterUiPos;
             _hpBar.value = _hp / maxHp;
         }
-    }
-
-    public void MoveStart()
-    {
-        targetPosition = tilemap.layoutGrid.CellToWorld(tilePosition);
-        animator.SetBool("isMoving", true);
-        SetState(eState.MOVE);
     }
 
     public void SetDirection(Direction direct)
@@ -221,6 +215,25 @@ public class ChessCharacter : MonoBehaviour
             Debug.Log(name + " : 이동 실패");
             SetState(eState.ATTACK);
         }
+    }
+
+    public void MoveStart()
+    {
+        targetPosition = tilemap.layoutGrid.CellToWorld(tilePosition);
+        animator.SetBool("isMoving", true);
+        SetState(eState.MOVE);
+    }
+
+    public void MouseMoveStart()
+    {
+        mouseTargetTilePosition = tilemap.layoutGrid.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+        //Debug.Log("Input mouse tile position : " + mouseTargetPosition);
+        SetState(eState.MOVE);
+    }
+
+    public Vector3Int GetTargetPosition()
+    {
+        return mouseTargetTilePosition;
     }
 
     public void SetState(eState state)
