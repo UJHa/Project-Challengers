@@ -15,7 +15,8 @@ public class LobbyManager : MonoBehaviour
     public Tilemap tilemap;
 
     public GameObject bgmOn, bgmOff;
-    public AudioSource bgm;
+    public GameObject seOn, seOff;
+    public AudioSource bgm, se;
 
     Animator animator;
     DateTime moved = DateTime.Now;
@@ -26,6 +27,7 @@ public class LobbyManager : MonoBehaviour
     private void Awake()
     {
         bgm = GameObject.Find("BGM").GetComponent<AudioSource>();
+        se = GameObject.Find("SE").GetComponent<AudioSource>();
     }
 
     // Start is called before the first frame update
@@ -42,6 +44,13 @@ public class LobbyManager : MonoBehaviour
             bgm.mute = true;
             bgmOn.SetActive(false);
             bgmOff.SetActive(true);
+        }
+
+        if (PlayerPrefs.GetInt("SE", 1) == 0)
+        {
+            se.mute = true;
+            seOn.SetActive(false);
+            seOff.SetActive(true);
         }
     }
 

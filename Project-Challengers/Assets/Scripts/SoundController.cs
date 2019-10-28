@@ -5,31 +5,27 @@ using UnityEngine;
 public class SoundController : MonoBehaviour
 {
     public LobbyManager lobbyManager;
-    public GameObject _bgmon;
-    public GameObject _bgmoff;
+    public GameObject opposite;
+    public string type;
+    public AudioClip buttonSe;
 
     private AudioSource sound;
+    private AudioSource se;
 
     private void Start()
     {
-        sound = lobbyManager.bgm;
+        se = lobbyManager.se.GetComponent<AudioSource>();
+        se.clip = buttonSe;
+        sound = type == "BGM" ? lobbyManager.bgm : lobbyManager.se;
     }
 
-    public void BgmOff()
+    public void TurnSound(bool turnon)
     {
-        sound.mute = true;
-        PlayerPrefs.SetInt("BGM", 0);
+        sound.mute = !turnon;
+        PlayerPrefs.SetInt(type, turnon ? 1 : 0);
         PlayerPrefs.Save();
-        _bgmon.SetActive(false);
-        _bgmoff.SetActive(true);
-    }
-
-    public void BgmOn()
-    {
-        sound.mute = false;
-        PlayerPrefs.SetInt("BGM", 1);
-        PlayerPrefs.Save();
-        _bgmon.SetActive(true);
-        _bgmoff.SetActive(false);
+        se.Play();
+        gameObject.SetActive(false);
+        opposite.SetActive(true);
     }
 }
