@@ -70,7 +70,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: c5ffd21897508cd4e800cbae16805521, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d25203518c11bfb41aa4fa2d90273171, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -93,9 +93,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc2300789d688bf41bf52dcd17c3fdc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapon: {fileID: 761448641156098324, guid: 32d55a1602900a14fab16f144815479c, type: 3}
   moveSpeed: 4
   maxHp: 100
+  _attackPower: 10
+  weapon: {fileID: 761448641156098324, guid: 32d55a1602900a14fab16f144815479c, type: 3}
 --- !u!95 &7733719567690797252
 Animator:
   serializedVersion: 3
