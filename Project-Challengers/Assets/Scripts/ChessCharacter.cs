@@ -24,7 +24,7 @@ public class ChessCharacter : MonoBehaviour
 
     protected Dictionary<eState, State> stateMap;
 
-    public enum Direction { UP, DOWN, LEFT, RIGHT };
+    public enum Direction { UP, DOWN, LEFT, RIGHT, MAXSIZE };
     protected Direction _direction;
 
     protected Animator animator;
@@ -95,8 +95,8 @@ public class ChessCharacter : MonoBehaviour
         //State update
         if (_state != _prevState)
         {
-            Debug.Log("start : " + _prevState);
-            Debug.Log("start : " + _state);
+            Debug.Log("end prev state: " + _prevState);
+            Debug.Log("start cur state : " + _state);
             stateMap[_prevState].EndState();
             stateMap[_state].StartState();
             _prevState = _state;
@@ -178,12 +178,8 @@ public class ChessCharacter : MonoBehaviour
         GameManager.gameInstance.SetTileObject(tilePosition, gameObject);
     }
 
-    public bool CanMoveTile(Direction direction)
+    public bool CanMoveTile(Vector3Int tilePos)
     {
-        Vector3Int tilePos = tilePosition + GetDirectionTileNext(direction);
-        Debug.Log("tilePosition : " + tilePosition);
-        Debug.Log("tilePos : " + tilePos);
-        //Debug.Log("GameManager.gameInstance.tileMap data : " + GameManager.gameInstance.tilemap.GetColliderType(new Vector3Int(tilePos.x, tilePos.y, 0)));
         if (tilePos.x < 0 || tilePos.x > 7
          || tilePos.y < 0 || tilePos.y > 7)
         {
@@ -202,7 +198,8 @@ public class ChessCharacter : MonoBehaviour
 
         Debug.Log("direction : " + direction);
         SetDirection(direction);
-        if (CanMoveTile(direction))
+        Vector3Int nextTilePos = tilePosition + GetDirectionTileNext(direction);
+        if (CanMoveTile(nextTilePos))
         {
             Debug.Log(name + " : 이동 성공");
             tilemap.SetColliderType(tilePosition, Tile.ColliderType.None);
@@ -220,18 +217,28 @@ public class ChessCharacter : MonoBehaviour
     public void MoveStart()
     {
         targetPosition = tilemap.layoutGrid.CellToWorld(tilePosition);
-        animator.SetBool("isMoving", true);
         SetState(eState.MOVE);
     }
 
     public void MouseMoveStart()
     {
         mouseTargetTilePosition = tilemap.layoutGrid.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
-        //Debug.Log("Input mouse tile position : " + mouseTargetPosition);
+
+        //mouseTargetTilePosition의 x,y가 -1씩 되어 있다 원인은 파악하지 못해서 임시 처리
+        mouseTargetTilePosition.x += 1;
+        mouseTargetTilePosition.y += 1;
+        mouseTargetTilePosition.z = 0;
+
+        Debug.Log("Input mouse!2 : " + tilemap.transform.position);
         SetState(eState.MOVE);
     }
 
-    public Vector3Int GetTargetPosition()
+    public Vector3 GetTargetPosition()
+    {
+        return targetPosition;
+    }
+
+    public Vector3Int GetTargetTilePosition()
     {
         return mouseTargetTilePosition;
     }
@@ -246,30 +253,9 @@ public class ChessCharacter : MonoBehaviour
         return _state;
     }
 
-    public void MoveUpdate()
-    {
-        transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
-        if (Vector3.Distance(transform.position, targetPosition) == 0.0f)
-        {
-            MoveFinish();
-        }
-    }
+    public virtual void AttackStart() { }
 
-    private void MoveFinish()
-    {
-        animator.SetBool("isMoving", false);
-        SetState(eState.IDLE);
-    }
-
-    public virtual void AttackStart()
-    {
-        
-    }
-
-    public virtual void AttackUpdate()
-    {
-        
-    }
+    public virtual void AttackUpdate() { }
 
     protected virtual void AttackDamage(int damage)
     {
@@ -317,6 +303,12 @@ public class ChessCharacter : MonoBehaviour
     public int GetAttackPower()
     {
         return _attackPower;
+    }
+
+    //Animation
+    public Animator GetAnimator()
+    {
+        return animator;
     }
 
     //UI

@@ -3,17 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class ChessTile
+public class ChessTile : Tile
 {
-    private GameObject _gameObject;
+    public Dictionary<string, ChessTile> prevPathTileNodeMap;
+    public Vector3Int position;
 
-    public void SetGameObject(GameObject gameObject)
+    public ChessTile()
     {
-        _gameObject = gameObject;
-    }
-
-    public GameObject GetGameObject()
-    {
-        return _gameObject;
+        prevPathTileNodeMap = new Dictionary<string, ChessTile>();
     }
 }

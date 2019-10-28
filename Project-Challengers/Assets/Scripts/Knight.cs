@@ -15,8 +15,7 @@ public class Knight : ChessCharacter
 
         // 무기 초기 세팅
         weaponObject = Instantiate(weapon) as GameObject;
-        weaponObject.transform.parent = transform;
-        weaponObject.transform.localPosition = weaponObject.transform.position;
+        weaponObject.transform.SetParent(transform, false);
     }
 
     protected override void InitState()

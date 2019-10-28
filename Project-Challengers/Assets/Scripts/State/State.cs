@@ -12,7 +12,7 @@ public class State
 
     }
 
-    public void InitState(ChessCharacter cCharacter)
+    public virtual void InitState(ChessCharacter cCharacter)
     {
         _cCharacter = cCharacter;
         currentState = _cCharacter.GetState();
