@@ -54,14 +54,15 @@ public class ChessCharacter : MonoBehaviour
         transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
 
         transform.position = tilemap.layoutGrid.CellToWorld(tilePosition);
-        Debug.Log("Start Position tileX : " + tilePosition.x + " | tileY : " + tilePosition.y);
+        Debug.Log(this.name + " : Start Position tileX : " + tilePosition.x + " | tileY : " + tilePosition.y);
         tilemap.SetColliderType(tilePosition, Tile.ColliderType.Grid);
-
+        Debug.Log(this.name + " : 2");
         _hp = maxHp;
-
+        Debug.Log(this.name + " : 3");
         animator = GetComponent<Animator>();
         animator.SetBool("isMoving", false);
         animator.SetBool("isDead", false);
+        Debug.Log(this.name + " : 4");
     }
 
     protected virtual void InitState()
@@ -95,8 +96,8 @@ public class ChessCharacter : MonoBehaviour
         //State update
         if (_state != _prevState)
         {
-            Debug.Log("end prev state: " + _prevState);
-            Debug.Log("start cur state : " + _state);
+            Debug.Log(this.name + " : end prev state: " + _prevState);
+            Debug.Log(this.name + " : start cur state : " + _state);
             stateMap[_prevState].EndState();
             stateMap[_state].StartState();
             _prevState = _state;
@@ -229,6 +230,7 @@ public class ChessCharacter : MonoBehaviour
         mouseTargetTilePosition.y += 1;
         mouseTargetTilePosition.z = 0;
 
+        Debug.Log("name : " + this.name);
         Debug.Log("Input mouse!2 : " + tilemap.transform.position);
         SetState(eState.MOVE);
     }
