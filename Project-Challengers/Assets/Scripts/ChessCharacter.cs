@@ -56,13 +56,10 @@ public class ChessCharacter : MonoBehaviour
         transform.position = tilemap.layoutGrid.CellToWorld(tilePosition);
         Debug.Log(this.name + " : Start Position tileX : " + tilePosition.x + " | tileY : " + tilePosition.y);
         tilemap.SetColliderType(tilePosition, Tile.ColliderType.Grid);
-        Debug.Log(this.name + " : 2");
         _hp = maxHp;
-        Debug.Log(this.name + " : 3");
         animator = GetComponent<Animator>();
         animator.SetBool("isMoving", false);
         animator.SetBool("isDead", false);
-        Debug.Log(this.name + " : 4");
     }
 
     protected virtual void InitState()
@@ -96,8 +93,8 @@ public class ChessCharacter : MonoBehaviour
         //State update
         if (_state != _prevState)
         {
-            Debug.Log(this.name + " : end prev state: " + _prevState);
-            Debug.Log(this.name + " : start cur state : " + _state);
+            //Debug.Log(this.name + " : end prev state: " + _prevState);
+            //Debug.Log(this.name + " : start cur state : " + _state);
             stateMap[_prevState].EndState();
             stateMap[_state].StartState();
             _prevState = _state;

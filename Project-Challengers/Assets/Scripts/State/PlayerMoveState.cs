@@ -24,7 +24,7 @@ public class PlayerMoveState : State
     public override void StartState()
     {
         base.StartState();
-        Debug.Log("=====move Start State");
+        Debug.Log("=====Player move Start State");
         pathState = ePathState.PATH_FIND;
         
         _cCharacter.GetAnimator().SetBool("isMoving", true);
