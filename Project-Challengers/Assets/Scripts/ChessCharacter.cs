@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class ChessCharacter : MonoBehaviour
 {
-
     public float moveSpeed = 1.0f;
     public float maxHp = 300.0f;
     public int _attackPower = 10;
@@ -17,6 +16,9 @@ public class ChessCharacter : MonoBehaviour
     protected Vector3Int mouseTargetTilePosition;
 
     protected Vector3Int tilePosition;
+
+    public enum eCharacterType { BATTLE, WAIT, MAXSIZE };
+    protected eCharacterType characterType;
 
     public enum eState { IDLE, MOVE, ATTACK, DEAD, MAXSIZE };
     protected eState _state;
@@ -49,6 +51,7 @@ public class ChessCharacter : MonoBehaviour
     {
         // 데이터들 초기 세팅
         targetPosition = transform.position;
+        characterType = eCharacterType.BATTLE;
 
         _direction = Direction.RIGHT;
         transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
@@ -103,6 +106,7 @@ public class ChessCharacter : MonoBehaviour
         
 
         //UI update
+        if(characterType == eCharacterType.BATTLE)
         {
             GameObject canvas = GameObject.Find("Canvas");
             RectTransform canvasRect = canvas.GetComponent<RectTransform>();
@@ -174,6 +178,7 @@ public class ChessCharacter : MonoBehaviour
         tilePosition = tilePos;
         tilemap.SetColliderType(tilePosition, Tile.ColliderType.Grid);
         GameManager.gameInstance.SetTileObject(tilePosition, gameObject);
+        Debug.Log(tilemap.GetColliderType(tilePosition));
     }
 
     public bool CanMoveTile(Vector3Int tilePos)

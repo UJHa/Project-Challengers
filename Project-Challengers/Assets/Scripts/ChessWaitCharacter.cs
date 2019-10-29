@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class ChessWaitCharacter : ChessCharacter
 {
+    protected override void InitData()
+    {
+        base.InitData();
+        characterType = eCharacterType.WAIT;
+    }
     protected override void InitState()
     {
         //Debug.Log(this.name + " : InitState");
@@ -20,6 +25,5 @@ public class ChessWaitCharacter : ChessCharacter
         {
             stateMap[i].InitState(this);
         }
-        //Debug.Log(this.name + " : InitState 2");
     }
 }
