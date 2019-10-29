@@ -70,7 +70,7 @@ public class GameManager : MonoBehaviour
 
         //캐릭 생성 관련 테스트
         {
-            //SpawnCharacter("Prefabs/Skeleton", "Player", 0, 3, true);   //player
+            //SpawnCharacter("Prefabs/Lizard", "Player", 0, 3, true);   //player
             //SpawnCharacter("Prefabs/Knight", "Knight(NPC)", 1, 3, false);
             //SpawnCharacter("Prefabs/Lizard", "Lizard(NPC)", 2, 3, false);
             //SpawnCharacter("Prefabs/Skeleton", "Skeleton(NPC)", 3, 3, false);

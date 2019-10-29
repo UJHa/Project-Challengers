@@ -192,6 +192,11 @@ public class ChessCharacter : MonoBehaviour
         {
             return false;
         }
+        ChessTile chessTile = tilemap.GetTile<ChessTile>(tilePos);
+        if (chessTile.gameObject != null)
+        {
+            return false;
+        }
         return true;
     }
 
@@ -232,8 +237,8 @@ public class ChessCharacter : MonoBehaviour
         mouseTargetTilePosition.y += 1;
         mouseTargetTilePosition.z = 0;
 
-        Debug.Log("name : " + this.name);
-        Debug.Log("Input mouse!2 : " + tilemap.transform.position);
+        //Debug.Log("name : " + this.name);
+        //Debug.Log("Input mouse!2 : " + tilemap.transform.position);
         SetState(eState.MOVE);
     }
 
