@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class ChessCharacter : MonoBehaviour
 {
-
     public float moveSpeed = 1.0f;
     public float maxHp = 300.0f;
     public int _attackPower = 10;
@@ -17,6 +16,9 @@ public class ChessCharacter : MonoBehaviour
     protected Vector3Int mouseTargetTilePosition;
 
     protected Vector3Int tilePosition;
+
+    public enum eCharacterType { BATTLE, WAIT, MAXSIZE };
+    protected eCharacterType characterType;
 
     public enum eState { IDLE, MOVE, ATTACK, DEAD, MAXSIZE };
     protected eState _state;
@@ -49,16 +51,15 @@ public class ChessCharacter : MonoBehaviour
     {
         // 데이터들 초기 세팅
         targetPosition = transform.position;
+        characterType = eCharacterType.BATTLE;
 
         _direction = Direction.RIGHT;
         transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
 
         transform.position = tilemap.layoutGrid.CellToWorld(tilePosition);
-        Debug.Log("Start Position tileX : " + tilePosition.x + " | tileY : " + tilePosition.y);
+        Debug.Log(this.name + " : Start Position tileX : " + tilePosition.x + " | tileY : " + tilePosition.y);
         tilemap.SetColliderType(tilePosition, Tile.ColliderType.Grid);
-
         _hp = maxHp;
-
         animator = GetComponent<Animator>();
         animator.SetBool("isMoving", false);
         animator.SetBool("isDead", false);
@@ -95,8 +96,8 @@ public class ChessCharacter : MonoBehaviour
         //State update
         if (_state != _prevState)
         {
-            Debug.Log("end prev state: " + _prevState);
-            Debug.Log("start cur state : " + _state);
+            //Debug.Log(this.name + " : end prev state: " + _prevState);
+            //Debug.Log(this.name + " : start cur state : " + _state);
             stateMap[_prevState].EndState();
             stateMap[_state].StartState();
             _prevState = _state;
@@ -105,6 +106,7 @@ public class ChessCharacter : MonoBehaviour
         
 
         //UI update
+        if(characterType == eCharacterType.BATTLE)
         {
             GameObject canvas = GameObject.Find("Canvas");
             RectTransform canvasRect = canvas.GetComponent<RectTransform>();
@@ -176,6 +178,7 @@ public class ChessCharacter : MonoBehaviour
         tilePosition = tilePos;
         tilemap.SetColliderType(tilePosition, Tile.ColliderType.Grid);
         GameManager.gameInstance.SetTileObject(tilePosition, gameObject);
+        Debug.Log(tilemap.GetColliderType(tilePosition));
     }
 
     public bool CanMoveTile(Vector3Int tilePos)
@@ -186,6 +189,11 @@ public class ChessCharacter : MonoBehaviour
             return false;
         }
         if ((int)tilemap.GetColliderType(tilePos) > (int)Tile.ColliderType.None)
+        {
+            return false;
+        }
+        ChessTile chessTile = tilemap.GetTile<ChessTile>(tilePos);
+        if (chessTile.gameObject != null)
         {
             return false;
         }
@@ -229,7 +237,8 @@ public class ChessCharacter : MonoBehaviour
         mouseTargetTilePosition.y += 1;
         mouseTargetTilePosition.z = 0;
 
-        Debug.Log("Input mouse!2 : " + tilemap.transform.position);
+        //Debug.Log("name : " + this.name);
+        //Debug.Log("Input mouse!2 : " + tilemap.transform.position);
         SetState(eState.MOVE);
     }
 

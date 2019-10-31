@@ -9,12 +9,22 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager gameInstance;
 
-    public Button upBtn;
-    public Button downBtn;
-    public Button leftBtn;
-    public Button rightBtn;
-
     public Tilemap tilemap;
+
+    public Button buySlot1;
+    public Button buySlot2;
+    public Button buySlot3;
+    public Button buySlot4;
+
+    public Button resetBtn;
+
+    public enum eCharacter
+    {
+        KNIGHT,
+        LIZARD,
+        SKELETON,
+        MAX
+    }
 
     // Start is called before the first frame update
     private void Awake()
@@ -25,9 +35,8 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Debug.Log("Start GameManager!!!");
-
         //타일 객체들 생성(타일 위 오브젝트 관리를 위해서...)
-        for (int i = 0; i < 8; i++)
+        for (int i = -1; i < 8; i++)    //-1은 체스말 대기 위치
         {
             //tileCharacters.Add(new List<ChessTile>());
             for (int j = 0; j < 8; j++)
@@ -43,13 +52,34 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        SpawnCharacter("Prefabs/Skeleton", "Player", 0, 3, true);   //player
-        //SpawnCharacter("Prefabs/Knight", "Knight(NPC)", 1, 3, false);
-        //SpawnCharacter("Prefabs/Lizard", "Lizard(NPC)", 2, 3, false);
-        //SpawnCharacter("Prefabs/Skeleton", "Skeleton(NPC)", 3, 3, false);
-        //SpawnCharacter("Prefabs/Knight", 3, 3, false);
+        //캐릭터 구매 UI 초기화
+        {
+            SetBuySlot(buySlot1, GetRandomCharacter());
+            SetBuySlot(buySlot2, GetRandomCharacter());
+            SetBuySlot(buySlot3, GetRandomCharacter());
+            SetBuySlot(buySlot4, GetRandomCharacter());
+        }
+        resetBtn.onClick.AddListener(() => {
+            {
+                SetBuySlot(buySlot1, GetRandomCharacter());
+                SetBuySlot(buySlot2, GetRandomCharacter());
+                SetBuySlot(buySlot3, GetRandomCharacter());
+                SetBuySlot(buySlot4, GetRandomCharacter());
+            }
+        });
+
+        //캐릭 생성 관련 테스트
+        {
+            //SpawnCharacter("Prefabs/Lizard", "Player", 0, 3, true);   //player
+            //SpawnCharacter("Prefabs/Knight", "Knight(NPC)", 1, 3, false);
+            //SpawnCharacter("Prefabs/Lizard", "Lizard(NPC)", 2, 3, false);
+            //SpawnCharacter("Prefabs/Skeleton", "Skeleton(NPC)", 3, 3, false);
+            //SpawnCharacter("Prefabs/Knight", 3, 3, false);
+        }
     }
 
+    private GameObject holdTarget;
+    private ChessTile mouseDownTile;
     // Update is called once per frame
     void Update()
     {
@@ -57,7 +87,184 @@ public class GameManager : MonoBehaviour
         {
             tilemap.RefreshAllTiles();
         }
-        
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            Vector3Int mouseDownTilePosition = tilemap.layoutGrid.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+
+            //mouseTargetTilePosition의 x,y가 -1씩 되어 있다 원인은 파악하지 못해서 임시 처리
+            mouseDownTilePosition.x += 1;
+            mouseDownTilePosition.y += 1;
+            mouseDownTilePosition.z = 0;
+            mouseDownTile = tilemap.GetTile<ChessTile>(mouseDownTilePosition);
+            if (mouseDownTile != null)
+            {
+                if (mouseDownTile.gameObject != null)
+                {
+                    holdTarget = mouseDownTile.gameObject;
+                    mouseDownTile.gameObject = null;
+                }
+            }
+        }
+
+        //hold 도중 이동처리
+        if (Input.GetMouseButton(0) && holdTarget != null)
+        {
+            Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            mouseWorldPosition.x += 0;
+            mouseWorldPosition.y += 0.5f;
+            mouseWorldPosition.z = 0;
+            holdTarget.transform.position = mouseWorldPosition;
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            if (holdTarget != null)
+            {
+                Debug.Log("holdTarget null 아닐때");
+                Vector3Int mouseUpTilePosition = tilemap.layoutGrid.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+
+                //mouseTargetTilePosition의 x,y가 -1씩 되어 있다 원인은 파악하지 못해서 임시 처리
+                mouseUpTilePosition.x += 1;
+                mouseUpTilePosition.y += 1;
+                mouseUpTilePosition.z = 0;
+
+                ChessTile mouseUpTile = tilemap.GetTile<ChessTile>(mouseUpTilePosition);
+                if (mouseUpTile != null)
+                {
+                    if (mouseUpTile.position.y >= 0) // 8x8 배치 되는 기능 구현
+                    {
+                        Debug.Log("y : 0 이상");
+                        string[] nameList = holdTarget.name.Split('_');
+                        SpawnCharacter("Prefabs/"+ nameList[1], nameList[1] + "(NPC)", mouseUpTile.position.x, mouseUpTile.position.y, false);
+                        //Debug.Log("=start====================");
+                        //AllTilesLog();
+                        //Debug.Log("=end======================");
+                        Destroy(holdTarget);
+                        //mouseDownTile.gameObject = holdTarget;
+                        //mouseDownTile.gameObject.transform.position = tilemap.layoutGrid.CellToWorld(mouseDownTile.position);
+                    }
+                    else if(mouseUpTile.position.y == -1)    //대기 타일 내 이동
+                    {
+                        Debug.Log("y : -1");
+                        if (mouseUpTile.gameObject == null) // 빈 타일일 때
+                        {
+                            mouseUpTile.gameObject = holdTarget;
+                            mouseUpTile.gameObject.transform.position = tilemap.layoutGrid.CellToWorld(mouseUpTile.position);
+                        }
+                        else    //타일 있을 때 서로의 위치 교체하기
+                        {
+                            GameObject tempObject = mouseUpTile.gameObject;
+
+                            mouseUpTile.gameObject = holdTarget;
+                            mouseUpTile.gameObject.transform.position = tilemap.layoutGrid.CellToWorld(mouseUpTile.position);
+
+                            mouseDownTile.gameObject = tempObject;
+                            mouseDownTile.gameObject.transform.position = tilemap.layoutGrid.CellToWorld(mouseDownTile.position);
+                        }
+                    }
+                    else    //이상한 곳에 이동시키면... 실패시키기
+                    {
+                        Debug.Log("y : 예외들");
+                        mouseDownTile.gameObject = holdTarget;
+                        mouseDownTile.gameObject.transform.position = tilemap.layoutGrid.CellToWorld(mouseDownTile.position);
+                    }
+                    
+                    for (int i = 0; i < 8; i++)
+                    {
+                        ChessTile waitTile = tilemap.GetTile<ChessTile>(new Vector3Int(i, -1, 0));
+                        if (waitTile != null)
+                        {
+                            Debug.Log("waitTile[" + i + "] : " + waitTile.gameObject);
+                        }
+                    }
+                }
+                else
+                {
+                    Debug.Log("y : 예외들2");
+                    mouseDownTile.gameObject = holdTarget;
+                    mouseDownTile.gameObject.transform.position = tilemap.layoutGrid.CellToWorld(mouseDownTile.position);
+                }
+
+                holdTarget = null;
+            }
+        }
+    }
+
+    private string GetRandomCharacter()
+    {
+        string name = "";
+        eCharacter enumCharacter = (eCharacter)Random.Range(0, (int)eCharacter.MAX);
+        switch (enumCharacter)
+        {
+            case eCharacter.KNIGHT:
+                name = "Knight";
+                break;
+            case eCharacter.LIZARD:
+                name = "Lizard";
+                break;
+            case eCharacter.SKELETON:
+                name = "Skeleton";
+                break;
+        }
+        return name;
+    }
+
+    private void SetBuySlot(Button buySlot, string name)
+    {
+        buySlot.gameObject.SetActive(true);
+        //이미지 세팅
+        GameObject imageObject = buySlot.gameObject.transform.Find("Image").gameObject;
+        Image image = imageObject.GetComponent<Image>();
+        image.sprite = Resources.Load<Sprite>("BuySlotImages/" + name);
+        ResizeImage(image, imageObject);
+
+        //이름 세팅
+        GameObject nameTextObject = buySlot.gameObject.transform.Find("Text").gameObject;
+        Text nameText = nameTextObject.GetComponent<Text>();
+        nameText.text = name;
+
+        buySlot.onClick.RemoveAllListeners();
+        buySlot.onClick.AddListener(() => {
+            bool success = BuyWaitCharacter("Prefabs/Wait" + name, "WaitCharacter_" + name);
+            if (success)
+            {
+                buySlot.gameObject.SetActive(false);
+            }
+        });
+    }
+    private void ResizeImage(Image image, GameObject imageObject)
+    {
+        RectTransform imageRect = imageObject.GetComponent<RectTransform>();
+        imageRect.sizeDelta = new Vector2(75, 75);
+        float rateWidth = imageRect.rect.width * (image.sprite.rect.width / image.sprite.rect.height);
+        imageRect.sizeDelta = new Vector2(rateWidth, imageRect.rect.height);
+    }
+
+    private bool BuyWaitCharacter(string path, string name)
+    {
+        int waitPositionX = 0;
+        while (waitPositionX < 8)
+        {
+            ChessTile chessTile = tilemap.GetTile<ChessTile>(new Vector3Int(waitPositionX, -1, 0));
+            Debug.Log("chessTile.gameObject["+waitPositionX+"] : " + chessTile.gameObject);
+            if (chessTile != null)
+            {
+                if (chessTile.gameObject == null)
+                {
+                    GameObject character = Instantiate(Resources.Load(path)) as GameObject;
+                    character.name = name;
+                    ChessCharacter cCharacter = character.GetComponent<ChessWaitCharacter>();
+                    character.transform.SetParent(tilemap.transform);
+
+                    cCharacter.SetTilePosition(new Vector3Int(waitPositionX, -1, 0));
+                    chessTile.gameObject = character;
+                    return true;
+                }
+            }
+            waitPositionX++;
+        }
+        return false;
     }
 
     private void SpawnCharacter(string path, string name, int tileX, int tileY, bool isPlayer)
@@ -75,14 +282,6 @@ public class GameManager : MonoBehaviour
             chessTile.gameObject = character;
         }
 
-        if (isPlayer)
-        {
-            upBtn.onClick.AddListener(() => { cCharacter.MoveRequest(ChessCharacter.Direction.UP); });
-            downBtn.onClick.AddListener(() => { cCharacter.MoveRequest(ChessCharacter.Direction.DOWN); });
-            leftBtn.onClick.AddListener(() => { cCharacter.MoveRequest(ChessCharacter.Direction.LEFT); });
-            rightBtn.onClick.AddListener(() => { cCharacter.MoveRequest(ChessCharacter.Direction.RIGHT); });
-        }
-
         GameObject canvas = GameObject.Find("Canvas");
         RectTransform canvasRect = canvas.GetComponent<RectTransform>();
 
@@ -90,9 +289,6 @@ public class GameManager : MonoBehaviour
         GameObject sliderObject = Instantiate(Resources.Load("Prefabs/HpBar")) as GameObject;
         sliderObject.transform.SetParent(canvas.transform, false);
 
-        //Vector3 characterPos = tilemap.layoutGrid.CellToWorld(cCharacter.GetTilePosition());
-        //Vector3 characterUiPos = Camera.main.WorldToScreenPoint(characterPos) + new Vector3(canvasRect.rect.x, canvasRect.rect.y, 0);
-        //sliderObject.transform.localPosition = characterUiPos;
         Slider slider = sliderObject.GetComponent<Slider>();
         cCharacter.SetHpBar(slider);
     }
@@ -136,6 +332,21 @@ public class GameManager : MonoBehaviour
             {
                 ChessTile chessTile = tilemap.GetTile<ChessTile>(new Vector3Int(j, i, 0));
                 chessTile.prevPathTileNodeMap[keyName] = null;
+            }
+        }
+    }
+
+    public void AllTilesLog()
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                ChessTile chessTile = tilemap.GetTile<ChessTile>(new Vector3Int(j, i, 0));
+                if (chessTile != null)
+                {
+                    Debug.Log("tile["+j+","+i+"] : " + tilemap.GetColliderType(chessTile.position));
+                }
             }
         }
     }

@@ -24,7 +24,7 @@ public class PlayerMoveState : State
     public override void StartState()
     {
         base.StartState();
-        Debug.Log("=====move Start State");
+        Debug.Log("=====Player move Start State");
         pathState = ePathState.PATH_FIND;
         
         _cCharacter.GetAnimator().SetBool("isMoving", true);
@@ -95,7 +95,7 @@ public class PlayerMoveState : State
             //Debug.Log("ePathState.PATH_MOVE");
             //현재 타일 > 다음 타일로의 이동
             Vector3 aimPosition = GameManager.gameInstance.tilemap.layoutGrid.CellToWorld(aimTile.position);
-            _cCharacter.transform.position = Vector3.MoveTowards(_cCharacter.transform.position, aimPosition, 1.0f/*moveSpeed*/ * Time.deltaTime);
+            _cCharacter.transform.position = Vector3.MoveTowards(_cCharacter.transform.position, aimPosition, _cCharacter.moveSpeed * Time.deltaTime);
             if (Vector3.Distance(_cCharacter.transform.position, aimPosition) == 0.0f)
             {
                 pathState = ePathState.PATH_FIND;
