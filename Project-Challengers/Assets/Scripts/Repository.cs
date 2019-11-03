@@ -5,6 +5,7 @@ using UnityEngine;
 static class Repository
 {
     static int record = 28;
+    public static bool isInfinite = false;
 
     public static string GetRecord()
     {

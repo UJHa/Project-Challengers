@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using GooglePlayGames;
+using GooglePlayGames.BasicApi;
 
 public class StartController : MonoBehaviour
 {
@@ -13,11 +15,22 @@ public class StartController : MonoBehaviour
     public GameObject bgm, se;
 
     Text alertMessage;
+    bool bWaitingForAuth = false;
 
     private void Awake()
     {
         DontDestroyOnLoad(bgm);
         DontDestroyOnLoad(se);
+
+        PlayGamesClientConfiguration config = new PlayGamesClientConfiguration
+            .Builder()
+            .RequestServerAuthCode(false)
+            .RequestIdToken()
+            .Build();
+
+        PlayGamesPlatform.InitializeInstance(config);
+        PlayGamesPlatform.DebugLogEnabled = true;
+        PlayGamesPlatform.Activate();
     }
 
     void Start()
@@ -25,6 +38,26 @@ public class StartController : MonoBehaviour
         bgm.GetComponent<AudioSource>().clip = startBgm;
         bgm.GetComponent<AudioSource>().Play();
         alertMessage = nickAlert.GetComponent<Text>();
+
+        AutoLogin();
+    }
+
+    public void AutoLogin()
+    {
+        ShowAlert("로그인 시도중");
+        if (bWaitingForAuth) return;
+
+        if (!Social.localUser.authenticated)
+        {
+            ShowAlert("로그인중입니다");
+            bWaitingForAuth = true;
+
+            Social.localUser.Authenticate(AuthenticateCallback);
+        }
+        else
+        {
+            ShowAlert("로그인에 실패했습니다");
+        }
     }
 
     public void ToLobby()
@@ -40,11 +73,35 @@ public class StartController : MonoBehaviour
         {
             ShowAlert("6글자 이내로 입력해주세요");
         }
-        else
+        else if (Social.localUser.authenticated)
         {
             PlayerPrefs.SetString("Nickname", nickname.text);
             PlayerPrefs.Save();
             SceneManager.LoadScene("LobbyScene");
+        }
+        else
+        {
+            Social.localUser.Authenticate((bool success) =>
+            {
+                if (success)
+                {
+                    Debug.Log(Social.localUser.userName);
+                }
+                else
+                {
+                    ShowAlert("로그인에 실패했습니다");
+                }
+            });
+        }
+    }
+
+    void AuthenticateCallback(bool success)
+    {
+        if (success) ToLobby();
+        else
+        {
+            Debug.Log("여기 맞음");
+            ShowAlert("로그인에 실패했습니다");
         }
     }
 

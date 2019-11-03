@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class ButtonFunction : MonoBehaviour
 {
@@ -16,7 +17,9 @@ public class ButtonFunction : MonoBehaviour
 
     public void ToInGameScene()
     {
+        Repository.isInfinite = GetComponentInChildren<Toggle>().isOn;
         PlaySe();
+        Debug.Log(Repository.isInfinite);
         SceneManager.LoadScene("InGameScene");
     }
 

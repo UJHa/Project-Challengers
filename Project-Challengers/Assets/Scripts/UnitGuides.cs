@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class UnitGuides : MonoBehaviour
 {
     public string unitName, introduce;
-    public int atk;
 
     private GameObject unitGuide;
     private GuidebookManager guidebookManager;

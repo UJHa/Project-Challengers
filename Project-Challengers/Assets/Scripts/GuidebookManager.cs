@@ -10,7 +10,6 @@ public class GuidebookManager : MonoBehaviour
 
     public void ChangeInfo(UnitGuides target)
     {
-        atk.text = "공격 : " + target.atk;
         introduce.text = target.introduce;
     }
 }
