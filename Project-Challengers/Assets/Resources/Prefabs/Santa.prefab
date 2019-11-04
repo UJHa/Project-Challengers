@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8138860153211981861}
   - component: {fileID: 5773713636231824991}
   m_Layer: 0
-  m_Name: "Santa(pivot \uC791\uC5C5 1\uC21C\uC704\uB85C \uD544\uC694)"
+  m_Name: Santa
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -69,7 +69,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: ba32c931c8b01894e992017dfe502c6e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

@@ -20,9 +20,20 @@ public class GameManager : MonoBehaviour
 
     public enum eCharacter
     {
+        BLOBMINION,
+        CYCLOPS,
+        DETECTIVE,
+        DWARF,
+        IMP,
         KNIGHT,
         LIZARD,
+        PLASMADRONE,
+        ROYALKNIGHT,
+        SANTA,
         SKELETON,
+        SAPCECADET,
+        TAURUS,
+        VEX,
         MAX
     }
 
@@ -197,14 +208,47 @@ public class GameManager : MonoBehaviour
         eCharacter enumCharacter = (eCharacter)Random.Range(0, (int)eCharacter.MAX);
         switch (enumCharacter)
         {
+            case eCharacter.BLOBMINION:
+                name = "BlobMinion";
+                break;
+            case eCharacter.CYCLOPS:
+                name = "Cyclops";
+                break;
+            case eCharacter.DETECTIVE:
+                name = "Detective";
+                break;
+            case eCharacter.DWARF:
+                name = "Dwarf";
+                break;
+            case eCharacter.IMP:
+                name = "Imp";
+                break;
             case eCharacter.KNIGHT:
                 name = "Knight";
                 break;
             case eCharacter.LIZARD:
                 name = "Lizard";
                 break;
+            case eCharacter.PLASMADRONE:
+                name = "PlasmaDrone";
+                break;
+            case eCharacter.ROYALKNIGHT:
+                name = "RoyalKnight";
+                break;
+            case eCharacter.SANTA:
+                name = "Santa";
+                break;
             case eCharacter.SKELETON:
                 name = "Skeleton";
+                break;
+            case eCharacter.TAURUS:
+                name = "Taurus";
+                break;
+            case eCharacter.SAPCECADET:
+                name = "SpaceCadet";
+                break;
+            case eCharacter.VEX:
+                name = "Vex";
                 break;
         }
         return name;

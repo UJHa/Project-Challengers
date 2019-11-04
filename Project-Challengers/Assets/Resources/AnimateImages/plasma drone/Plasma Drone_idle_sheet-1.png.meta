@@ -1,0 +1,603 @@
+fileFormatVersion: 2
+guid: 14eacd4632124ef4b99ea7005369c917
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: Plasma Drone_idle_sheet-1_11
+    21300002: Plasma Drone_move_sheet-1_11
+    21300004: Plasma Drone_move_sheet-1_10
+    21300006: Plasma Drone_move_sheet-1_9
+    21300008: Plasma Drone_move_sheet-1_8
+    21300010: Plasma Drone_move_sheet-1_7
+    21300012: Plasma Drone_move_sheet-1_6
+    21300014: Plasma Drone_move_sheet-1_5
+    21300016: Plasma Drone_move_sheet-1_4
+    21300018: Plasma Drone_move_sheet-1_3
+    21300020: Plasma Drone_move_sheet-1_2
+    21300022: Plasma Drone_move_sheet-1_1
+    21300024: Plasma Drone_move_sheet-1_start
+    21300026: Plasma Drone_idle_sheet-1_10
+    21300028: Plasma Drone_idle_sheet-1_9
+    21300030: Plasma Drone_idle_sheet-1_8
+    21300032: Plasma Drone_idle_sheet-1_7
+    21300034: Plasma Drone_idle_sheet-1_6
+    21300036: Plasma Drone_idle_sheet-1_5
+    21300038: Plasma Drone_idle_sheet-1_4
+    21300040: Plasma Drone_idle_sheet-1_3
+    21300042: Plasma Drone_idle_sheet-1_2
+    21300044: Plasma Drone_idle_sheet-1_1
+    21300046: Plasma Drone_idle_sheet-1_0
+  externalObjects: {}
+  serializedVersion: 9
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: -1
+    aniso: -1
+    mipBias: -100
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 60
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - serializedVersion: 2
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Plasma Drone_idle_sheet-1_11
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 91
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 18, y: 9, z: 8, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 343fb1c1185036d479b8b8c103ba2dd2
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Plasma Drone_move_sheet-1_11
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 0
+        width: 91
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 18, y: 9, z: 8, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 188aa333f19e3ea42993a981aa5ed53d
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Plasma Drone_move_sheet-1_10
+      rect:
+        serializedVersion: 2
+        x: 182
+        y: 0
+        width: 91
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 18, y: 9, z: 8, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 10b72156ce4ce2e439f937e7041d83d0
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Plasma Drone_move_sheet-1_9
+      rect:
+        serializedVersion: 2
+        x: 273
+        y: 0
+        width: 91
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 18, y: 9, z: 8, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6b257b3eec7cc5b48b2762619a01efb1
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Plasma Drone_move_sheet-1_8
+      rect:
+        serializedVersion: 2
+        x: 364
+        y: 0
+        width: 91
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 18, y: 9, z: 8, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9c8b49c4b9ad7154aa816550627a9eed
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Plasma Drone_move_sheet-1_7
+      rect:
+        serializedVersion: 2
+        x: 455
+        y: 0
+        width: 91
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 18, y: 9, z: 8, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 854e62f1fd3f33d45b2602aaa0461f29
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Plasma Drone_move_sheet-1_6
+      rect:
+        serializedVersion: 2
+        x: 546
+        y: 0
+        width: 91
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 18, y: 9, z: 8, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6a68971c3a26d764fbec9d7d8a1a3a2d
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Plasma Drone_move_sheet-1_5
+      rect:
+        serializedVersion: 2
+        x: 637
+        y: 0
+        width: 91
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 18, y: 9, z: 8, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d2d20d8a1e9f3b146b92a4976590a1d9
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Plasma Drone_move_sheet-1_4
+      rect:
+        serializedVersion: 2
+        x: 728
+        y: 0
+        width: 91
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 18, y: 9, z: 8, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: af09647d45551e449871a987807fa46f
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Plasma Drone_move_sheet-1_3
+      rect:
+        serializedVersion: 2
+        x: 819
+        y: 0
+        width: 91
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 18, y: 9, z: 8, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0f85609e4980d3146895d1d041748774
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Plasma Drone_move_sheet-1_2
+      rect:
+        serializedVersion: 2
+        x: 910
+        y: 0
+        width: 91
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 18, y: 9, z: 8, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eca30adb05bfd9c40ac0e49260582fce
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Plasma Drone_move_sheet-1_1
+      rect:
+        serializedVersion: 2
+        x: 1001
+        y: 0
+        width: 91
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 18, y: 9, z: 8, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c7878b9718b96bc43ad2541299cccc65
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Plasma Drone_move_sheet-1_start
+      rect:
+        serializedVersion: 2
+        x: 1092
+        y: 0
+        width: 91
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 18, y: 9, z: 8, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c36668d75f4e471469c7e9d402a6aa5f
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Plasma Drone_idle_sheet-1_10
+      rect:
+        serializedVersion: 2
+        x: 1183
+        y: 0
+        width: 91
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 18, y: 9, z: 8, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fa64c4fc42586a24386a593ee823b061
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Plasma Drone_idle_sheet-1_9
+      rect:
+        serializedVersion: 2
+        x: 1274
+        y: 0
+        width: 91
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 18, y: 9, z: 8, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f7045045d63ebf14a9bebfe14a8839b4
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Plasma Drone_idle_sheet-1_8
+      rect:
+        serializedVersion: 2
+        x: 1365
+        y: 0
+        width: 91
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 18, y: 9, z: 8, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bd1ae6642a32c1e41ac326978f3b7f29
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Plasma Drone_idle_sheet-1_7
+      rect:
+        serializedVersion: 2
+        x: 1456
+        y: 0
+        width: 91
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 18, y: 9, z: 8, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0ad2296d222105f48afaf79f21641d9a
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Plasma Drone_idle_sheet-1_6
+      rect:
+        serializedVersion: 2
+        x: 1547
+        y: 0
+        width: 91
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 18, y: 9, z: 8, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 402a4aa0f7b4c124bb93ed89ca3e463f
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Plasma Drone_idle_sheet-1_5
+      rect:
+        serializedVersion: 2
+        x: 1638
+        y: 0
+        width: 91
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 18, y: 9, z: 8, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4cbe2c9ae0701a8498f14f008cd9eeba
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Plasma Drone_idle_sheet-1_4
+      rect:
+        serializedVersion: 2
+        x: 1729
+        y: 0
+        width: 91
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 18, y: 9, z: 8, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a69d2ae6dab7ca74786e5030b1fcc3d7
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Plasma Drone_idle_sheet-1_3
+      rect:
+        serializedVersion: 2
+        x: 1820
+        y: 0
+        width: 91
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 18, y: 9, z: 8, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eade64110a765e5488a8b9c977c0f5c1
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Plasma Drone_idle_sheet-1_2
+      rect:
+        serializedVersion: 2
+        x: 1911
+        y: 0
+        width: 91
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 18, y: 9, z: 8, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aca257b62f5d8da41a79a4aa969c68f2
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Plasma Drone_idle_sheet-1_1
+      rect:
+        serializedVersion: 2
+        x: 2002
+        y: 0
+        width: 91
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 18, y: 9, z: 8, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 04e45e812a8260246b4e03f35551095e
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Plasma Drone_idle_sheet-1_0
+      rect:
+        serializedVersion: 2
+        x: 2093
+        y: 0
+        width: 91
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 18, y: 9, z: 8, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a2a74aae57adbe94aa468e7284b04729
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 3073025f974ad9b4bb54a618c1984ff9
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

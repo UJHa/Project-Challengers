@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5745610224117452543}
   - component: {fileID: 5254092219780326691}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: Block Palette
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55,7 +55,7 @@ GameObject:
   - component: {fileID: 4496782334565200423}
   - component: {fileID: 3413577562069073193}
   - component: {fileID: 8071812795778650453}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: Layer1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -121,6 +121,24 @@ Tilemap:
       m_ObjectToInstantiate: {fileID: 0}
       m_TileFlags: 1
       m_ColliderType: 1
+  - first: {x: 2, y: -1, z: 0}
+    second:
+      m_TileIndex: 1
+      m_TileSpriteIndex: 4294967295
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_ObjectToInstantiate: {fileID: 0}
+      m_TileFlags: 1
+      m_ColliderType: 2
+  - first: {x: 3, y: -1, z: 0}
+    second:
+      m_TileIndex: 1
+      m_TileSpriteIndex: 4294967295
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_ObjectToInstantiate: {fileID: 0}
+      m_TileFlags: 1
+      m_ColliderType: 2
   - first: {x: 3, y: 3, z: 0}
     second:
       m_TileIndex: 5
@@ -143,8 +161,8 @@ Tilemap:
   m_TileAssetArray:
   - m_RefCount: 0
     m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
+  - m_RefCount: 2
+    m_Data: {fileID: 11400000, guid: 4c5c53b8050b0e7458106414cc3d8a9c, type: 2}
   - m_RefCount: 1
     m_Data: {fileID: 11400000, guid: 971882d88951fce48b0787c5f8d85142, type: 2}
   - m_RefCount: 1
@@ -173,7 +191,7 @@ Tilemap:
   - m_RefCount: 1
     m_Data: {fileID: 21300000, guid: a5391215f6f60c243af5aeac25a0b27c, type: 3}
   m_TileMatrixArray:
-  - m_RefCount: 6
+  - m_RefCount: 8
     m_Data:
       e00: 1
       e01: 0
@@ -192,7 +210,7 @@ Tilemap:
       e32: 0
       e33: 1
   m_TileColorArray:
-  - m_RefCount: 6
+  - m_RefCount: 8
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   - m_RefCount: 0
     m_Data: {r: 0, g: 0, b: 0, a: 0}
