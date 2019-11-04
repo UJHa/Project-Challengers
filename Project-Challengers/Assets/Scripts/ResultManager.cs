@@ -13,14 +13,13 @@ public class ResultManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        nicknameText.text = PlayerPrefs.GetString("Nickname");
-        resultText.text = round + " ROUND 달성!";
-        recordText.text = "최고 기록 " + PlayerPrefs.GetInt("Record", 0) + " ROUND";
-    }
+        if (round > int.Parse(Repository.record))
+        {
+            Repository.UpdateData("Record", round.ToString());
+        }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        nicknameText.text = Repository.sData["Nickname"];
+        resultText.text = round + " 단계 달성!";
+        recordText.text = Repository.GetRecord();
     }
 }

@@ -37,31 +37,31 @@ public class GuidebookController : MonoBehaviour
         }
     }
 
-    public void select()
+    public void Select()
     {
         GetComponent<Image>().color = selectedColor;
-        btnChange(this);
+        BtnChange(this);
         content.SetActive(true);
-        target = new Vector3(-10, transform.position.y);
+        target = new Vector3(-60, transform.position.y);
         moving = true;
     }
 
-    public void unselect()
+    void Unselect()
     {
         GetComponent<Image>().color = unselectedColor;
         content.SetActive(false);
-        target = new Vector3(-40, transform.position.y);
+        target = new Vector3(-120, transform.position.y);
         moving = true;
     }
 
-    void btnChange(GuidebookController selected)
+    void BtnChange(GuidebookController selected)
     {
         se.clip = buttonSe;
         se.Play();
 
         if (selectMenu != selected)
         {
-            selectMenu.unselect();
+            selectMenu.Unselect();
             selectMenu = selected;
         }
     }

@@ -5,14 +5,15 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using GooglePlayGames;
 using GooglePlayGames.BasicApi;
+using GooglePlayGames.BasicApi.SavedGame;
 
 public class StartController : MonoBehaviour
 {
     public AudioClip buttonSe;
     public AudioClip startBgm;
-    public Text nickname;
     public GameObject nickAlert;
     public GameObject bgm, se;
+    public GameObject loginLayout;
 
     Text alertMessage;
     bool bWaitingForAuth = false;
@@ -40,6 +41,16 @@ public class StartController : MonoBehaviour
         alertMessage = nickAlert.GetComponent<Text>();
 
         AutoLogin();
+
+        if (PlayerPrefs.GetInt("BGM", 1) == 0)
+        {
+            bgm.GetComponent<AudioSource>().mute = true;
+        }
+
+        if (PlayerPrefs.GetInt("SE", 1) == 0)
+        {
+            se.GetComponent<AudioSource>().mute = true;
+        }
     }
 
     public void AutoLogin()
@@ -49,7 +60,7 @@ public class StartController : MonoBehaviour
 
         if (!Social.localUser.authenticated)
         {
-            ShowAlert("로그인중입니다");
+            ShowAlert("로그인 중입니다");
             bWaitingForAuth = true;
 
             Social.localUser.Authenticate(AuthenticateCallback);
@@ -60,7 +71,34 @@ public class StartController : MonoBehaviour
         }
     }
 
-    public void ToLobby()
+    public void Login()
+    {
+        se.GetComponent<AudioSource>().clip = buttonSe;
+        se.GetComponent<AudioSource>().Play();
+
+        Social.localUser.Authenticate((bool success) =>
+        {
+            if (success)
+            {
+                Debug.Log(Social.localUser.userName);
+                if (Repository.sData.ContainsKey("Nickname"))
+                {
+                    SceneManager.LoadScene("LobbyScene");
+                }
+                else
+                {
+                    gameObject.SetActive(false);
+                    loginLayout.SetActive(true);
+                }
+            }
+            else
+            {
+                ShowAlert("로그인에 실패했습니다");
+            }
+        });
+    }
+
+    public void ToLobby(Text nickname)
     {
         se.GetComponent<AudioSource>().clip = buttonSe;
         se.GetComponent<AudioSource>().Play();
@@ -75,29 +113,15 @@ public class StartController : MonoBehaviour
         }
         else if (Social.localUser.authenticated)
         {
-            PlayerPrefs.SetString("Nickname", nickname.text);
-            PlayerPrefs.Save();
+            GooglePlayGameServiceManager.SaveToCloud("Nickname," + nickname.text);
+            GooglePlayGameServiceManager.LoadFromCloud();
             SceneManager.LoadScene("LobbyScene");
-        }
-        else
-        {
-            Social.localUser.Authenticate((bool success) =>
-            {
-                if (success)
-                {
-                    Debug.Log(Social.localUser.userName);
-                }
-                else
-                {
-                    ShowAlert("로그인에 실패했습니다");
-                }
-            });
         }
     }
 
     void AuthenticateCallback(bool success)
     {
-        if (success) ToLobby();
+        if (success) GooglePlayGameServiceManager.LoadFromCloud();
         else
         {
             Debug.Log("여기 맞음");

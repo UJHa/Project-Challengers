@@ -1,16 +1,12 @@
-﻿
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 
 public class LobbyManager : MonoBehaviour
 {
+    public GameObject mainCamera;
     public int freq = 3;
-    public GameObject character;
     public Text nicknameText, recordText;
     public Tilemap tilemap;
 
@@ -18,8 +14,10 @@ public class LobbyManager : MonoBehaviour
     public GameObject seOn, seOff;
     public AudioSource bgm, se;
 
+    GameObject character;
     Animator animator;
     DateTime moved = DateTime.Now;
+    float moveSpeed = 1.0f;
     bool moving = false;
     Vector3 pos, destination;
     Vector3Int cellpos, target;
@@ -33,22 +31,25 @@ public class LobbyManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        recordText.text = Repository.GetRecord();
-        nicknameText.text = PlayerPrefs.GetString("Nickname");
+        UnityEngine.Object[] characters = Resources.LoadAll("Prefabs");
+        character = Instantiate(characters[UnityEngine.Random.Range(0, characters.Length)]) as GameObject;
+        character.transform.position = tilemap.CellToWorld(new Vector3Int(4, 4, 0));
+        mainCamera.transform.SetParent(character.transform);
+
+        /*recordText.text = Repository.GetRecord();
+        nicknameText.text = Repository.sData["Nickname"];*/
         animator = character.GetComponent<Animator>();
         pos = character.transform.position;
         cellpos = tilemap.WorldToCell(character.transform.position);
 
         if (PlayerPrefs.GetInt("BGM", 1) == 0)
         {
-            bgm.mute = true;
             bgmOn.SetActive(false);
             bgmOff.SetActive(true);
         }
 
         if (PlayerPrefs.GetInt("SE", 1) == 0)
         {
-            se.mute = true;
             seOn.SetActive(false);
             seOff.SetActive(true);
         }
@@ -59,10 +60,10 @@ public class LobbyManager : MonoBehaviour
     {
         if (moving)
         {
-            character.transform.position += (destination - pos) * Time.deltaTime;
-            if (Vector3.Distance(character.transform.position, destination) < 0.1f)
+            character.transform.position = Vector3.MoveTowards(character.transform.position, destination, moveSpeed * Time.deltaTime);
+
+            if (Vector3.Distance(character.transform.position, destination) == 0.0f)
             {
-                character.transform.position = destination;
                 moving = false;
                 animator.SetBool("isMoving", false);
                 pos = character.transform.position;
