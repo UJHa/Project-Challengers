@@ -143,7 +143,7 @@ public class GameManager : MonoBehaviour
                 ChessTile mouseUpTile = tilemap.GetTile<ChessTile>(mouseUpTilePosition);
                 if (mouseUpTile != null)
                 {
-                    if (mouseUpTile.position.y >= 0) // 8x8 배치 되는 기능 구현
+                    if (mouseUpTile.position.y >= 0 && mouseUpTile.position.y < 4) // 4x8 배치 되는 기능 구현
                     {
                         Debug.Log("y : 0 이상");
                         string[] nameList = holdTarget.name.Split('_');
