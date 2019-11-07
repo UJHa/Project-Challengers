@@ -36,8 +36,8 @@ public class LobbyManager : MonoBehaviour
         character.transform.position = tilemap.CellToWorld(new Vector3Int(4, 4, 0));
         mainCamera.transform.SetParent(character.transform);
 
-        /*recordText.text = Repository.GetRecord();
-        nicknameText.text = Repository.sData["Nickname"];*/
+        recordText.text = Repository.GetRecord();
+        nicknameText.text = Repository.sData["Nickname"];
         animator = character.GetComponent<Animator>();
         pos = character.transform.position;
         cellpos = tilemap.WorldToCell(character.transform.position);

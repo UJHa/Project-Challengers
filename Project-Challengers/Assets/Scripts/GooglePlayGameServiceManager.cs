@@ -13,11 +13,15 @@ public class GooglePlayGameServiceManager
 
     public static void Init()
     {
-        PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder().EnableSavedGames().Build();
+        PlayGamesClientConfiguration config = new PlayGamesClientConfiguration
+            .Builder()
+            .EnableSavedGames()
+            .RequestServerAuthCode(false)
+            .RequestIdToken()
+            .Build();
+
         PlayGamesPlatform.InitializeInstance(config);
-
-        PlayGamesPlatform.DebugLogEnabled = false;
-
+        PlayGamesPlatform.DebugLogEnabled = true;
         PlayGamesPlatform.Activate();
     }
 
@@ -123,13 +127,16 @@ public class GooglePlayGameServiceManager
     {
         if (status == SavedGameRequestStatus.Success)
         {
-            string tmpData = (Encoding.Default.GetString(data));
+            Debug.Log("TMPBYTES : " + data);
+            Debug.Log("TMPSTRING : " + Encoding.Default.GetString(data));
+            string tmpData = Encoding.Default.GetString(data);
             foreach (string saved in tmpData.Split('\n'))
             {
                 string[] tmp = saved.Split(',');
                 Repository.sData.Add(tmp[0], tmp[1]);
             }
 
+            Repository.fLoading = true;
             Debug.Log("읽기 성공");
         }
         else

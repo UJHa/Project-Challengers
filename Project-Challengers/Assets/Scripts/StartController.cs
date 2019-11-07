@@ -23,15 +23,7 @@ public class StartController : MonoBehaviour
         DontDestroyOnLoad(bgm);
         DontDestroyOnLoad(se);
 
-        PlayGamesClientConfiguration config = new PlayGamesClientConfiguration
-            .Builder()
-            .RequestServerAuthCode(false)
-            .RequestIdToken()
-            .Build();
-
-        PlayGamesPlatform.InitializeInstance(config);
-        PlayGamesPlatform.DebugLogEnabled = true;
-        PlayGamesPlatform.Activate();
+        GooglePlayGameServiceManager.Init();
     }
 
     void Start()
@@ -81,14 +73,18 @@ public class StartController : MonoBehaviour
             if (success)
             {
                 Debug.Log(Social.localUser.userName);
-                if (Repository.sData.ContainsKey("Nickname"))
+                if (Repository.fLoading)
                 {
-                    SceneManager.LoadScene("LobbyScene");
-                }
-                else
-                {
-                    gameObject.SetActive(false);
-                    loginLayout.SetActive(true);
+                    if (Repository.sData.ContainsKey("Nickname"))
+                    {
+                        SceneManager.LoadScene("LobbyScene");
+                    }
+                    else
+                    {
+                        ShowAlert("");
+                        gameObject.SetActive(false);
+                        loginLayout.SetActive(true);
+                    }
                 }
             }
             else
@@ -115,17 +111,23 @@ public class StartController : MonoBehaviour
         {
             GooglePlayGameServiceManager.SaveToCloud("Nickname," + nickname.text);
             GooglePlayGameServiceManager.LoadFromCloud();
+            Debug.Log(Repository.sData["Nickname"]);
             SceneManager.LoadScene("LobbyScene");
         }
     }
 
-    void AuthenticateCallback(bool success)
+    void AuthenticateCallback(bool success, string error)
     {
-        if (success) GooglePlayGameServiceManager.LoadFromCloud();
+        if (success)
+        {
+            GooglePlayGameServiceManager.LoadFromCloud();
+            Debug.Log("USERNAME : " + Social.localUser.userName);
+            ShowAlert("");
+        }
         else
         {
-            Debug.Log("여기 맞음");
-            ShowAlert("로그인에 실패했습니다");
+            Debug.Log("오류 : " + error);
+            ShowAlert(error);
         }
     }
 

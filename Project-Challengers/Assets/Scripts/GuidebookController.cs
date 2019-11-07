@@ -42,7 +42,7 @@ public class GuidebookController : MonoBehaviour
         GetComponent<Image>().color = selectedColor;
         BtnChange(this);
         content.SetActive(true);
-        target = new Vector3(-60, transform.position.y);
+        target = new Vector3(-220, transform.position.y);
         moving = true;
     }
 
@@ -50,7 +50,7 @@ public class GuidebookController : MonoBehaviour
     {
         GetComponent<Image>().color = unselectedColor;
         content.SetActive(false);
-        target = new Vector3(-120, transform.position.y);
+        target = new Vector3(-480, transform.position.y);
         moving = true;
     }
 

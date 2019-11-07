@@ -1,9 +1,9 @@
 lastUpgrade=01005
 proj.pluginVersion=0.10.05
-proj.AppId=253827965136
+proj.AppId=532887031123
 and.BundleId=com.ICreateEverything.CartoonChess
 proj.classDir=Assets
 proj.ConstantsClassName=GPGSIds
-and.ResourceData=%3c%3fxml+version%3d%221.0%22+encoding%3d%22utf-8%22%3f%3e%0d%0a%3c%21--%0d%0aGoogle+Play+game+services+IDs.%0d%0aSave+this+file+as+res%2fvalues%2fgames-ids.xml+in+your+project.%0d%0a--%3e%0d%0a%3cresources%3e%0d%0a++%3c%21--+app_id+--%3e%0d%0a++%3cstring+name%3d%22app_id%22+translatable%3d%22false%22%3e253827965136%3c%2fstring%3e%0d%0a++%3c%21--+package_name+--%3e%0d%0a++%3cstring+name%3d%22package_name%22+translatable%3d%22false%22%3ecom.ICreateEverything.CartoonChess%3c%2fstring%3e%0d%0a++%3c%21--+leaderboard+1+--%3e%0d%0a++%3cstring+name%3d%22leaderboard_1%22+translatable%3d%22false%22%3eCgkI0MHNyrEHEAIQAQ%3c%2fstring%3e%0d%0a%3c%2fresources%3e
-and.ClientId=253827965136-4ebh5psih0smbkh35k3r0rb46qeafu3e.apps.googleusercontent.com
+and.ResourceData=%3c%3fxml+version%3d%221.0%22+encoding%3d%22utf-8%22%3f%3e%0d%0a%3c%21--%0d%0aGoogle+Play+game+services+IDs.%0d%0aSave+this+file+as+res%2fvalues%2fgames-ids.xml+in+your+project.%0d%0a--%3e%0d%0a%3cresources%3e%0d%0a++%3c%21--+app_id+--%3e%0d%0a++%3cstring+name%3d%22app_id%22+translatable%3d%22false%22%3e532887031123%3c%2fstring%3e%0d%0a++%3c%21--+package_name+--%3e%0d%0a++%3cstring+name%3d%22package_name%22+translatable%3d%22false%22%3ecom.ICreateEverything.CartoonChess%3c%2fstring%3e%0d%0a++%3c%21--+leaderboard+Cartoon+--%3e%0d%0a++%3cstring+name%3d%22leaderboard_cartoon%22+translatable%3d%22false%22%3eCgkI05qrlMEPEAIQAQ%3c%2fstring%3e%0d%0a%3c%2fresources%3e%0d%0a
+and.ClientId=532887031123-gamlk969rih1tpkdkvpnc5fov28o84q4.apps.googleusercontent.com
 android.SetupDone=true

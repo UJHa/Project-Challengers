@@ -261,10 +261,10 @@ RectTransform:
   m_Father: {fileID: 1071717494}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 470.4, y: 100}
+  m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &384371177
 MonoBehaviour:
@@ -1543,7 +1543,6 @@ GameObject:
   - component: {fileID: 2006241959}
   - component: {fileID: 2006241958}
   - component: {fileID: 2006241957}
-  - component: {fileID: 2006241961}
   - component: {fileID: 2006241960}
   m_Layer: 5
   m_Name: LoginButton
@@ -1623,17 +1622,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 2006241961}
-        m_MethodName: ToLobby
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &2006241958
@@ -1691,19 +1679,6 @@ MonoBehaviour:
   bgm: {fileID: 1248447523}
   se: {fileID: 1737015142}
   loginLayout: {fileID: 362229291}
---- !u!114 &2006241961
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2006241955}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02f82bcbc2cfc95469c096dfe6c2188b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  buttonSe: {fileID: 8300000, guid: e6c01cf6daa87844a94d04144ac1e826, type: 3}
 --- !u!1 &2116749507
 GameObject:
   m_ObjectHideFlags: 0
