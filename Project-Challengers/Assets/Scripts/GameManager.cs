@@ -58,8 +58,8 @@ public class GameManager : MonoBehaviour
                     chessTile.sprite = Resources.Load<Sprite>("Blocks/" + tilemap.GetTile(new Vector3Int(j, i, 0)).name);
                 }
                 chessTile.colliderType = Tile.ColliderType.None;
-                chessTile.position = new Vector3Int(j, i, 0);
-                tilemap.SetTile(chessTile.position, chessTile);
+                chessTile.SetTilePosition(new Vector3Int(j, i, 0));
+                tilemap.SetTile(chessTile.GetTilePosition(), chessTile);
             }
         }
 
@@ -143,11 +143,11 @@ public class GameManager : MonoBehaviour
                 ChessTile mouseUpTile = tilemap.GetTile<ChessTile>(mouseUpTilePosition);
                 if (mouseUpTile != null)
                 {
-                    if (mouseUpTile.position.y >= 0 && mouseUpTile.position.y < 4) // 4x8 배치 되는 기능 구현
+                    if (mouseUpTile.GetTilePosition().y >= 0 && mouseUpTile.GetTilePosition().y < 4) // 4x8 배치 되는 기능 구현
                     {
                         Debug.Log("y : 0 이상");
                         string[] nameList = holdTarget.name.Split('_');
-                        SpawnCharacter("Prefabs/"+ nameList[1], nameList[1] + "(NPC)", mouseUpTile.position.x, mouseUpTile.position.y, false);
+                        SpawnCharacter("Prefabs/"+ nameList[1], nameList[1] + "(NPC)", mouseUpTile.GetTilePosition().x, mouseUpTile.GetTilePosition().y, false);
                         //Debug.Log("=start====================");
                         //AllTilesLog();
                         //Debug.Log("=end======================");
@@ -155,30 +155,30 @@ public class GameManager : MonoBehaviour
                         //mouseDownTile.gameObject = holdTarget;
                         //mouseDownTile.gameObject.transform.position = tilemap.layoutGrid.CellToWorld(mouseDownTile.position);
                     }
-                    else if(mouseUpTile.position.y == -1)    //대기 타일 내 이동
+                    else if(mouseUpTile.GetTilePosition().y == -1)    //대기 타일 내 이동
                     {
                         Debug.Log("y : -1");
                         if (mouseUpTile.gameObject == null) // 빈 타일일 때
                         {
                             mouseUpTile.gameObject = holdTarget;
-                            mouseUpTile.gameObject.transform.position = tilemap.layoutGrid.CellToWorld(mouseUpTile.position);
+                            mouseUpTile.gameObject.transform.position = tilemap.layoutGrid.CellToWorld(mouseUpTile.GetTilePosition());
                         }
                         else    //타일 있을 때 서로의 위치 교체하기
                         {
                             GameObject tempObject = mouseUpTile.gameObject;
 
                             mouseUpTile.gameObject = holdTarget;
-                            mouseUpTile.gameObject.transform.position = tilemap.layoutGrid.CellToWorld(mouseUpTile.position);
+                            mouseUpTile.gameObject.transform.position = tilemap.layoutGrid.CellToWorld(mouseUpTile.GetTilePosition());
 
                             mouseDownTile.gameObject = tempObject;
-                            mouseDownTile.gameObject.transform.position = tilemap.layoutGrid.CellToWorld(mouseDownTile.position);
+                            mouseDownTile.gameObject.transform.position = tilemap.layoutGrid.CellToWorld(mouseDownTile.GetTilePosition());
                         }
                     }
                     else    //이상한 곳에 이동시키면... 실패시키기
                     {
                         Debug.Log("y : 예외들");
                         mouseDownTile.gameObject = holdTarget;
-                        mouseDownTile.gameObject.transform.position = tilemap.layoutGrid.CellToWorld(mouseDownTile.position);
+                        mouseDownTile.gameObject.transform.position = tilemap.layoutGrid.CellToWorld(mouseDownTile.GetTilePosition());
                     }
                     
                     for (int i = 0; i < 8; i++)
@@ -194,7 +194,7 @@ public class GameManager : MonoBehaviour
                 {
                     Debug.Log("y : 예외들2");
                     mouseDownTile.gameObject = holdTarget;
-                    mouseDownTile.gameObject.transform.position = tilemap.layoutGrid.CellToWorld(mouseDownTile.position);
+                    mouseDownTile.gameObject.transform.position = tilemap.layoutGrid.CellToWorld(mouseDownTile.GetTilePosition());
                 }
 
                 holdTarget = null;
@@ -375,7 +375,7 @@ public class GameManager : MonoBehaviour
             for (int j = 0; j < 8; j++)
             {
                 ChessTile chessTile = tilemap.GetTile<ChessTile>(new Vector3Int(j, i, 0));
-                chessTile.prevPathTileNodeMap[keyName] = null;
+                chessTile.ResetTileData(keyName);
             }
         }
     }
@@ -389,7 +389,7 @@ public class GameManager : MonoBehaviour
                 ChessTile chessTile = tilemap.GetTile<ChessTile>(new Vector3Int(j, i, 0));
                 if (chessTile != null)
                 {
-                    Debug.Log("tile["+j+","+i+"] : " + tilemap.GetColliderType(chessTile.position));
+                    Debug.Log("tile["+j+","+i+"] : " + tilemap.GetColliderType(chessTile.GetTilePosition()));
                 }
             }
         }

@@ -78,7 +78,7 @@ public class ChessCharacter : MonoBehaviour
         }
         else
         {
-            stateMap[eState.IDLE] = new IdleState();
+            stateMap[eState.IDLE] = new EnemyFindIdleState();
             stateMap[eState.MOVE] = new MoveState();
         }
         stateMap[eState.ATTACK] = new AttackState();
@@ -245,6 +245,11 @@ public class ChessCharacter : MonoBehaviour
     public Vector3 GetTargetPosition()
     {
         return targetPosition;
+    }
+
+    public void SetTargetTilePosition(Vector3Int targetTilePosition)
+    {
+        mouseTargetTilePosition = targetTilePosition;
     }
 
     public Vector3Int GetTargetTilePosition()
