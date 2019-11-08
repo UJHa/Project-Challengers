@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class UnitGuides : MonoBehaviour
 {
-    public string unitName, introduce;
+    public string introduce;
 
     private GameObject unitGuide;
     private GuidebookManager guidebookManager;
@@ -23,7 +23,6 @@ public class UnitGuides : MonoBehaviour
         guidebookManager = GameObject.Find("GuidebookManager").GetComponent<GuidebookManager>();
 
         selectAnimator = GetComponentInChildren<Animator>();
-        GetComponentInChildren<Text>().text = unitName;
 
         animator = unitGuide.GetComponentInChildren<Animator>();
         guideName = unitGuide.GetComponentInChildren<Text>();
@@ -35,7 +34,7 @@ public class UnitGuides : MonoBehaviour
         se.Play();
 
         animator.runtimeAnimatorController = selectAnimator.runtimeAnimatorController;
-        guideName.text = unitName;
+        guideName.text = gameObject.GetComponentInChildren<Text>().text;
         guidebookManager.ChangeInfo(this);
     }
 }

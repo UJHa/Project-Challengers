@@ -111,7 +111,7 @@ public class ChessCharacter : MonoBehaviour
             GameObject canvas = GameObject.Find("Canvas");
             RectTransform canvasRect = canvas.GetComponent<RectTransform>();
             Vector3 characterUiPos = Camera.main.WorldToScreenPoint(transform.position) + new Vector3(canvasRect.rect.x, canvasRect.rect.y, 0);
-            characterUiPos.y += 50;
+            characterUiPos.y += 100;
             _hpBar.gameObject.transform.localPosition = characterUiPos;
             _hpBar.value = _hp / maxHp;
         }

@@ -6,7 +6,8 @@ static class Repository
 {
     public static string record = "0";
     public static bool isInfinite = false;
-    public static Dictionary<string, string> sData;
+    public static Dictionary<string, string> sData = new Dictionary<string, string>();
+    public static bool fLoading = false;
 
     public static void UpdateData(string key, string value)
     {
@@ -19,12 +20,11 @@ static class Repository
         }
 
         GooglePlayGameServiceManager.SaveToCloud(tmp);
-        GooglePlayGameServiceManager.LoadFromCloud();
     }
 
     public static string GetRecord()
     {
-        sData.TryGetValue("Record", out record);
+        if (!sData.TryGetValue("Record", out record)) record = "0";
 
         return "최고 " + record + "단계";
     }
