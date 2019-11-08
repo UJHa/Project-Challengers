@@ -35,7 +35,13 @@ public class ButtonFunction : MonoBehaviour
         SceneManager.LoadScene("GuidebookScene");
     }
 
-    public void PlaySe()
+    public void ExitGame()
+    {
+        PlaySe();
+        Application.Quit();
+    }
+
+    void PlaySe()
     {
         se.clip = buttonSe;
         se.Play();

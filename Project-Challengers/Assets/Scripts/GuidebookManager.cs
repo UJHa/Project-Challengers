@@ -5,17 +5,38 @@ using UnityEngine.UI;
 
 public class GuidebookManager : MonoBehaviour
 {
-    public GameObject unitsContent;
+    public GameObject unitsContent, unitsPanel;
     public Text atk, introduce;
     public AudioClip selectSe;
+
+    private string[] eCharacter =
+    {
+        "Blobminion",
+        "Cyclops",
+        "Detective",
+        "Dwarf",
+        "Imp",
+        "Knight",
+        "Lizard",
+        "PlasmaDrone",
+        "RoyalKnight",
+        "Santa",
+        "Skeleton",
+        "SpaceCadet",
+        "Taurus",
+        "Vex"
+    };
 
     void Start()
     {
         Object[] units = Resources.LoadAll("Prefabs");
 
-        foreach(GameObject unit in units)
+        foreach(string character in eCharacter)
         {
-            Instantiate(unit, unitsContent.transform).transform.localScale = new Vector3(250, 250);
+            Debug.Log(character + "를 생성합니다");
+            GameObject parent = Instantiate(unitsPanel, unitsContent.transform);
+            Instantiate(Resources.Load<GameObject>("Prefabs/" + character), parent.transform).transform.localScale = new Vector3(200, 200);
+            parent.GetComponentInChildren<Text>().text = character;
         }
     }
 

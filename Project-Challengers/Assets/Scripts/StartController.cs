@@ -14,6 +14,7 @@ public class StartController : MonoBehaviour
     public GameObject nickAlert;
     public GameObject bgm, se;
     public GameObject loginLayout;
+    public GameObject enterButton;
 
     Text alertMessage;
     bool bWaitingForAuth = false;
@@ -72,26 +73,41 @@ public class StartController : MonoBehaviour
         {
             if (success)
             {
-                Debug.Log(Social.localUser.userName);
-                if (Repository.fLoading)
-                {
-                    if (Repository.sData.ContainsKey("Nickname"))
-                    {
-                        SceneManager.LoadScene("LobbyScene");
-                    }
-                    else
-                    {
-                        ShowAlert("");
-                        gameObject.SetActive(false);
-                        loginLayout.SetActive(true);
-                    }
-                }
+                GooglePlayGameServiceManager.LoadFromCloud();
+                Debug.Log("USERNAME : " + Social.localUser.userName);
+                ShowAlert("");
+                gameObject.SetActive(false);
+                enterButton.SetActive(true);
             }
             else
             {
                 ShowAlert("로그인에 실패했습니다");
             }
         });
+    }
+
+    public void EnterButton()
+    {
+        se.GetComponent<AudioSource>().clip = buttonSe;
+        se.GetComponent<AudioSource>().Play();
+
+        if (Repository.fLoading)
+        {
+            if (Repository.sData.ContainsKey("Nickname"))
+            {
+                SceneManager.LoadScene("LobbyScene");
+            }
+            else
+            {
+                ShowAlert("");
+                enterButton.SetActive(false);
+                loginLayout.SetActive(true);
+            }
+        }
+        else
+        {
+            ShowAlert("데이터를 불러오는 중입니다");
+        }
     }
 
     public void ToLobby(Text nickname)
@@ -122,13 +138,23 @@ public class StartController : MonoBehaviour
         {
             GooglePlayGameServiceManager.LoadFromCloud();
             Debug.Log("USERNAME : " + Social.localUser.userName);
-            ShowAlert("");
+        }
+        else if (error == "Not implemented on this platform")
+        {
+            Repository.sData["Nickname"] = "TEST";
+            Repository.sData["Record"] = "32";
+            Repository.fLoading = true;
         }
         else
         {
             Debug.Log("오류 : " + error);
             ShowAlert(error);
+            return;
         }
+
+        ShowAlert("");
+        gameObject.SetActive(false);
+        enterButton.SetActive(true);
     }
 
     void ShowAlert(string message)

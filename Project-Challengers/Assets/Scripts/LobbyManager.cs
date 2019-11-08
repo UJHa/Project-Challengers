@@ -22,6 +22,24 @@ public class LobbyManager : MonoBehaviour
     Vector3 pos, destination;
     Vector3Int cellpos, target;
 
+    private string[] eCharacter =
+    {
+        "Blobminion",
+        "Cyclops",
+        "Detective",
+        "Dwarf",
+        "Imp",
+        "Knight",
+        "Lizard",
+        "PlasmaDrone",
+        "RoyalKnight",
+        "Santa",
+        "Skeleton",
+        "SpaceCadet",
+        "Taurus",
+        "Vex"
+    };
+
     private void Awake()
     {
         bgm = GameObject.Find("BGM").GetComponent<AudioSource>();
@@ -31,8 +49,7 @@ public class LobbyManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        UnityEngine.Object[] characters = Resources.LoadAll("Prefabs");
-        character = Instantiate(characters[UnityEngine.Random.Range(0, characters.Length)]) as GameObject;
+        character = Instantiate(Resources.Load<GameObject>("Prefabs/" + eCharacter[UnityEngine.Random.Range(0, eCharacter.Length)]));
         character.transform.position = tilemap.CellToWorld(new Vector3Int(4, 4, 0));
         mainCamera.transform.SetParent(character.transform);
 
