@@ -6,10 +6,21 @@ public class EnemyFindIdleState : State
 {
     private float findTimer;
 
+    Queue<ChessTile> findQueue;
+
+    public override void InitState(ChessCharacter cCharacter)
+    {
+        base.InitState(cCharacter);
+        findQueue = new Queue<ChessTile>();
+    }
+
     public override void StartState()
     {
         base.StartState();
         findTimer = 0.0f;
+
+        findQueue.Clear();
+        GameManager.gameInstance.ResetTilePath(_cCharacter.name);
     }
 
     public override void UpdateState()
@@ -20,6 +31,7 @@ public class EnemyFindIdleState : State
             ChessCharacter targetCharacter = FindAdjacentTarget(3/*findRange*/);
             if (targetCharacter != null)
             {
+                Debug.Log("["+_cCharacter.name+"]IDLE target : " + targetCharacter.GetTilePosition());
                 _cCharacter.SetTargetTilePosition(targetCharacter.GetTilePosition()/*타일 좌표 0,0~7,7사이*/);
                 _cCharacter.SetState(ChessCharacter.eState.MOVE);
             }
@@ -33,10 +45,52 @@ public class EnemyFindIdleState : State
     {
         base.EndState();
         findTimer = 0.0f;
+        GameManager.gameInstance.ResetTilePath(_cCharacter.name);
     }
 
     private ChessCharacter FindAdjacentTarget(int findRange)
     {
+        findQueue.Clear();
+        GameManager.gameInstance.ResetTilePath(_cCharacter.name);
+
+        ChessTile startTile;
+        startTile = GameManager.gameInstance.tilemap.GetTile<ChessTile>(_cCharacter.GetTilePosition());
+        startTile.SetPrevPathTileNodeMap(_cCharacter.name, startTile);
+        findQueue.Enqueue(startTile);
+        while (findQueue.Count > 0)
+        {
+            ChessTile currentTile = findQueue.Dequeue();
+            if (currentTile == null)
+            {
+                break;
+            }
+
+            if (currentTile.gameObject != null && currentTile.GetDistanceWeight() != 0)
+            {
+                ChessCharacter character = currentTile.gameObject.GetComponent<ChessCharacter>();
+                return character;
+            }
+            else if (currentTile.GetDistanceWeight() == findRange + 1)
+            {
+                return null;
+            }
+            else
+            {
+                for (int i = 0; i < (int)ChessCharacter.Direction.MAXSIZE; i++)
+                {
+                    ChessCharacter.Direction direction = (ChessCharacter.Direction)i;
+                    Vector3Int nextTilePos = currentTile.GetTilePosition() + _cCharacter.GetDirectionTileNext(direction);
+                    ChessTile nextTile = GameManager.gameInstance.tilemap.GetTile<ChessTile>(nextTilePos);
+                    if (_cCharacter.IsInWall(nextTilePos) //맵 안에 있을 때 분기
+                        && nextTile.GetPrevPathTileNodeMap(_cCharacter.name) == null) // 이미 이전 타일 세팅 안되있을 때 분기
+                    {
+                        nextTile.SetPrevPathTileNodeMap(_cCharacter.name, currentTile);
+                        nextTile.SetDistanceWeight(currentTile.GetDistanceWeight() + 1);
+                        findQueue.Enqueue(nextTile);
+                    }
+                }
+            }
+        }
         return null;
     }
 }

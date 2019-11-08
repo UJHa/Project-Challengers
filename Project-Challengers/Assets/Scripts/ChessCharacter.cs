@@ -42,7 +42,6 @@ public class ChessCharacter : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("Start()");
         InitData();
         InitState();
     }
@@ -79,7 +78,7 @@ public class ChessCharacter : MonoBehaviour
         else
         {
             stateMap[eState.IDLE] = new EnemyFindIdleState();
-            stateMap[eState.MOVE] = new MoveState();
+            stateMap[eState.MOVE] = new PlayerMoveState();
         }
         stateMap[eState.ATTACK] = new AttackState();
         stateMap[eState.DEAD] = new DeadState();
@@ -178,7 +177,16 @@ public class ChessCharacter : MonoBehaviour
         tilePosition = tilePos;
         tilemap.SetColliderType(tilePosition, Tile.ColliderType.Grid);
         GameManager.gameInstance.SetTileObject(tilePosition, gameObject);
-        Debug.Log(tilemap.GetColliderType(tilePosition));
+    }
+
+    public bool IsInWall(Vector3Int tilePos)
+    {
+        if (tilePos.x < 0 || tilePos.x > 7
+         || tilePos.y < 0 || tilePos.y > 7)
+        {
+            return false;
+        }
+        return true;
     }
 
     public bool CanMoveTile(Vector3Int tilePos)
@@ -188,6 +196,7 @@ public class ChessCharacter : MonoBehaviour
         {
             return false;
         }
+
         if ((int)tilemap.GetColliderType(tilePos) > (int)Tile.ColliderType.None)
         {
             return false;

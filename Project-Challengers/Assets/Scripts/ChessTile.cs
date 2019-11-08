@@ -39,4 +39,14 @@ public class ChessTile : Tile
     {
         return _tilePosition;
     }
+
+    public void SetDistanceWeight(int d)
+    {
+        distanceWeight = d;
+    }
+
+    public int GetDistanceWeight()
+    {
+        return distanceWeight;
+    }
 }

@@ -186,7 +186,7 @@ public class GameManager : MonoBehaviour
                         ChessTile waitTile = tilemap.GetTile<ChessTile>(new Vector3Int(i, -1, 0));
                         if (waitTile != null)
                         {
-                            Debug.Log("waitTile[" + i + "] : " + waitTile.gameObject);
+                            //Debug.Log("waitTile[" + i + "] : " + waitTile.gameObject);
                         }
                     }
                 }
