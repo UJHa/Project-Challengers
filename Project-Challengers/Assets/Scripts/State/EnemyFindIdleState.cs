@@ -28,14 +28,14 @@ public class EnemyFindIdleState : State
         base.UpdateState();
         if (findTimer >= 1.0f) // 1초에 한번 씩 주변 범위 적 탐색
         {
-            ChessCharacter attackTargetCharacter = FindAdjacentTarget(1/*findRange*/);
+            ChessCharacter attackTargetCharacter = FindAdjacentTarget(_cCharacter._attackRange);
             if (attackTargetCharacter != null)
             {
                 _cCharacter.SetAttackTarget(attackTargetCharacter);
                 _cCharacter.SetState(ChessCharacter.eState.ATTACK);
             }
             //이동 체크
-            ChessCharacter moveTargetCharacter = FindAdjacentTarget(3/*findRange*/);
+            ChessCharacter moveTargetCharacter = FindAdjacentTarget(_cCharacter._findRange);
             if (moveTargetCharacter != null)
             {
                 //Debug.Log("["+_cCharacter.name+"]IDLE target : " + moveTargetCharacter.GetTilePosition());
