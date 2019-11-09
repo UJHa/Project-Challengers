@@ -147,7 +147,7 @@ public class GameManager : MonoBehaviour
                     {
                         Debug.Log("y : 0 이상");
                         string[] nameList = holdTarget.name.Split('_');
-                        SpawnCharacter("Prefabs/"+ nameList[1], nameList[1] + "(NPC)", mouseUpTile.GetTilePosition().x, mouseUpTile.GetTilePosition().y, false);
+                        SpawnCharacter("Prefabs/Character/" + nameList[1], nameList[1] + "(NPC)", mouseUpTile.GetTilePosition().x, mouseUpTile.GetTilePosition().y, false);
                         //Debug.Log("=start====================");
                         //AllTilesLog();
                         //Debug.Log("=end======================");
@@ -270,7 +270,7 @@ public class GameManager : MonoBehaviour
 
         buySlot.onClick.RemoveAllListeners();
         buySlot.onClick.AddListener(() => {
-            bool success = BuyWaitCharacter("Prefabs/Wait" + name, "WaitCharacter_" + name);
+            bool success = BuyWaitCharacter("Prefabs/WaitCharacter/Wait" + name, "WaitCharacter_" + name);
             if (success)
             {
                 buySlot.gameObject.SetActive(false);
@@ -296,6 +296,7 @@ public class GameManager : MonoBehaviour
             {
                 if (chessTile.gameObject == null)
                 {
+                    Debug.Log("TEST path : " + path);
                     GameObject character = Instantiate(Resources.Load(path)) as GameObject;
                     character.name = name;
                     ChessCharacter cCharacter = character.GetComponent<ChessWaitCharacter>();
@@ -330,7 +331,7 @@ public class GameManager : MonoBehaviour
         RectTransform canvasRect = canvas.GetComponent<RectTransform>();
 
         //slider transform 세팅
-        GameObject sliderObject = Instantiate(Resources.Load("Prefabs/HpBar")) as GameObject;
+        GameObject sliderObject = Instantiate(Resources.Load("Prefabs/UI/HpBar")) as GameObject;
         sliderObject.transform.SetParent(canvas.transform, false);
 
         Slider slider = sliderObject.GetComponent<Slider>();
