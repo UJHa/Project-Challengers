@@ -89,12 +89,25 @@ public class PlayerMoveState : State
             else
             {
                 Debug.Log("ePathState.PATH_FIND can't Move");
-                _cCharacter.SetState(ChessCharacter.eState.IDLE);
+                // 다음 이동 타일에 배치된 오브젝트 있으면 그 대상 공격하기
+                if (aimTile != null && aimTile.gameObject != null)
+                {
+                    ChessCharacter attackTargetCharacter = aimTile.gameObject.GetComponent<ChessCharacter>();
+                    if (attackTargetCharacter != null)
+                    {
+                        _cCharacter.SetAttackTarget(attackTargetCharacter);
+                        _cCharacter.SetState(ChessCharacter.eState.ATTACK);
+                    }
+                }
+                else
+                {
+                    _cCharacter.SetState(ChessCharacter.eState.IDLE);
+                }
             }
         }
         else if (pathState == ePathState.PATH_MOVE)
         {
-            Debug.Log("ePathState.PATH_MOVE");
+            //Debug.Log("ePathState.PATH_MOVE");
             //현재 타일 > 다음 타일로의 이동
             Vector3 aimPosition = GameManager.gameInstance.tilemap.layoutGrid.CellToWorld(aimTile.GetTilePosition());
             _cCharacter.transform.position = Vector3.MoveTowards(_cCharacter.transform.position, aimPosition, _cCharacter.moveSpeed * Time.deltaTime);
@@ -110,6 +123,7 @@ public class PlayerMoveState : State
         base.EndState();
         _cCharacter.GetAnimator().SetBool("isMoving", false);
         GameManager.gameInstance.ResetTilePath(_cCharacter.name);
+        _cCharacter.SetTargetTilePosition(_cCharacter.GetTilePosition());
     }
 
     private void FindPath(Vector3Int targetTilePosition)
@@ -120,18 +134,15 @@ public class PlayerMoveState : State
         findQueue.Enqueue(startTile);
         while (findQueue.Count > 0)
         {
-            Debug.Log("-----------[" + _cCharacter.name + "]FindPath() findQueue.Count : " + findQueue.Count);
             ChessTile currentTile = findQueue.Dequeue();
-            Debug.Log("-----------[" + _cCharacter.name + "]FindPath() findQueue.Count : " + currentTile.GetTilePosition());
             if (currentTile == null)
             {
-                Debug.Log("-----------[" + _cCharacter.name + "]FindPath() 1");
                 break;
             }
 
             if (currentTile.GetTilePosition() == targetTilePosition)
             {
-                Debug.Log("-----------[" + _cCharacter.name + "]FindPath() 2");
+                //Debug.Log("-----------[" + _cCharacter.name + "]FindPath() 2");
                 // 현재 탐색 타일이 목적 타일인 경우
                 ChessTile pathTile = currentTile;
                 while (pathTile.GetPrevPathTileNodeMap(_cCharacter.name) != null && pathTile.GetPrevPathTileNodeMap(_cCharacter.name) != pathTile)

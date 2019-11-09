@@ -56,6 +56,9 @@ public class ChessCharacter : MonoBehaviour
         transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
 
         transform.position = tilemap.layoutGrid.CellToWorld(tilePosition);
+        mouseTargetTilePosition = tilePosition;
+        _attackTarget = null;
+
         Debug.Log(this.name + " : Start Position tileX : " + tilePosition.x + " | tileY : " + tilePosition.y);
         tilemap.SetColliderType(tilePosition, Tile.ColliderType.Grid);
         _hp = maxHp;
@@ -291,12 +294,33 @@ public class ChessCharacter : MonoBehaviour
             _hp = 0;
             SetState(eState.DEAD);
             tilemap.SetColliderType(tilePosition, Tile.ColliderType.None);
+            GameManager.gameInstance.SetTileObject(tilePosition, null);
             
         }
     }
 
+    public ChessCharacter _attackTarget;
+    public void SetAttackTarget(ChessCharacter tileCharacter)
+    {
+        _attackTarget = tileCharacter;
+    }
+
     public void AnimateEvent(string message)
     {
+        if (message.Equals("AttackDamage")) // AttackDamage 함수와 헷깔리므로 이름 변경해야 합니다.
+        {
+            Debug.Log("TEST3!!!!!!");
+            if (_attackTarget != null)
+            {
+                GameObject gameObject = GameManager.gameInstance.GetTileObject(_attackTarget.GetTilePosition());
+                if (gameObject != null)
+                {
+                    ChessCharacter character = gameObject.GetComponent<ChessCharacter>();
+                    Debug.Log("character : " + character);
+                    character.SendMessage("AttackDamage", GetAttackPower());
+                }
+            }
+        }
         if (message.Equals("AttackEnd"))
         {
             Debug.Log("TEST!!!!!!");
@@ -308,18 +332,6 @@ public class ChessCharacter : MonoBehaviour
             Debug.Log("TEST2!!!!!!");
             gameObject.SetActive(false);
             _hpBar.gameObject.SetActive(false);
-        }
-        if (message.Equals("AttackDamage"))
-        {
-            Debug.Log("TEST3!!!!!!");
-            Vector3Int nextTilePosition = GetTilePosition() + GetDirectionTileNext(GetDirection());
-            GameObject gameObject = GameManager.gameInstance.GetTileObject(nextTilePosition);
-            if (gameObject != null)
-            {
-                ChessCharacter character = gameObject.GetComponent<ChessCharacter>();
-                Debug.Log("character : " + character);
-                character.SendMessage("AttackDamage", GetAttackPower());
-            }
         }
     }
 

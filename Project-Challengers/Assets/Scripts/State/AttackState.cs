@@ -21,13 +21,6 @@ public class AttackState : State
     {
         base.EndState();
         Debug.Log("ATTack END!!!!!");
-        //Vector3Int nextTilePosition = _cCharacter.GetTilePosition() + _cCharacter.GetDirectionTileNext(_cCharacter.GetDirection());
-        //GameObject gameObject = GameManager.gameInstance.GetTileObject(nextTilePosition);
-        //if (gameObject != null)
-        //{
-        //    ChessCharacter character = gameObject.GetComponent<ChessCharacter>();
-        //    Debug.Log("character : " + character);
-        //    character.SendMessage("AttackDamage", _cCharacter.GetAttackPower());
-        //}
+        _cCharacter.SetAttackTarget(null);
     }
 }
