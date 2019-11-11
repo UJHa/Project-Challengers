@@ -4,8 +4,10 @@ using UnityEngine;
 
 static class Repository
 {
+    public static int round;
     public static string record = "0";
     public static bool isInfinite = false;
+    public static bool isClear = false;
     public static Dictionary<string, string> sData = new Dictionary<string, string>();
     public static bool fLoading = false;
 

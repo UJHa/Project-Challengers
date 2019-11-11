@@ -20,7 +20,7 @@ public class ButtonFunction : MonoBehaviour
         Repository.isInfinite = GetComponentInChildren<Toggle>().isOn;
         PlaySe();
         Debug.Log(Repository.isInfinite);
-        SceneManager.LoadScene("InGameScene");
+        SceneManager.LoadScene("GreenStage(Stage4)");
     }
 
     public void ToLobby()

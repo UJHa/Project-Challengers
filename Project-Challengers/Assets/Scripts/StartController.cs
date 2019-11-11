@@ -73,7 +73,7 @@ public class StartController : MonoBehaviour
         {
             if (success)
             {
-                GooglePlayGameServiceManager.LoadFromCloud();
+                GooglePlayGameServiceManager.LoadFromCloud(this, "EnterButton");
                 Debug.Log("USERNAME : " + Social.localUser.userName);
                 ShowAlert("");
                 gameObject.SetActive(false);
@@ -126,7 +126,7 @@ public class StartController : MonoBehaviour
         else if (Social.localUser.authenticated)
         {
             GooglePlayGameServiceManager.SaveToCloud("Nickname," + nickname.text);
-            GooglePlayGameServiceManager.LoadFromCloud();
+            GooglePlayGameServiceManager.LoadFromCloud(this, "EnterButton");
             Debug.Log(Repository.sData["Nickname"]);
             SceneManager.LoadScene("LobbyScene");
         }
@@ -134,9 +134,11 @@ public class StartController : MonoBehaviour
 
     void AuthenticateCallback(bool success, string error)
     {
+        gameObject.SetActive(false);
+
         if (success)
         {
-            GooglePlayGameServiceManager.LoadFromCloud();
+            GooglePlayGameServiceManager.LoadFromCloud(this, "EnterButton");
             Debug.Log("USERNAME : " + Social.localUser.userName);
         }
         else if (error == "Not implemented on this platform")
@@ -148,12 +150,12 @@ public class StartController : MonoBehaviour
         else
         {
             Debug.Log("오류 : " + error);
+            gameObject.SetActive(true);
             ShowAlert(error);
             return;
         }
 
         ShowAlert("");
-        gameObject.SetActive(false);
         enterButton.SetActive(true);
     }
 

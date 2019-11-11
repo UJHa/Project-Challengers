@@ -35,6 +35,6 @@ public class UnitGuides : MonoBehaviour
 
         animator.runtimeAnimatorController = selectAnimator.runtimeAnimatorController;
         guideName.text = gameObject.GetComponentInChildren<Text>().text;
-        guidebookManager.ChangeInfo(this);
+        guidebookManager.ChangeInfo(gameObject);
     }
 }

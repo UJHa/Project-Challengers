@@ -6,12 +6,12 @@ using UnityEngine.UI;
 public class GuidebookManager : MonoBehaviour
 {
     public GameObject unitsContent, unitsPanel;
-    public Text atk, introduce;
+    public Text introduce, maxHp, moveSpeed, atkPower, findRange, atkRange;
     public AudioClip selectSe;
 
     private string[] eCharacter =
     {
-        "Blobminion",
+        "BlobMinion",
         "Cyclops",
         "Detective",
         "Dwarf",
@@ -35,13 +35,21 @@ public class GuidebookManager : MonoBehaviour
         {
             Debug.Log(character + "를 생성합니다");
             GameObject parent = Instantiate(unitsPanel, unitsContent.transform);
-            Instantiate(Resources.Load<GameObject>("Prefabs/" + character), parent.transform).transform.localScale = new Vector3(200, 200);
+            Instantiate(Resources.Load<GameObject>("Prefabs/Character/" + character), parent.transform).transform.localScale = new Vector3(200, 200);
             parent.GetComponentInChildren<Text>().text = character;
         }
     }
 
-    public void ChangeInfo(UnitGuides target)
+    public void ChangeInfo(GameObject target)
     {
-        introduce.text = target.introduce;
+        UnitGuides information = target.GetComponent<UnitGuides>();
+        ChessCharacter stats = target.GetComponentInChildren<Skeleton>(true) ? (ChessCharacter)target.GetComponentInChildren<Skeleton>(true) : target.GetComponentInChildren<Knight>(true);
+
+        introduce.text = information.introduce;
+        maxHp.text = "최대체력 : " + stats.maxHp;
+        moveSpeed.text = "이동속도 : " + stats.moveSpeed;
+        atkPower.text = "공격력 : " + stats._attackPower;
+        findRange.text = "탐색범위 : " + stats._findRange;
+        atkRange.text = "공격범위 : " + stats._attackRange;
     }
 }
