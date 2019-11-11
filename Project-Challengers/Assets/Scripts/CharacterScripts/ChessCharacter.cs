@@ -32,7 +32,7 @@ public class ChessCharacter : MonoBehaviour
     public enum Direction { UP, DOWN, LEFT, RIGHT, MAXSIZE };
     protected Direction _direction;
 
-    public enum eCharacterType { PLAYER, ENEMY, MAXSIZE };
+    public enum eCharacterType { PLAYER, ENEMY, WAIT, MAXSIZE };
     public eCharacterType _characterType;
 
     protected Animator animator;
@@ -76,9 +76,6 @@ public class ChessCharacter : MonoBehaviour
 
     protected virtual void InitState()
     {
-        SetState(eState.IDLE);
-        _prevState = eState.IDLE;
-
         stateMap = new Dictionary<eState, State>();
         if (canInput)
         {
@@ -97,22 +94,29 @@ public class ChessCharacter : MonoBehaviour
         {
             stateMap[i].InitState(this);
         }
+
+        SetState(eState.IDLE);
+        _prevState = eState.IDLE;
+        //초기 세팅만 startState 호출(이후 변경으로 인한 내용은 update에서 감지
+        stateMap[_state].StartState();
+        _prevState = _state;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //State update
-        if (_state != _prevState)
+        if (GameManager.gameInstance._round == GameManager.eRound.BATTLE)
         {
-            //Debug.Log(this.name + " : end prev state: " + _prevState);
-            //Debug.Log(this.name + " : start cur state : " + _state);
-            stateMap[_prevState].EndState();
-            stateMap[_state].StartState();
-            _prevState = _state;
+            if (_state != _prevState)
+            {
+                //Debug.Log(this.name + " : end prev state: " + _prevState);
+                //Debug.Log(this.name + " : start cur state : " + _state);
+                stateMap[_prevState].EndState();
+                stateMap[_state].StartState();
+                _prevState = _state;
+            }
+            stateMap[_state].UpdateState();
         }
-        stateMap[_state].UpdateState();
-        
 
         //UI update
         if(_battleState == eCharacterBattleState.BATTLE)
@@ -363,6 +367,8 @@ public class ChessCharacter : MonoBehaviour
             Debug.Log("TEST2!!!!!!");
             gameObject.SetActive(false);
             _hpBar.gameObject.SetActive(false);
+            Destroy(gameObject);
+            Destroy(_hpBar);
         }
     }
 

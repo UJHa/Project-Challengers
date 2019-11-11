@@ -74,10 +74,10 @@ public class EnemyFindIdleState : State
 
             if (currentTile.gameObject != null && currentTile.GetDistanceWeight() != 0)
             {
-                ChessCharacter character = currentTile.gameObject.GetComponent<ChessCharacter>();
-                if (_cCharacter.GetCharacterType() != character.GetCharacterType()) // 적일 때만 탐색 성공 시킨다.
+                ChessCharacter targetCharacter = currentTile.gameObject.GetComponent<ChessCharacter>();
+                if (_cCharacter.GetCharacterType() != targetCharacter.GetCharacterType() && targetCharacter.GetCharacterType() != ChessCharacter.eCharacterType.WAIT) // 적일 때만 탐색 성공 시킨다.
                 {
-                    return character;
+                    return targetCharacter;
                 }
             }
             else if (currentTile.GetDistanceWeight() == findRange + 1)

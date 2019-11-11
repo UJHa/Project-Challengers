@@ -18,6 +18,11 @@ public class GameManager : MonoBehaviour
 
     public Button resetBtn;
 
+    public Text roundNum;
+    public Text roundTimer;
+    public Text roundInfo;
+    public int currentRound = 0;
+    private Dictionary<int, List<eCharacter>> roundEnemyList;
     public enum eCharacter
     {
         BLOBMINION,
@@ -36,6 +41,11 @@ public class GameManager : MonoBehaviour
         VEX,
         MAX
     }
+
+    public enum eRound { WAIT, BATTLE, MAXSIZE };
+    public eRound _round;
+    private eRound _prevRound;
+    private Dictionary<eRound, Round> roundMap;
 
     // Start is called before the first frame update
     private void Awake()
@@ -63,29 +73,59 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        //캐릭터 구매 UI 초기화
+        //캐릭터 구매 UI 초기화(제거 예정)
+        resetBtn.onClick.AddListener(() =>
         {
-            SetBuySlot(buySlot1, GetRandomCharacter());
-            SetBuySlot(buySlot2, GetRandomCharacter());
-            SetBuySlot(buySlot3, GetRandomCharacter());
-            SetBuySlot(buySlot4, GetRandomCharacter());
-        }
-        resetBtn.onClick.AddListener(() => {
             {
-                SetBuySlot(buySlot1, GetRandomCharacter());
-                SetBuySlot(buySlot2, GetRandomCharacter());
-                SetBuySlot(buySlot3, GetRandomCharacter());
-                SetBuySlot(buySlot4, GetRandomCharacter());
+                SetBuySlot(buySlot1, GetRandomCharacterName());
+                SetBuySlot(buySlot2, GetRandomCharacterName());
+                SetBuySlot(buySlot3, GetRandomCharacterName());
+                SetBuySlot(buySlot4, GetRandomCharacterName());
             }
         });
 
-        //캐릭 생성 관련 테스트(적 유닛 생성)
+        currentRound = 1;
+        //round 별 적 데이터 저장
+        roundEnemyList = new Dictionary<int, List<eCharacter>>();
+        roundEnemyList[1] = new List<eCharacter>();
+        roundEnemyList[1].Add(eCharacter.SKELETON);
+
+        roundEnemyList[2] = new List<eCharacter>();
+        roundEnemyList[2].Add(eCharacter.SKELETON);
+        roundEnemyList[2].Add(eCharacter.SKELETON);
+
+        roundEnemyList[3] = new List<eCharacter>();
+        roundEnemyList[3].Add(eCharacter.SKELETON);
+        roundEnemyList[3].Add(eCharacter.SKELETON);
+        roundEnemyList[3].Add(eCharacter.SKELETON);
+
+        roundEnemyList[4] = new List<eCharacter>();
+        roundEnemyList[4].Add(eCharacter.SKELETON);
+        roundEnemyList[4].Add(eCharacter.SKELETON);
+        roundEnemyList[4].Add(eCharacter.SKELETON);
+        roundEnemyList[4].Add(eCharacter.SKELETON);
+        roundEnemyList[4].Add(eCharacter.SKELETON);
+
+        roundMap = new Dictionary<eRound, Round>();
+        roundMap[eRound.WAIT] = new WaitRound();
+        roundMap[eRound.BATTLE] = new BattleRound();
+
+        for (eRound i = 0; i< eRound.MAXSIZE; i++)
         {
-            //SpawnCharacter("Prefabs/Character/Lizard", "Player", 0, 3, true);   //player
-            //SpawnCharacter("Prefabs/Character/Knight", "Knight(NPC)", 2, 4, false, ChessCharacter.eCharacterType.ENEMY);
-            //SpawnCharacter("Prefabs/Character/Lizard", "Lizard(NPC)", 3, 4, false, ChessCharacter.eCharacterType.ENEMY);
-            SpawnCharacter("Prefabs/Character/Skeleton", "Skeleton(NPC)", 4, 4, false, ChessCharacter.eCharacterType.ENEMY);
-            //SpawnCharacter("Prefabs/Character/Knight", 3, 3, false);
+            roundMap[i].InitState();
+        }
+        _round = eRound.WAIT;
+        //초기 세팅만 startState 호출(이후 변경으로 인한 내용은 update에서 감지)
+        roundMap[_round].StartState();
+        _prevRound = _round;
+    }
+
+    public void SpawnEnemies()
+    {
+        List<GameManager.eCharacter> enemyList = roundEnemyList[currentRound];
+        for (int i = 0; i < enemyList.Count; i++)
+        {
+            SpawnCharacter("Prefabs/Character/" + enemyList[i], "Skeleton(NPC)", 4, 4, false, ChessCharacter.eCharacterType.ENEMY);
         }
     }
 
@@ -100,6 +140,57 @@ public class GameManager : MonoBehaviour
         }
 
         UpdateInput();
+
+        UpdateRound();
+        
+    }
+    
+    private void UpdateRound()
+    {
+        //State update
+        if (_round != _prevRound)
+        {
+            //Debug.Log(this.name + " : end prev state: " + _prevState);
+            //Debug.Log(this.name + " : start cur state : " + _state);
+            roundMap[_prevRound].EndState();
+            roundMap[_round].StartState();
+            _prevRound = _round;
+        }
+        roundMap[_round].UpdateState();
+
+        //if (roundData == 1)
+        //{
+        //    if (isRoundStart)
+        //    {
+        //        SpawnCharacters();
+        //        state >> wait
+        //    }
+        //    if (isRoundUpdate)
+        //    {
+        //        UpdateRoundTimer();
+
+
+        //        if (wait)
+        //        {
+        //            StopCharacters();
+        //        }
+        //        else if (battle)
+        //        {
+        //            UpdateCharacters();
+        //            if (noneCharacters)
+        //            {
+        //                if (me win)
+        //                {
+        //                    NextRound(); //다음 라운드 or 끝 라운드 시 결과 화면으로...
+        //                }
+        //                else if (enemy win)
+        //                {
+        //                    FinishGame(); // 결과 화면으로...
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
     }
 
     private void UpdateInput()
@@ -207,10 +298,23 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private string GetRandomCharacter()
+    public void ResetBuyCharacters()
+    {
+        SetBuySlot(buySlot1, GetRandomCharacterName());
+        SetBuySlot(buySlot2, GetRandomCharacterName());
+        SetBuySlot(buySlot3, GetRandomCharacterName());
+        SetBuySlot(buySlot4, GetRandomCharacterName());
+    }
+
+    private string GetRandomCharacterName()
     {
         string name = "";
         eCharacter enumCharacter = (eCharacter)Random.Range(0, (int)eCharacter.MAX);
+        return GetCharacterName(enumCharacter);
+    }
+
+    public string GetCharacterName(eCharacter enumCharacter)
+    {
         switch (enumCharacter)
         {
             case eCharacter.BLOBMINION:
@@ -308,6 +412,7 @@ public class GameManager : MonoBehaviour
                     character.transform.SetParent(tilemap.transform);
 
                     cCharacter.SetTilePosition(new Vector3Int(waitPositionX, -1, 0));
+                    cCharacter.SetCharacterType(ChessCharacter.eCharacterType.WAIT);
                     chessTile.gameObject = character;
                     return true;
                 }
@@ -317,7 +422,7 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
-    private void SpawnCharacter(string path, string name, int tileX, int tileY, bool isPlayer, ChessCharacter.eCharacterType characterType)
+    public void SpawnCharacter(string path, string name, int tileX, int tileY, bool isPlayer, ChessCharacter.eCharacterType characterType)
     {
         GameObject character = Instantiate(Resources.Load(path)) as GameObject;
         character.name = name;

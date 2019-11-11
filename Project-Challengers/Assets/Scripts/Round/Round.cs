@@ -2,18 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class State
+public class Round
 {
-    protected ChessCharacter _cCharacter;
+    private GameManager.eRound currentRound;
 
-    public State()
+    public Round()
     {
 
     }
 
-    public virtual void InitState(ChessCharacter cCharacter)
+    public virtual void InitState()
     {
-        _cCharacter = cCharacter;
     }
 
     public virtual void StartState()
@@ -23,11 +22,11 @@ public class State
 
     public virtual void UpdateState()
     {
-        
+
     }
 
     public virtual void EndState()
     {
-        
+
     }
 }
