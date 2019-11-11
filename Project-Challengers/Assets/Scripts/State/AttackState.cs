@@ -9,6 +9,15 @@ public class AttackState : State
         base.StartState();
         Debug.Log("atk StartState!!!");
         _cCharacter.AttackStart();
+        Vector3 directionVector = _cCharacter.GetAttackTarget().transform.position - _cCharacter.transform.position;
+        if (directionVector.x < 0.0f)
+        {
+            _cCharacter.SetDirection(ChessCharacter.Direction.LEFT);
+        }
+        else
+        {
+            _cCharacter.SetDirection(ChessCharacter.Direction.RIGHT);
+        }
     }
 
     public override void UpdateState()

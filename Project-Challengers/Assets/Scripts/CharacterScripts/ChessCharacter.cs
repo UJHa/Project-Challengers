@@ -130,8 +130,7 @@ public class ChessCharacter : MonoBehaviour
                     Debug.Log("PLS none!!!");
                     break;
                 case eCharacterType.ENEMY:
-                    _hpBar.fillRect.gameObject.GetComponent<Image>().color = new Color(1.0f, 0.0f, 0.0f);
-                    Debug.Log("enemy name : " + name + ", hpbar color : " + _hpBar.fillRect.gameObject.GetComponent<Image>().color);
+                    _hpBar.fillRect.gameObject.GetComponent<Image>().color = new Color(155.0f / 255.0f, 0.0f, 0.0f, 1.0f);
                     break;
             }
         }
@@ -327,10 +326,14 @@ public class ChessCharacter : MonoBehaviour
         }
     }
 
-    public ChessCharacter _attackTarget;
+    private ChessCharacter _attackTarget;
     public void SetAttackTarget(ChessCharacter tileCharacter)
     {
         _attackTarget = tileCharacter;
+    }
+    public ChessCharacter GetAttackTarget()
+    {
+        return _attackTarget;
     }
 
     public void AnimateEvent(string message)

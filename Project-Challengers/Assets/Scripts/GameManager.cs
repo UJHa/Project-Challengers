@@ -82,8 +82,8 @@ public class GameManager : MonoBehaviour
         //캐릭 생성 관련 테스트(적 유닛 생성)
         {
             //SpawnCharacter("Prefabs/Character/Lizard", "Player", 0, 3, true);   //player
-            SpawnCharacter("Prefabs/Character/Knight", "Knight(NPC)", 2, 4, false, ChessCharacter.eCharacterType.ENEMY);
-            SpawnCharacter("Prefabs/Character/Lizard", "Lizard(NPC)", 3, 4, false, ChessCharacter.eCharacterType.ENEMY);
+            //SpawnCharacter("Prefabs/Character/Knight", "Knight(NPC)", 2, 4, false, ChessCharacter.eCharacterType.ENEMY);
+            //SpawnCharacter("Prefabs/Character/Lizard", "Lizard(NPC)", 3, 4, false, ChessCharacter.eCharacterType.ENEMY);
             SpawnCharacter("Prefabs/Character/Skeleton", "Skeleton(NPC)", 4, 4, false, ChessCharacter.eCharacterType.ENEMY);
             //SpawnCharacter("Prefabs/Character/Knight", 3, 3, false);
         }
@@ -99,6 +99,11 @@ public class GameManager : MonoBehaviour
             tilemap.RefreshAllTiles();
         }
 
+        UpdateInput();
+    }
+
+    private void UpdateInput()
+    {
         if (Input.GetMouseButtonDown(0))
         {
             Vector3Int mouseDownTilePosition = tilemap.layoutGrid.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
@@ -155,7 +160,7 @@ public class GameManager : MonoBehaviour
                         //mouseDownTile.gameObject = holdTarget;
                         //mouseDownTile.gameObject.transform.position = tilemap.layoutGrid.CellToWorld(mouseDownTile.position);
                     }
-                    else if(mouseUpTile.GetTilePosition().y == -1)    //대기 타일 내 이동
+                    else if (mouseUpTile.GetTilePosition().y == -1)    //대기 타일 내 이동
                     {
                         Debug.Log("y : -1");
                         if (mouseUpTile.gameObject == null) // 빈 타일일 때
@@ -180,7 +185,7 @@ public class GameManager : MonoBehaviour
                         mouseDownTile.gameObject = holdTarget;
                         mouseDownTile.gameObject.transform.position = tilemap.layoutGrid.CellToWorld(mouseDownTile.GetTilePosition());
                     }
-                    
+
                     for (int i = 0; i < 8; i++)
                     {
                         ChessTile waitTile = tilemap.GetTile<ChessTile>(new Vector3Int(i, -1, 0));
