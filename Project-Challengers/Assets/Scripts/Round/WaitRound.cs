@@ -9,11 +9,12 @@ public class WaitRound : Round
     public override void InitState()
     {
         base.InitState();
-        totalWaitSec = 30;
+        totalWaitSec = 10;
     }
     public override void StartState()
     {
         base.StartState();
+        //UI
         GameManager.gameInstance.roundInfo.text = "구매와 배치!";
 
         //캐릭 생성 관련 테스트(적 유닛 생성)
@@ -26,7 +27,7 @@ public class WaitRound : Round
     public override void UpdateState()
     {
         base.UpdateState();
-        if (waitTimer >= 30.0f)
+        if (waitTimer >= totalWaitSec)
         {
             GameManager.gameInstance._round = GameManager.eRound.BATTLE;
 
@@ -37,5 +38,14 @@ public class WaitRound : Round
         //UI
         int remainSec = totalWaitSec - (int)waitTimer;
         GameManager.gameInstance.roundTimer.text = "남은 배치 시간 : " + remainSec;
+
+        //mouse
+        GameManager.gameInstance.UpdateInput();
+    }
+
+    public override void EndState()
+    {
+        base.EndState();
+        //GameManager.gameInstance.SaveMyChessCharacters();
     }
 }

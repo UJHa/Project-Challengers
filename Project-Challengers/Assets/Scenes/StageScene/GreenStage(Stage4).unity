@@ -1378,7 +1378,7 @@ MonoBehaviour:
   roundNum: {fileID: 576093493}
   roundTimer: {fileID: 777178085}
   roundInfo: {fileID: 30772994}
-  roundData: 0
+  currentRound: 0
   _round: 0
 --- !u!4 &1146853946
 Transform:

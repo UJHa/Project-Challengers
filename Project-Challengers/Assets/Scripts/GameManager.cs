@@ -22,7 +22,9 @@ public class GameManager : MonoBehaviour
     public Text roundTimer;
     public Text roundInfo;
     public int currentRound = 0;
+    public int maxRound = 7;
     private Dictionary<int, List<eCharacter>> roundEnemyList;
+    public List<string> lastPlayerNameList;
     public enum eCharacter
     {
         BLOBMINION,
@@ -42,7 +44,7 @@ public class GameManager : MonoBehaviour
         MAX
     }
 
-    public enum eRound { WAIT, BATTLE, MAXSIZE };
+    public enum eRound { WAIT, BATTLE, FINISH, MAXSIZE };
     public eRound _round;
     private eRound _prevRound;
     private Dictionary<eRound, Round> roundMap;
@@ -84,6 +86,9 @@ public class GameManager : MonoBehaviour
             }
         });
 
+        //최신 플레이어 배치 리스트 저장
+        lastPlayerNameList = new List<string>();
+
         currentRound = 1;
         //round 별 적 데이터 저장
         roundEnemyList = new Dictionary<int, List<eCharacter>>();
@@ -91,24 +96,27 @@ public class GameManager : MonoBehaviour
         roundEnemyList[1].Add(eCharacter.SKELETON);
 
         roundEnemyList[2] = new List<eCharacter>();
-        roundEnemyList[2].Add(eCharacter.SKELETON);
-        roundEnemyList[2].Add(eCharacter.SKELETON);
+        roundEnemyList[2].Add(eCharacter.ROYALKNIGHT);
 
         roundEnemyList[3] = new List<eCharacter>();
-        roundEnemyList[3].Add(eCharacter.SKELETON);
-        roundEnemyList[3].Add(eCharacter.SKELETON);
-        roundEnemyList[3].Add(eCharacter.SKELETON);
+        roundEnemyList[3].Add(eCharacter.PLASMADRONE);
 
         roundEnemyList[4] = new List<eCharacter>();
-        roundEnemyList[4].Add(eCharacter.SKELETON);
-        roundEnemyList[4].Add(eCharacter.SKELETON);
-        roundEnemyList[4].Add(eCharacter.SKELETON);
-        roundEnemyList[4].Add(eCharacter.SKELETON);
-        roundEnemyList[4].Add(eCharacter.SKELETON);
+        roundEnemyList[4].Add(eCharacter.TAURUS);
+
+        roundEnemyList[5] = new List<eCharacter>();
+        roundEnemyList[5].Add(eCharacter.VEX);
+
+        roundEnemyList[6] = new List<eCharacter>();
+        roundEnemyList[6].Add(eCharacter.SANTA);
+
+        roundEnemyList[7] = new List<eCharacter>();
+        roundEnemyList[7].Add(eCharacter.SAPCECADET);
 
         roundMap = new Dictionary<eRound, Round>();
         roundMap[eRound.WAIT] = new WaitRound();
         roundMap[eRound.BATTLE] = new BattleRound();
+        roundMap[eRound.FINISH] = new FinishRound();
 
         for (eRound i = 0; i< eRound.MAXSIZE; i++)
         {
@@ -118,6 +126,49 @@ public class GameManager : MonoBehaviour
         //초기 세팅만 startState 호출(이후 변경으로 인한 내용은 update에서 감지)
         roundMap[_round].StartState();
         _prevRound = _round;
+    }
+
+    public void SaveData()
+    {
+        SaveRound();
+    }
+
+    private void SaveRound()
+    {
+        Repository.round = currentRound;
+    }
+
+    public void SavePlayerList()
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                ChessTile chessTile = tilemap.GetTile<ChessTile>(new Vector3Int(j, i, 0));
+                if (chessTile)
+                {
+                    if (chessTile.gameObject)
+                    {
+                        if (chessTile.gameObject.name.Contains("Player"))
+                        {
+                            lastPlayerNameList.Add(chessTile.gameObject.name.Split('(')[0]);
+                        }
+                    }
+                }
+            }
+        }
+        
+    }
+
+    public void NextRound()
+    {
+        currentRound++;
+        if (currentRound > maxRound)
+        {
+            currentRound--;
+            SaveData();
+            //@결과 화면 이동
+        }
     }
 
     public void SpawnEnemies()
@@ -139,12 +190,70 @@ public class GameManager : MonoBehaviour
             tilemap.RefreshAllTiles();
         }
 
-        UpdateInput();
+        //UpdateInput();
 
         UpdateRound();
         
     }
     
+    public bool IsFinishRound()
+    {
+        int enemyCount = 0;
+        int playerCount = 0;
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                ChessTile chessTile = tilemap.GetTile<ChessTile>(new Vector3Int(j, i, 0));
+                if (chessTile)
+                {
+                    if (chessTile.gameObject)
+                    {
+                        if (chessTile.gameObject.name.Contains("NPC"))
+                        {
+                            enemyCount++;
+                        }
+                        if (chessTile.gameObject.name.Contains("Player"))
+                        {
+                            playerCount++;
+                        }
+                    }
+                }
+            }
+        }
+        // 플레이어, 적 중 하나라로 0명이면 라운드 종료
+        return playerCount == 0 || enemyCount == 0;
+    }
+
+    public bool RoundWin()
+    {
+        int enemyCount = 0;
+        int playerCount = 0;
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                ChessTile chessTile = tilemap.GetTile<ChessTile>(new Vector3Int(j, i, 0));
+                if (chessTile)
+                {
+                    if (chessTile.gameObject)
+                    {
+                        if (chessTile.gameObject.name.Contains("NPC"))
+                        {
+                            enemyCount++;
+                        }
+                        if (chessTile.gameObject.name.Contains("Player"))
+                        {
+                            playerCount++;
+                        }
+                    }
+                }
+            }
+        }
+        // 플레이어 0명이 아니고 적이 없으면 승리
+        return playerCount != 0 && enemyCount == 0;
+    }
+
     private void UpdateRound()
     {
         //State update
@@ -157,43 +266,9 @@ public class GameManager : MonoBehaviour
             _prevRound = _round;
         }
         roundMap[_round].UpdateState();
-
-        //if (roundData == 1)
-        //{
-        //    if (isRoundStart)
-        //    {
-        //        SpawnCharacters();
-        //        state >> wait
-        //    }
-        //    if (isRoundUpdate)
-        //    {
-        //        UpdateRoundTimer();
-
-
-        //        if (wait)
-        //        {
-        //            StopCharacters();
-        //        }
-        //        else if (battle)
-        //        {
-        //            UpdateCharacters();
-        //            if (noneCharacters)
-        //            {
-        //                if (me win)
-        //                {
-        //                    NextRound(); //다음 라운드 or 끝 라운드 시 결과 화면으로...
-        //                }
-        //                else if (enemy win)
-        //                {
-        //                    FinishGame(); // 결과 화면으로...
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
     }
 
-    private void UpdateInput()
+    public void UpdateInput()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -243,7 +318,7 @@ public class GameManager : MonoBehaviour
                     {
                         Debug.Log("y : 0 이상");
                         string[] nameList = holdTarget.name.Split('_');
-                        SpawnCharacter("Prefabs/Character/" + nameList[1], nameList[1] + "(NPC)", mouseUpTile.GetTilePosition().x, mouseUpTile.GetTilePosition().y, false, ChessCharacter.eCharacterType.PLAYER);
+                        SpawnCharacter("Prefabs/Character/" + nameList[1], nameList[1] + "(Player)", mouseUpTile.GetTilePosition().x, mouseUpTile.GetTilePosition().y, false, ChessCharacter.eCharacterType.PLAYER);
                         //Debug.Log("=start====================");
                         //AllTilesLog();
                         //Debug.Log("=end======================");
@@ -361,6 +436,18 @@ public class GameManager : MonoBehaviour
                 break;
         }
         return name;
+    }
+
+    public void StopBuySlots()
+    {
+        buySlot1.gameObject.SetActive(false);
+        buySlot1.onClick.RemoveAllListeners();
+        buySlot2.gameObject.SetActive(false);
+        buySlot2.onClick.RemoveAllListeners();
+        buySlot3.gameObject.SetActive(false);
+        buySlot3.onClick.RemoveAllListeners();
+        buySlot4.gameObject.SetActive(false);
+        buySlot4.onClick.RemoveAllListeners();
     }
 
     private void SetBuySlot(Button buySlot, string name)

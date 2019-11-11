@@ -131,7 +131,6 @@ public class ChessCharacter : MonoBehaviour
             {
                 case eCharacterType.PLAYER:
                     _hpBar.fillRect.gameObject.GetComponent<Image>().color = Color.red;
-                    Debug.Log("PLS none!!!");
                     break;
                 case eCharacterType.ENEMY:
                     _hpBar.fillRect.gameObject.GetComponent<Image>().color = new Color(155.0f / 255.0f, 0.0f, 0.0f, 1.0f);
