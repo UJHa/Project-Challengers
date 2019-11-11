@@ -96,13 +96,14 @@ public class GooglePlayGameServiceManager
     }
 
     //파일 읽기
-    public static void LoadFromCloud()
+    public static void LoadFromCloud(MonoBehaviour callback, string cbName)
     {
         if (!CheckLogin())
         {
             return;
         }
         OpenSavedGame(sfilename, false);
+        callback.SendMessage(cbName);
     }
 
     static void OnSavedGameOpenedToRead(SavedGameRequestStatus status, ISavedGameMetadata game)

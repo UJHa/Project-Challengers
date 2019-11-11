@@ -6,20 +6,28 @@ using UnityEngine.UI;
 
 public class ResultManager : MonoBehaviour
 {
+    const int MAXLEVEL = 7;
+
     public Text nicknameText;
     public Text resultText, recordText;
-    public int round;
 
     // Start is called before the first frame update
     void Start()
     {
-        if (round > int.Parse(Repository.record))
-        {
-            Repository.UpdateData("Record", round.ToString());
-        }
-
         nicknameText.text = Repository.sData["Nickname"];
-        resultText.text = round + " 단계 달성!";
-        recordText.text = Repository.GetRecord();
+
+        if (Repository.round >= MAXLEVEL)
+        {
+            Repository.isClear = true;
+            resultText.text = "클리어!";
+            recordText.text = "축하드립니다";
+        }
+        else
+        {
+            if (Repository.round > int.Parse(Repository.record)) Repository.UpdateData("Record", Repository.round.ToString());
+
+            resultText.text = "패배";
+            recordText.text = Repository.round + "단계 달성!";
+        }
     }
 }

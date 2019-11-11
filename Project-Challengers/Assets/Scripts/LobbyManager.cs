@@ -24,7 +24,7 @@ public class LobbyManager : MonoBehaviour
 
     private string[] eCharacter =
     {
-        "Blobminion",
+        "BlobMinion",
         "Cyclops",
         "Detective",
         "Dwarf",
@@ -49,7 +49,7 @@ public class LobbyManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        character = Instantiate(Resources.Load<GameObject>("Prefabs/" + eCharacter[UnityEngine.Random.Range(0, eCharacter.Length)]));
+        character = Instantiate(Resources.Load<GameObject>("Prefabs/Character/" + eCharacter[UnityEngine.Random.Range(0, eCharacter.Length)]));
         character.transform.position = tilemap.CellToWorld(new Vector3Int(4, 4, 0));
         mainCamera.transform.SetParent(character.transform);
 
