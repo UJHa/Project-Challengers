@@ -20,8 +20,8 @@ public class ChessCharacter : MonoBehaviour
 
     protected Vector3Int tilePosition;
 
-    public enum eCharacterType { BATTLE, WAIT, MAXSIZE };
-    protected eCharacterType characterType;
+    public enum eCharacterBattleState { BATTLE, WAIT, MAXSIZE };
+    protected eCharacterBattleState _battleState;
 
     public enum eState { IDLE, MOVE, ATTACK, DEAD, MAXSIZE };
     protected eState _state;
@@ -31,6 +31,9 @@ public class ChessCharacter : MonoBehaviour
 
     public enum Direction { UP, DOWN, LEFT, RIGHT, MAXSIZE };
     protected Direction _direction;
+
+    public enum eCharacterType { PLAYER, ENEMY, MAXSIZE };
+    public eCharacterType _characterType;
 
     protected Animator animator;
 
@@ -53,7 +56,8 @@ public class ChessCharacter : MonoBehaviour
     {
         // 데이터들 초기 세팅
         targetPosition = transform.position;
-        characterType = eCharacterType.BATTLE;
+        _battleState = eCharacterBattleState.BATTLE;
+        Debug.Log("InitData in ChessCharacter");
 
         _direction = Direction.RIGHT;
         transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
@@ -111,7 +115,7 @@ public class ChessCharacter : MonoBehaviour
         
 
         //UI update
-        if(characterType == eCharacterType.BATTLE)
+        if(_battleState == eCharacterBattleState.BATTLE)
         {
             GameObject canvas = GameObject.Find("Canvas");
             RectTransform canvasRect = canvas.GetComponent<RectTransform>();
@@ -119,6 +123,17 @@ public class ChessCharacter : MonoBehaviour
             characterUiPos.y += 100;
             _hpBar.gameObject.transform.localPosition = characterUiPos;
             _hpBar.value = _hp / maxHp;
+            switch (_characterType)
+            {
+                case eCharacterType.PLAYER:
+                    _hpBar.fillRect.gameObject.GetComponent<Image>().color = Color.red;
+                    Debug.Log("PLS none!!!");
+                    break;
+                case eCharacterType.ENEMY:
+                    _hpBar.fillRect.gameObject.GetComponent<Image>().color = new Color(1.0f, 0.0f, 0.0f);
+                    Debug.Log("enemy name : " + name + ", hpbar color : " + _hpBar.fillRect.gameObject.GetComponent<Image>().color);
+                    break;
+            }
         }
     }
 
@@ -166,6 +181,16 @@ public class ChessCharacter : MonoBehaviour
                 break;
         }
         return result;
+    }
+
+    public void SetCharacterType(eCharacterType characterType)
+    {
+        _characterType = characterType;
+    }
+
+    public eCharacterType GetCharacterType()
+    {
+        return _characterType;
     }
 
     public void IsPlayer(bool isPlayer)

@@ -7,7 +7,7 @@ public class ChessWaitCharacter : ChessCharacter
     protected override void InitData()
     {
         base.InitData();
-        characterType = eCharacterType.WAIT;
+        _battleState = eCharacterBattleState.WAIT;
     }
     protected override void InitState()
     {

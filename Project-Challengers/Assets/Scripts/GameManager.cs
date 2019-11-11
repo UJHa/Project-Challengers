@@ -79,13 +79,13 @@ public class GameManager : MonoBehaviour
             }
         });
 
-        //캐릭 생성 관련 테스트
+        //캐릭 생성 관련 테스트(적 유닛 생성)
         {
-            //SpawnCharacter("Prefabs/Lizard", "Player", 0, 3, true);   //player
-            //SpawnCharacter("Prefabs/Knight", "Knight(NPC)", 1, 3, false);
-            //SpawnCharacter("Prefabs/Lizard", "Lizard(NPC)", 2, 3, false);
-            //SpawnCharacter("Prefabs/Skeleton", "Skeleton(NPC)", 3, 3, false);
-            //SpawnCharacter("Prefabs/Knight", 3, 3, false);
+            //SpawnCharacter("Prefabs/Character/Lizard", "Player", 0, 3, true);   //player
+            SpawnCharacter("Prefabs/Character/Knight", "Knight(NPC)", 2, 4, false, ChessCharacter.eCharacterType.ENEMY);
+            SpawnCharacter("Prefabs/Character/Lizard", "Lizard(NPC)", 3, 4, false, ChessCharacter.eCharacterType.ENEMY);
+            SpawnCharacter("Prefabs/Character/Skeleton", "Skeleton(NPC)", 4, 4, false, ChessCharacter.eCharacterType.ENEMY);
+            //SpawnCharacter("Prefabs/Character/Knight", 3, 3, false);
         }
     }
 
@@ -147,7 +147,7 @@ public class GameManager : MonoBehaviour
                     {
                         Debug.Log("y : 0 이상");
                         string[] nameList = holdTarget.name.Split('_');
-                        SpawnCharacter("Prefabs/Character/" + nameList[1], nameList[1] + "(NPC)", mouseUpTile.GetTilePosition().x, mouseUpTile.GetTilePosition().y, false);
+                        SpawnCharacter("Prefabs/Character/" + nameList[1], nameList[1] + "(NPC)", mouseUpTile.GetTilePosition().x, mouseUpTile.GetTilePosition().y, false, ChessCharacter.eCharacterType.PLAYER);
                         //Debug.Log("=start====================");
                         //AllTilesLog();
                         //Debug.Log("=end======================");
@@ -312,13 +312,15 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
-    private void SpawnCharacter(string path, string name, int tileX, int tileY, bool isPlayer)
+    private void SpawnCharacter(string path, string name, int tileX, int tileY, bool isPlayer, ChessCharacter.eCharacterType characterType)
     {
         GameObject character = Instantiate(Resources.Load(path)) as GameObject;
         character.name = name;
         ChessCharacter cCharacter = character.GetComponent<ChessCharacter>();
         cCharacter.SetTilePosition(new Vector3Int(tileX, tileY, 0));
         cCharacter.IsPlayer(isPlayer);
+        cCharacter.SetCharacterType(characterType);
+        Debug.Log("Spawn in GameManager");
         character.transform.SetParent(tilemap.transform);
 
         ChessTile chessTile = tilemap.GetTile<ChessTile>(new Vector3Int(tileX, tileY, 0));
