@@ -11,7 +11,7 @@ public class ChessCharacter : MonoBehaviour
     public float maxHp = 300.0f;
     public int _attackPower = 10;
 
-    public int _findRange = 3;
+    public int _findRange = 15;
     public int _attackRange = 1;
     private float _hp;
 

@@ -23,7 +23,15 @@ public class GameManager : MonoBehaviour
     public Text roundInfo;
     public int currentRound = 0;
     public int maxRound = 7;
-    private Dictionary<int, List<eCharacter>> roundEnemyList;
+
+    private struct sSpawnEnemy
+    {
+        public eCharacter character;
+        public int tileX;
+        public int tileY;
+    }
+
+    private Dictionary<int, List<sSpawnEnemy>> roundEnemyList;
     public List<string> lastPlayerNameList;
     public enum eCharacter
     {
@@ -91,27 +99,27 @@ public class GameManager : MonoBehaviour
 
         currentRound = 1;
         //round 별 적 데이터 저장
-        roundEnemyList = new Dictionary<int, List<eCharacter>>();
-        roundEnemyList[1] = new List<eCharacter>();
-        roundEnemyList[1].Add(eCharacter.SKELETON);
+        roundEnemyList = new Dictionary<int, List<sSpawnEnemy>>();
+        roundEnemyList[1] = new List<sSpawnEnemy>();
+        roundEnemyList[1].Add(GetSpawnEnemyInfo(eCharacter.SKELETON, 4, 4));
 
-        roundEnemyList[2] = new List<eCharacter>();
-        roundEnemyList[2].Add(eCharacter.ROYALKNIGHT);
+        roundEnemyList[2] = new List<sSpawnEnemy>();
+        roundEnemyList[2].Add(GetSpawnEnemyInfo(eCharacter.ROYALKNIGHT, 4, 4));
 
-        roundEnemyList[3] = new List<eCharacter>();
-        roundEnemyList[3].Add(eCharacter.PLASMADRONE);
+        roundEnemyList[3] = new List<sSpawnEnemy>();
+        roundEnemyList[3].Add(GetSpawnEnemyInfo(eCharacter.PLASMADRONE, 4, 4));
 
-        roundEnemyList[4] = new List<eCharacter>();
-        roundEnemyList[4].Add(eCharacter.TAURUS);
+        roundEnemyList[4] = new List<sSpawnEnemy>();
+        roundEnemyList[4].Add(GetSpawnEnemyInfo(eCharacter.TAURUS, 4, 4));
 
-        roundEnemyList[5] = new List<eCharacter>();
-        roundEnemyList[5].Add(eCharacter.VEX);
+        roundEnemyList[5] = new List<sSpawnEnemy>();
+        roundEnemyList[5].Add(GetSpawnEnemyInfo(eCharacter.VEX, 4, 4));
 
-        roundEnemyList[6] = new List<eCharacter>();
-        roundEnemyList[6].Add(eCharacter.SANTA);
+        roundEnemyList[6] = new List<sSpawnEnemy>();
+        roundEnemyList[6].Add(GetSpawnEnemyInfo(eCharacter.SANTA, 4, 4));
 
-        roundEnemyList[7] = new List<eCharacter>();
-        roundEnemyList[7].Add(eCharacter.SAPCECADET);
+        roundEnemyList[7] = new List<sSpawnEnemy>();
+        roundEnemyList[7].Add(GetSpawnEnemyInfo(eCharacter.SAPCECADET, 4, 4));
 
         roundMap = new Dictionary<eRound, Round>();
         roundMap[eRound.WAIT] = new WaitRound();
@@ -126,6 +134,15 @@ public class GameManager : MonoBehaviour
         //초기 세팅만 startState 호출(이후 변경으로 인한 내용은 update에서 감지)
         roundMap[_round].StartState();
         _prevRound = _round;
+    }
+
+    private sSpawnEnemy GetSpawnEnemyInfo(eCharacter character, int tileX, int tileY)
+    {
+        sSpawnEnemy enemy;
+        enemy.character = character;
+        enemy.tileX = tileX;
+        enemy.tileY = tileY;
+        return enemy;
     }
 
     public void SaveData()
@@ -173,10 +190,11 @@ public class GameManager : MonoBehaviour
 
     public void SpawnEnemies()
     {
-        List<GameManager.eCharacter> enemyList = roundEnemyList[currentRound];
+        List<sSpawnEnemy> enemyList = roundEnemyList[currentRound];
         for (int i = 0; i < enemyList.Count; i++)
         {
-            SpawnCharacter("Prefabs/Character/" + enemyList[i], "Skeleton(NPC)", 4, 4, false, ChessCharacter.eCharacterType.ENEMY);
+            Debug.Log("name : " + enemyList[i].character);
+            SpawnCharacter("Prefabs/Character/" + enemyList[i].character, enemyList[i].character + "(NPC)", enemyList[i].tileX, enemyList[i].tileY, false, ChessCharacter.eCharacterType.ENEMY);
         }
     }
 
@@ -318,13 +336,18 @@ public class GameManager : MonoBehaviour
                     {
                         Debug.Log("y : 0 이상");
                         string[] nameList = holdTarget.name.Split('_');
-                        SpawnCharacter("Prefabs/Character/" + nameList[1], nameList[1] + "(Player)", mouseUpTile.GetTilePosition().x, mouseUpTile.GetTilePosition().y, false, ChessCharacter.eCharacterType.PLAYER);
-                        //Debug.Log("=start====================");
-                        //AllTilesLog();
-                        //Debug.Log("=end======================");
-                        Destroy(holdTarget);
-                        //mouseDownTile.gameObject = holdTarget;
-                        //mouseDownTile.gameObject.transform.position = tilemap.layoutGrid.CellToWorld(mouseDownTile.position);
+                        if (mouseUpTile.gameObject == null)
+                        {
+                            SpawnCharacter("Prefabs/Character/" + nameList[1], nameList[1] + "(Player)", mouseUpTile.GetTilePosition().x, mouseUpTile.GetTilePosition().y, false, ChessCharacter.eCharacterType.PLAYER);
+                            Destroy(holdTarget);
+                        }
+                        else
+                        {
+                            Debug.Log("가는 타일에 기존 캐릭터가 있습니다.");
+                            mouseDownTile.gameObject = holdTarget;
+                            mouseDownTile.gameObject.transform.position = tilemap.layoutGrid.CellToWorld(mouseDownTile.GetTilePosition());
+                        }
+                        
                     }
                     else if (mouseUpTile.GetTilePosition().y == -1)    //대기 타일 내 이동
                     {
