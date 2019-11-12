@@ -1383,6 +1383,7 @@ MonoBehaviour:
   lastPlayerNameList: []
   _round: 0
   waitBgm: {fileID: 8300000, guid: c0f5786f639278d479c9da914217fdad, type: 3}
+  battleBgm: {fileID: 8300000, guid: b442123a67071894ca2beeb4a6185aae, type: 3}
 --- !u!4 &1146853946
 Transform:
   m_ObjectHideFlags: 0

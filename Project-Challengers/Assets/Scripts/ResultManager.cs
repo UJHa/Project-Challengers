@@ -18,9 +18,10 @@ public class ResultManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        /*bgm = GameObject.Find("bgm");
+        bgm = GameObject.Find("bgm");
         se = GameObject.Find("se");
-        bgm.GetComponent<AudioSource>().clip = startBgm;*/
+        bgm.GetComponent<AudioSource>().clip = startBgm;
+        bgm.GetComponent<AudioSource>().Play();
 
         //캐릭터 이미지 추가
         foreach(string name in GameManager.gameInstance.lastPlayerNameList)
