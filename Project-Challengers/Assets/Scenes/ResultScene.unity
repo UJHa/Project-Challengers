@@ -226,7 +226,7 @@ MonoBehaviour:
   unitPanel: {fileID: 4465942166250887445, guid: 0591e483e3cedab459227418ab65b379,
     type: 3}
   unitsGrid: {fileID: 1365348855}
-  startBgm: {fileID: 0}
+  startBgm: {fileID: 8300000, guid: fd0f7515c90082e48b2ee910adb3b08f, type: 3}
 --- !u!4 &288774718
 Transform:
   m_ObjectHideFlags: 0

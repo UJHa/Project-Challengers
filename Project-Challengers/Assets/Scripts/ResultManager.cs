@@ -18,8 +18,8 @@ public class ResultManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        bgm = GameObject.Find("bgm");
-        se = GameObject.Find("se");
+        bgm = GameObject.Find("BGM");
+        se = GameObject.Find("SE");
         bgm.GetComponent<AudioSource>().clip = startBgm;
         bgm.GetComponent<AudioSource>().Play();
 
