@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class FinishRound : Round
 {
@@ -41,7 +42,7 @@ public class FinishRound : Round
             else
             {
                 GameManager.gameInstance.SaveData();
-                //@결과 화면 이동
+                SceneManager.LoadScene("ResultScene");
             }
         }
         else

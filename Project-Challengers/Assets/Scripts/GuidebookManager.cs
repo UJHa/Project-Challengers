@@ -35,7 +35,11 @@ public class GuidebookManager : MonoBehaviour
         {
             Debug.Log(character + "를 생성합니다");
             GameObject parent = Instantiate(unitsPanel, unitsContent.transform);
-            Instantiate(Resources.Load<GameObject>("Prefabs/Character/" + character), parent.transform).transform.localScale = new Vector3(200, 200);
+            GameObject unit = Instantiate(Resources.Load<GameObject>("Prefabs/Character/" + character), parent.transform);
+            ChessCharacter script = unit.GetComponent<Skeleton>() ? (ChessCharacter)unit.GetComponent<Skeleton>() : unit.GetComponent<Knight>();
+            script.enabled = false;
+            unit.transform.localScale = new Vector3(200, 200);
+
             parent.GetComponentInChildren<Text>().text = character;
         }
     }
@@ -44,6 +48,7 @@ public class GuidebookManager : MonoBehaviour
     {
         UnitGuides information = target.GetComponent<UnitGuides>();
         ChessCharacter stats = target.GetComponentInChildren<Skeleton>(true) ? (ChessCharacter)target.GetComponentInChildren<Skeleton>(true) : target.GetComponentInChildren<Knight>(true);
+        Debug.Log(stats._findRange);
 
         introduce.text = information.introduce;
         maxHp.text = "최대체력 : " + stats.maxHp;
