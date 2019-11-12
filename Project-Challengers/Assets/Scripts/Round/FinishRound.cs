@@ -36,18 +36,24 @@ public class FinishRound : Round
             {
                 GameManager.gameInstance.NextRound();
                 GameManager.gameInstance._round = GameManager.eRound.WAIT;
+                waitTimer = 0.0f;
             }
             else
             {
                 GameManager.gameInstance.SaveData();
                 //@결과 화면 이동
             }
-
-            //waitTimer = 0.0f; // 딱 한번만 보여줄 내용
         }
         else
         {
             waitTimer += Time.deltaTime;
         }
+    }
+
+    public override void EndState()
+    {
+        base.EndState();
+        waitTimer = 0.0f;
+        GameManager.gameInstance.DestroyPlayerList();
     }
 }

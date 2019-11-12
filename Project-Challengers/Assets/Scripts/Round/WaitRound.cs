@@ -14,8 +14,11 @@ public class WaitRound : Round
     public override void StartState()
     {
         base.StartState();
+        GameManager.gameInstance.SetPlayerList();
+
         //UI
         GameManager.gameInstance.roundInfo.text = "구매와 배치!";
+        GameManager.gameInstance.roundNum.text = "Round " + GameManager.gameInstance.currentRound;
 
         //캐릭 생성 관련 테스트(적 유닛 생성)
         GameManager.gameInstance.SpawnEnemies();

@@ -24,15 +24,15 @@ public class GameManager : MonoBehaviour
     public int currentRound = 0;
     public int maxRound = 7;
 
-    private struct sSpawnEnemy
+    private struct sSpawnCharacter
     {
         public eCharacter character;
         public int tileX;
         public int tileY;
     }
 
-    private Dictionary<int, List<sSpawnEnemy>> roundEnemyList;
-    public List<string> lastPlayerNameList;
+    private Dictionary<int, List<sSpawnCharacter>> roundEnemyList;
+    private List<sSpawnCharacter> lastPlayerNameList;
     public enum eCharacter
     {
         BLOBMINION,
@@ -46,10 +46,11 @@ public class GameManager : MonoBehaviour
         ROYALKNIGHT,
         SANTA,
         SKELETON,
-        SAPCECADET,
+        SPACECADET,
         TAURUS,
-        VEX,
-        MAX
+        MAX,
+        WORM,
+        DARKKNIGHT
     }
 
     public enum eRound { WAIT, BATTLE, FINISH, MAXSIZE };
@@ -87,39 +88,56 @@ public class GameManager : MonoBehaviour
         resetBtn.onClick.AddListener(() =>
         {
             {
-                SetBuySlot(buySlot1, GetRandomCharacterName());
-                SetBuySlot(buySlot2, GetRandomCharacterName());
-                SetBuySlot(buySlot3, GetRandomCharacterName());
-                SetBuySlot(buySlot4, GetRandomCharacterName());
+                SetBuySlot(buySlot1, GetRandomCharacter());
+                SetBuySlot(buySlot2, GetRandomCharacter());
+                SetBuySlot(buySlot3, GetRandomCharacter());
+                SetBuySlot(buySlot4, GetRandomCharacter());
             }
         });
 
         //최신 플레이어 배치 리스트 저장
-        lastPlayerNameList = new List<string>();
+        lastPlayerNameList = new List<sSpawnCharacter>();
 
         currentRound = 1;
         //round 별 적 데이터 저장
-        roundEnemyList = new Dictionary<int, List<sSpawnEnemy>>();
-        roundEnemyList[1] = new List<sSpawnEnemy>();
-        roundEnemyList[1].Add(GetSpawnEnemyInfo(eCharacter.SKELETON, 4, 4));
+        roundEnemyList = new Dictionary<int, List<sSpawnCharacter>>();
+        roundEnemyList[1] = new List<sSpawnCharacter>();
+        roundEnemyList[1].Add(GetSpawnCharacterInfo(eCharacter.ROYALKNIGHT, 2, 4));
+        //roundEnemyList[1].Add(GetSpawnCharacterInfo(eCharacter.ROYALKNIGHT, 2, 5));
+        //roundEnemyList[1].Add(GetSpawnCharacterInfo(eCharacter.SKELETON, 5, 4));
+        //roundEnemyList[1].Add(GetSpawnCharacterInfo(eCharacter.SKELETON, 5, 5));
 
-        roundEnemyList[2] = new List<sSpawnEnemy>();
-        roundEnemyList[2].Add(GetSpawnEnemyInfo(eCharacter.ROYALKNIGHT, 4, 4));
+        roundEnemyList[2] = new List<sSpawnCharacter>();
+        roundEnemyList[2].Add(GetSpawnCharacterInfo(eCharacter.WORM, 0, 7));
+        roundEnemyList[2].Add(GetSpawnCharacterInfo(eCharacter.WORM, 1, 7));
+        roundEnemyList[2].Add(GetSpawnCharacterInfo(eCharacter.WORM, 6, 7));
+        roundEnemyList[2].Add(GetSpawnCharacterInfo(eCharacter.WORM, 7, 6));
+        roundEnemyList[2].Add(GetSpawnCharacterInfo(eCharacter.WORM, 7, 7));
 
-        roundEnemyList[3] = new List<sSpawnEnemy>();
-        roundEnemyList[3].Add(GetSpawnEnemyInfo(eCharacter.PLASMADRONE, 4, 4));
+        roundEnemyList[3] = new List<sSpawnCharacter>();
+        roundEnemyList[3].Add(GetSpawnCharacterInfo(eCharacter.TAURUS, 2, 5));
+        roundEnemyList[3].Add(GetSpawnCharacterInfo(eCharacter.TAURUS, 3, 6));
+        roundEnemyList[3].Add(GetSpawnCharacterInfo(eCharacter.BLOBMINION, 4, 6));
+        roundEnemyList[3].Add(GetSpawnCharacterInfo(eCharacter.BLOBMINION, 5, 5));
 
-        roundEnemyList[4] = new List<sSpawnEnemy>();
-        roundEnemyList[4].Add(GetSpawnEnemyInfo(eCharacter.TAURUS, 4, 4));
+        roundEnemyList[4] = new List<sSpawnCharacter>();
+        roundEnemyList[4].Add(GetSpawnCharacterInfo(eCharacter.DWARF, 2, 4));
+        roundEnemyList[4].Add(GetSpawnCharacterInfo(eCharacter.DWARF, 3, 4));
+        roundEnemyList[4].Add(GetSpawnCharacterInfo(eCharacter.DWARF, 4, 4));
+        roundEnemyList[4].Add(GetSpawnCharacterInfo(eCharacter.DWARF, 5, 4));
+        roundEnemyList[4].Add(GetSpawnCharacterInfo(eCharacter.DWARF, 6, 4));
+        roundEnemyList[4].Add(GetSpawnCharacterInfo(eCharacter.SANTA, 4, 6));
 
-        roundEnemyList[5] = new List<sSpawnEnemy>();
-        roundEnemyList[5].Add(GetSpawnEnemyInfo(eCharacter.VEX, 4, 4));
+        roundEnemyList[5] = new List<sSpawnCharacter>();
+        roundEnemyList[5].Add(GetSpawnCharacterInfo(eCharacter.IMP, 6, 7));
+        roundEnemyList[5].Add(GetSpawnCharacterInfo(eCharacter.IMP, 7, 6));
+        roundEnemyList[5].Add(GetSpawnCharacterInfo(eCharacter.DARKKNIGHT, 7, 7));
 
-        roundEnemyList[6] = new List<sSpawnEnemy>();
-        roundEnemyList[6].Add(GetSpawnEnemyInfo(eCharacter.SANTA, 4, 4));
+        roundEnemyList[6] = new List<sSpawnCharacter>();
+        roundEnemyList[6].Add(GetSpawnCharacterInfo(eCharacter.SANTA, 4, 4));
 
-        roundEnemyList[7] = new List<sSpawnEnemy>();
-        roundEnemyList[7].Add(GetSpawnEnemyInfo(eCharacter.SAPCECADET, 4, 4));
+        roundEnemyList[7] = new List<sSpawnCharacter>();
+        roundEnemyList[7].Add(GetSpawnCharacterInfo(eCharacter.SPACECADET, 4, 4));
 
         roundMap = new Dictionary<eRound, Round>();
         roundMap[eRound.WAIT] = new WaitRound();
@@ -136,13 +154,13 @@ public class GameManager : MonoBehaviour
         _prevRound = _round;
     }
 
-    private sSpawnEnemy GetSpawnEnemyInfo(eCharacter character, int tileX, int tileY)
+    private sSpawnCharacter GetSpawnCharacterInfo(eCharacter character, int tileX, int tileY)
     {
-        sSpawnEnemy enemy;
-        enemy.character = character;
-        enemy.tileX = tileX;
-        enemy.tileY = tileY;
-        return enemy;
+        sSpawnCharacter sCharacter;
+        sCharacter.character = character;
+        sCharacter.tileX = tileX;
+        sCharacter.tileY = tileY;
+        return sCharacter;
     }
 
     public void SaveData()
@@ -168,13 +186,42 @@ public class GameManager : MonoBehaviour
                     {
                         if (chessTile.gameObject.name.Contains("Player"))
                         {
-                            lastPlayerNameList.Add(chessTile.gameObject.name.Split('(')[0]);
+                            ChessCharacter character = chessTile.gameObject.GetComponent<ChessCharacter>();
+                            lastPlayerNameList.Add(GetSpawnCharacterInfo(character.GetChessCharacterType(), chessTile.GetTilePosition().x, chessTile.GetTilePosition().y));
                         }
                     }
                 }
             }
         }
-        
+    }
+
+    public void DestroyPlayerList()
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                ChessTile chessTile = tilemap.GetTile<ChessTile>(new Vector3Int(j, i, 0));
+                if (chessTile)
+                {
+                    if (chessTile.gameObject)
+                    {
+                        if (chessTile.gameObject.name.Contains("Player"))
+                        {
+                            Destroy(chessTile.gameObject);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    public void SetPlayerList()
+    {
+        for (int i = 0; i < lastPlayerNameList.Count; i++)
+        {
+            sSpawnCharacter sCharacter =  lastPlayerNameList[i];
+            SpawnCharacter("Prefabs/Character/" + sCharacter.character.ToString(), sCharacter.character.ToString() + "(Player)", sCharacter.tileX, sCharacter.tileY, false, sCharacter.character, ChessCharacter.eCharacterType.PLAYER);
+        }
     }
 
     public void NextRound()
@@ -190,11 +237,11 @@ public class GameManager : MonoBehaviour
 
     public void SpawnEnemies()
     {
-        List<sSpawnEnemy> enemyList = roundEnemyList[currentRound];
+        List<sSpawnCharacter> enemyList = roundEnemyList[currentRound];
         for (int i = 0; i < enemyList.Count; i++)
         {
             Debug.Log("name : " + enemyList[i].character);
-            SpawnCharacter("Prefabs/Character/" + enemyList[i].character, enemyList[i].character + "(NPC)", enemyList[i].tileX, enemyList[i].tileY, false, ChessCharacter.eCharacterType.ENEMY);
+            SpawnCharacter("Prefabs/Character/" + enemyList[i].character, enemyList[i].character + "(NPC)", enemyList[i].tileX, enemyList[i].tileY, false, enemyList[i].character, ChessCharacter.eCharacterType.ENEMY);
         }
     }
 
@@ -338,7 +385,8 @@ public class GameManager : MonoBehaviour
                         string[] nameList = holdTarget.name.Split('_');
                         if (mouseUpTile.gameObject == null)
                         {
-                            SpawnCharacter("Prefabs/Character/" + nameList[1], nameList[1] + "(Player)", mouseUpTile.GetTilePosition().x, mouseUpTile.GetTilePosition().y, false, ChessCharacter.eCharacterType.PLAYER);
+                            ChessWaitCharacter chessWaitCharacter = holdTarget.GetComponent<ChessWaitCharacter>();
+                            SpawnCharacter("Prefabs/Character/" + nameList[1], nameList[1] + "(Player)", mouseUpTile.GetTilePosition().x, mouseUpTile.GetTilePosition().y, false, chessWaitCharacter.GetChessCharacterType(), ChessCharacter.eCharacterType.PLAYER);
                             Destroy(holdTarget);
                         }
                         else
@@ -398,17 +446,17 @@ public class GameManager : MonoBehaviour
 
     public void ResetBuyCharacters()
     {
-        SetBuySlot(buySlot1, GetRandomCharacterName());
-        SetBuySlot(buySlot2, GetRandomCharacterName());
-        SetBuySlot(buySlot3, GetRandomCharacterName());
-        SetBuySlot(buySlot4, GetRandomCharacterName());
+        SetBuySlot(buySlot1, GetRandomCharacter());
+        SetBuySlot(buySlot2, GetRandomCharacter());
+        SetBuySlot(buySlot3, GetRandomCharacter());
+        SetBuySlot(buySlot4, GetRandomCharacter());
     }
 
-    private string GetRandomCharacterName()
+    private eCharacter GetRandomCharacter()
     {
         string name = "";
         eCharacter enumCharacter = (eCharacter)Random.Range(0, (int)eCharacter.MAX);
-        return GetCharacterName(enumCharacter);
+        return enumCharacter;
     }
 
     public string GetCharacterName(eCharacter enumCharacter)
@@ -451,11 +499,8 @@ public class GameManager : MonoBehaviour
             case eCharacter.TAURUS:
                 name = "Taurus";
                 break;
-            case eCharacter.SAPCECADET:
+            case eCharacter.SPACECADET:
                 name = "SpaceCadet";
-                break;
-            case eCharacter.VEX:
-                name = "Vex";
                 break;
         }
         return name;
@@ -473,23 +518,24 @@ public class GameManager : MonoBehaviour
         buySlot4.onClick.RemoveAllListeners();
     }
 
-    private void SetBuySlot(Button buySlot, string name)
+    private void SetBuySlot(Button buySlot, eCharacter name)
     {
         buySlot.gameObject.SetActive(true);
         //이미지 세팅
         GameObject imageObject = buySlot.gameObject.transform.Find("Image").gameObject;
         Image image = imageObject.GetComponent<Image>();
-        image.sprite = Resources.Load<Sprite>("BuySlotImages/" + name);
+        image.sprite = Resources.Load<Sprite>("BuySlotImages/" + name.ToString());
+        Debug.Log(name.ToString());
         ResizeImage(image, imageObject);
 
         //이름 세팅
         GameObject nameTextObject = buySlot.gameObject.transform.Find("Text").gameObject;
         Text nameText = nameTextObject.GetComponent<Text>();
-        nameText.text = name;
+        nameText.text = name.ToString();
 
         buySlot.onClick.RemoveAllListeners();
         buySlot.onClick.AddListener(() => {
-            bool success = BuyWaitCharacter("Prefabs/WaitCharacter/Wait" + name, "WaitCharacter_" + name);
+            bool success = BuyWaitCharacter("Prefabs/WaitCharacter/Wait" + name, "WaitCharacter_" + name, name);
             if (success)
             {
                 buySlot.gameObject.SetActive(false);
@@ -500,22 +546,22 @@ public class GameManager : MonoBehaviour
     {
         RectTransform imageRect = imageObject.GetComponent<RectTransform>();
         imageRect.sizeDelta = new Vector2(75, 75);
+        Debug.Log(imageRect);
+        Debug.Log(image.sprite);
         float rateWidth = imageRect.rect.width * (image.sprite.rect.width / image.sprite.rect.height);
         imageRect.sizeDelta = new Vector2(rateWidth, imageRect.rect.height);
     }
 
-    private bool BuyWaitCharacter(string path, string name)
+    private bool BuyWaitCharacter(string path, string name, eCharacter characterType)
     {
         int waitPositionX = 0;
         while (waitPositionX < 8)
         {
             ChessTile chessTile = tilemap.GetTile<ChessTile>(new Vector3Int(waitPositionX, -1, 0));
-            Debug.Log("chessTile.gameObject["+waitPositionX+"] : " + chessTile.gameObject);
             if (chessTile != null)
             {
                 if (chessTile.gameObject == null)
                 {
-                    Debug.Log("TEST path : " + path);
                     GameObject character = Instantiate(Resources.Load(path)) as GameObject;
                     character.name = name;
                     ChessCharacter cCharacter = character.GetComponent<ChessWaitCharacter>();
@@ -523,6 +569,7 @@ public class GameManager : MonoBehaviour
 
                     cCharacter.SetTilePosition(new Vector3Int(waitPositionX, -1, 0));
                     cCharacter.SetCharacterType(ChessCharacter.eCharacterType.WAIT);
+                    cCharacter.SetChessCharacterType(characterType);
                     chessTile.gameObject = character;
                     return true;
                 }
@@ -532,7 +579,7 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
-    public void SpawnCharacter(string path, string name, int tileX, int tileY, bool isPlayer, ChessCharacter.eCharacterType characterType)
+    public void SpawnCharacter(string path, string name, int tileX, int tileY, bool isPlayer, eCharacter chessCharacterType, ChessCharacter.eCharacterType characterType)
     {
         GameObject character = Instantiate(Resources.Load(path)) as GameObject;
         character.name = name;
@@ -540,6 +587,7 @@ public class GameManager : MonoBehaviour
         cCharacter.SetTilePosition(new Vector3Int(tileX, tileY, 0));
         cCharacter.IsPlayer(isPlayer);
         cCharacter.SetCharacterType(characterType);
+        cCharacter.SetChessCharacterType(chessCharacterType);
         Debug.Log("Spawn in GameManager");
         character.transform.SetParent(tilemap.transform);
 
@@ -565,7 +613,7 @@ public class GameManager : MonoBehaviour
         if (tilePosition.x < 0 || tilePosition.x > 7
          || tilePosition.y < 0 || tilePosition.y > 7)
         {
-            Debug.Log("Tile 범위 초과 : GetTileObject");
+            //Debug.Log("Tile 범위 초과 : GetTileObject");
         }
         ChessTile chessTile = tilemap.GetTile<ChessTile>(tilePosition);
         if (chessTile != null)

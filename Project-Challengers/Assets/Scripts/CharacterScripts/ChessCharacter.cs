@@ -24,7 +24,7 @@ public class ChessCharacter : MonoBehaviour
     protected eCharacterBattleState _battleState;
 
     public enum eState { IDLE, MOVE, ATTACK, DEAD, MAXSIZE };
-    protected eState _state;
+    public eState _state;
     protected eState _prevState;
 
     protected Dictionary<eState, State> stateMap;
@@ -185,6 +185,17 @@ public class ChessCharacter : MonoBehaviour
         return result;
     }
 
+    private GameManager.eCharacter eChessCharacterType;
+    public GameManager.eCharacter GetChessCharacterType()
+    {
+        return eChessCharacterType;
+    }
+
+    public void SetChessCharacterType(GameManager.eCharacter character)
+    {
+        eChessCharacterType = character;
+    }
+
     public void SetCharacterType(eCharacterType characterType)
     {
         _characterType = characterType;
@@ -343,7 +354,7 @@ public class ChessCharacter : MonoBehaviour
     {
         if (message.Equals("AttackDamage")) // AttackDamage 함수와 헷깔리므로 이름 변경해야 합니다.
         {
-            Debug.Log("TEST3!!!!!!");
+            Debug.Log("AnimateEvent : AttackDamage!!!!!!");
             if (_attackTarget != null)
             {
                 GameObject gameObject = GameManager.gameInstance.GetTileObject(_attackTarget.GetTilePosition());
@@ -357,13 +368,13 @@ public class ChessCharacter : MonoBehaviour
         }
         if (message.Equals("AttackEnd"))
         {
-            Debug.Log("TEST!!!!!!");
+            Debug.Log("AnimateEvent : AttackEnd!!!!!!");
             animator.SetBool("isAttack", false);
             SetState(eState.IDLE);
         }
         if (message.Equals("DeadEnd"))
         {
-            Debug.Log("TEST2!!!!!!");
+            Debug.Log("AnimateEvent : DeadEnd!!!!!!");
             gameObject.SetActive(false);
             _hpBar.gameObject.SetActive(false);
             Destroy(gameObject);

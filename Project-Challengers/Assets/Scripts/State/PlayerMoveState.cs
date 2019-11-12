@@ -7,6 +7,8 @@ public class PlayerMoveState : State
 {
     Queue<ChessTile> findQueue;
     Stack<ChessTile> pathStack;
+
+    ChessTile targetTile;
     private enum ePathState
     {
         PATH_FIND,
@@ -50,17 +52,22 @@ public class PlayerMoveState : State
                 _cCharacter.SetState(ChessCharacter.eState.IDLE);
                 return;
             }
+
+            if (targetTile.GetTilePosition() != _cCharacter.GetTilePosition())
+            {
+                Debug.Log("적 위치 변경으로 재탐색");
+                _cCharacter.SetState(ChessCharacter.eState.IDLE);
+                return;
+            }
             //경로 상의 다음 타일 세팅
             aimTile = pathStack.Pop();
-            //Debug.Log("aimTile : " + aimTile.position);
 
             if (aimTile != null && _cCharacter.CanMoveTile(aimTile.GetTilePosition()))
             {
-                Debug.Log("ePathState.PATH_FIND canMove");
+                //Debug.Log("ePathState.PATH_FIND canMove");
                 //이동 방향 설정
                 Vector3Int dirctionVector = aimTile.GetTilePosition() - _cCharacter.GetTilePosition();
                 ChessCharacter.Direction direction = ChessCharacter.Direction.RIGHT;
-                Debug.Log(dirctionVector);
                 if (dirctionVector == Vector3Int.up)
                 {
                     direction = ChessCharacter.Direction.UP;
@@ -77,7 +84,6 @@ public class PlayerMoveState : State
                 {
                     direction = ChessCharacter.Direction.RIGHT;
                 }
-                Debug.Log("direction : " + direction);
                 _cCharacter.SetDirection(direction);
 
                 //이동하는 타일로 캐릭 정보 이동
@@ -95,8 +101,11 @@ public class PlayerMoveState : State
                     ChessCharacter attackTargetCharacter = aimTile.gameObject.GetComponent<ChessCharacter>();
                     if (attackTargetCharacter != null)
                     {
-                        _cCharacter.SetAttackTarget(attackTargetCharacter);
-                        _cCharacter.SetState(ChessCharacter.eState.ATTACK);
+                        if (_cCharacter.GetCharacterType() != attackTargetCharacter.GetCharacterType() && attackTargetCharacter.GetCharacterType() != ChessCharacter.eCharacterType.WAIT) // 적일 때만 공격 시킨다.
+                        {
+                            _cCharacter.SetAttackTarget(attackTargetCharacter);
+                            _cCharacter.SetState(ChessCharacter.eState.ATTACK);
+                        }
                     }
                 }
                 else
@@ -147,11 +156,9 @@ public class PlayerMoveState : State
                 ChessTile pathTile = currentTile;
                 while (pathTile.GetPrevPathTileNodeMap(_cCharacter.name) != null && pathTile.GetPrevPathTileNodeMap(_cCharacter.name) != pathTile)
                 {
-                    //Debug.Log("path log : " + pathTile.position);
-                    //Debug.Log("path prevPathTileNode : " + pathTile.prevPathTileNode);
-                    //pathTile.sprite = null;
                     pathStack.Push(pathTile);
                     pathTile = pathTile.GetPrevPathTileNodeMap(_cCharacter.name);
+                    targetTile = pathTile;
                 }
                 Debug.Log("@@@@@path finish1!!!");
                 return;
