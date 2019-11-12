@@ -10,7 +10,7 @@ public class FinishRound : Round
     public override void InitState()
     {
         base.InitState();
-        totalWaitSec = 5;
+        totalWaitSec = 1;
     }
     public override void StartState()
     {
@@ -40,19 +40,29 @@ public class FinishRound : Round
             if (GameManager.gameInstance.RoundWin())
             {
                 GameManager.gameInstance.NextRound();
+                if (GameManager.gameInstance.currentRound > GameManager.gameInstance.maxRound)
+                {
+
+                }
                 GameManager.gameInstance._round = GameManager.eRound.WAIT;
+                waitTimer = 0.0f;
             }
             else
             {
                 GameManager.gameInstance.SaveData();
                 SceneManager.LoadScene("ResultScene");
             }
-
-            //waitTimer = 0.0f; // 딱 한번만 보여줄 내용
         }
         else
         {
             waitTimer += Time.deltaTime;
         }
+    }
+
+    public override void EndState()
+    {
+        base.EndState();
+        waitTimer = 0.0f;
+        GameManager.gameInstance.DestroyPlayerList();
     }
 }

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class ResultManager : MonoBehaviour
 {
-    const int MAXLEVEL = 7;
+    const int MAXLEVEL = 5;
 
     public Text nicknameText;
     public Text resultText, recordText;
@@ -24,10 +24,10 @@ public class ResultManager : MonoBehaviour
         bgm.GetComponent<AudioSource>().Play();
 
         //캐릭터 이미지 추가
-        foreach(string name in GameManager.gameInstance.lastPlayerNameList)
+        foreach(GameManager.sSpawnCharacter name in GameManager.gameInstance.lastPlayerNameList)
         {
             GameObject parent = Instantiate(unitPanel, unitsGrid.transform);
-            GameObject unit = Instantiate(Resources.Load<GameObject>("Prefabs/WaitCharacter/Wait" + name), parent.transform);
+            GameObject unit = Instantiate(Resources.Load<GameObject>("Prefabs/WaitCharacter/Wait" + name.character.ToString()), parent.transform);
             unit.GetComponent<ChessWaitCharacter>().enabled = false;
             unit.transform.localScale = new Vector3(150, 150);
         }
