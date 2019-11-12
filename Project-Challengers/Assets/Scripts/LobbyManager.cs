@@ -50,6 +50,8 @@ public class LobbyManager : MonoBehaviour
     void Start()
     {
         character = Instantiate(Resources.Load<GameObject>("Prefabs/Character/" + eCharacter[UnityEngine.Random.Range(0, eCharacter.Length)]));
+        ChessCharacter script = character.GetComponent<Skeleton>() ? (ChessCharacter)character.GetComponent<Skeleton>() : character.GetComponent<Knight>();
+        script.enabled = false;
         character.transform.position = tilemap.CellToWorld(new Vector3Int(4, 4, 0));
         mainCamera.transform.SetParent(character.transform);
 

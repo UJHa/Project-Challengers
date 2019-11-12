@@ -96,6 +96,9 @@ MonoBehaviour:
   moveSpeed: 4
   maxHp: 100
   _attackPower: 10
+  _findRange: 15
+  _attackRange: 1
+  _characterType: 0
   weapon: {fileID: 761448641156098324, guid: 32d55a1602900a14fab16f144815479c, type: 3}
 --- !u!95 &7733719567690797252
 Animator:

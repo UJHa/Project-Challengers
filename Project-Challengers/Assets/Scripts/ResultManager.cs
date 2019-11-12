@@ -10,10 +10,28 @@ public class ResultManager : MonoBehaviour
 
     public Text nicknameText;
     public Text resultText, recordText;
+    public GameObject unitPanel, unitsGrid;
+
+    private GameObject bgm, se;
+    public AudioClip startBgm;
 
     // Start is called before the first frame update
     void Start()
     {
+        /*bgm = GameObject.Find("bgm");
+        se = GameObject.Find("se");
+        bgm.GetComponent<AudioSource>().clip = startBgm;*/
+
+        //캐릭터 이미지 추가
+        foreach(string name in GameManager.gameInstance.lastPlayerNameList)
+        {
+            GameObject parent = Instantiate(unitPanel, unitsGrid.transform);
+            GameObject unit = Instantiate(Resources.Load<GameObject>("Prefabs/WaitCharacter/Wait" + name), parent.transform);
+            unit.GetComponent<ChessWaitCharacter>().enabled = false;
+            unit.transform.localScale = new Vector3(150, 150);
+        }
+
+        Repository.round = GameManager.gameInstance.currentRound;
         nicknameText.text = Repository.sData["Nickname"];
 
         if (Repository.round >= MAXLEVEL)

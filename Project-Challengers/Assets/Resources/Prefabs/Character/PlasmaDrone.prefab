@@ -115,6 +115,6 @@ MonoBehaviour:
   moveSpeed: 1
   maxHp: 20
   _attackPower: 10
-  _findRange: 3
+  _findRange: 15
   _attackRange: 1
-  _attackTarget: {fileID: 0}
+  _characterType: 0

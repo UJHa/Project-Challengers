@@ -96,6 +96,9 @@ MonoBehaviour:
   moveSpeed: 0.5
   maxHp: 300
   _attackPower: 30
+  _findRange: 15
+  _attackRange: 1
+  _characterType: 0
 --- !u!95 &7733719567690797252
 Animator:
   serializedVersion: 3

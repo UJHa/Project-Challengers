@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 using UnityEditor;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -57,6 +58,9 @@ public class GameManager : MonoBehaviour
     private eRound _prevRound;
     private Dictionary<eRound, Round> roundMap;
 
+    private AudioSource bgm;
+    public AudioClip waitBgm;
+
     // Start is called before the first frame update
     private void Awake()
     {
@@ -66,6 +70,10 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Debug.Log("Start GameManager!!!");
+        //BGM 오브젝트 읽어오기
+        /*bgm = GameObject.Find("BGM").GetComponent<AudioSource>();
+        bgm.clip = waitBgm;*/
+
         //타일 객체들 생성(타일 위 오브젝트 관리를 위해서...)
         for (int i = -1; i < 8; i++)    //-1은 체스말 대기 위치
         {
@@ -179,12 +187,11 @@ public class GameManager : MonoBehaviour
 
     public void NextRound()
     {
-        currentRound++;
-        if (currentRound > maxRound)
+        if (++currentRound > maxRound)
         {
             currentRound--;
             SaveData();
-            //@결과 화면 이동
+            SceneManager.LoadScene("ResultScene");
         }
     }
 
