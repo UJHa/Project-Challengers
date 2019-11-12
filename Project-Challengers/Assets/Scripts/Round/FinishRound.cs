@@ -10,7 +10,7 @@ public class FinishRound : Round
     public override void InitState()
     {
         base.InitState();
-        totalWaitSec = 5;
+        totalWaitSec = 1;
     }
     public override void StartState()
     {
@@ -36,6 +36,10 @@ public class FinishRound : Round
             if (GameManager.gameInstance.RoundWin())
             {
                 GameManager.gameInstance.NextRound();
+                if (GameManager.gameInstance.currentRound > GameManager.gameInstance.maxRound)
+                {
+
+                }
                 GameManager.gameInstance._round = GameManager.eRound.WAIT;
                 waitTimer = 0.0f;
             }

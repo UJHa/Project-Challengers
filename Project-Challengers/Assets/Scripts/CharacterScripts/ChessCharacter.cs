@@ -400,4 +400,9 @@ public class ChessCharacter : MonoBehaviour
     {
         _hpBar = slider;
     }
+
+    public Slider GetHpBar()
+    {
+        return _hpBar;
+    }
 }

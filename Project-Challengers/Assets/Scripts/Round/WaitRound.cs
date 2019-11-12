@@ -9,7 +9,7 @@ public class WaitRound : Round
     public override void InitState()
     {
         base.InitState();
-        totalWaitSec = 10;
+        totalWaitSec = 6;
     }
     public override void StartState()
     {

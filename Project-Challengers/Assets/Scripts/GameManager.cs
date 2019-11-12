@@ -23,9 +23,9 @@ public class GameManager : MonoBehaviour
     public Text roundTimer;
     public Text roundInfo;
     public int currentRound = 0;
-    public int maxRound = 7;
+    public int maxRound = 5;
 
-    private struct sSpawnCharacter
+    public struct sSpawnCharacter
     {
         public eCharacter character;
         public int tileX;
@@ -33,7 +33,8 @@ public class GameManager : MonoBehaviour
     }
 
     private Dictionary<int, List<sSpawnCharacter>> roundEnemyList;
-    private List<sSpawnCharacter> lastPlayerNameList;
+    public List<sSpawnCharacter> lastPlayerNameList;
+    
     public enum eCharacter
     {
         BLOBMINION,
@@ -41,8 +42,6 @@ public class GameManager : MonoBehaviour
         DETECTIVE,
         DWARF,
         IMP,
-        KNIGHT,
-        LIZARD,
         PLASMADRONE,
         ROYALKNIGHT,
         SANTA,
@@ -141,12 +140,6 @@ public class GameManager : MonoBehaviour
         roundEnemyList[5].Add(GetSpawnCharacterInfo(eCharacter.IMP, 7, 6));
         roundEnemyList[5].Add(GetSpawnCharacterInfo(eCharacter.DARKKNIGHT, 7, 7));
 
-        roundEnemyList[6] = new List<sSpawnCharacter>();
-        roundEnemyList[6].Add(GetSpawnCharacterInfo(eCharacter.SANTA, 4, 4));
-
-        roundEnemyList[7] = new List<sSpawnCharacter>();
-        roundEnemyList[7].Add(GetSpawnCharacterInfo(eCharacter.SPACECADET, 4, 4));
-
         roundMap = new Dictionary<eRound, Round>();
         roundMap[eRound.WAIT] = new WaitRound();
         roundMap[eRound.BATTLE] = new BattleRound();
@@ -183,6 +176,7 @@ public class GameManager : MonoBehaviour
 
     public void SavePlayerList()
     {
+        lastPlayerNameList.Clear();
         for (int i = 0; i < 8; i++)
         {
             for (int j = 0; j < 8; j++)
@@ -214,9 +208,14 @@ public class GameManager : MonoBehaviour
                 {
                     if (chessTile.gameObject)
                     {
-                        if (chessTile.gameObject.name.Contains("Player"))
+                        //if (chessTile.gameObject.name.Contains("Player"))
                         {
-                            Destroy(chessTile.gameObject);
+                            ChessCharacter character = chessTile.gameObject.GetComponent<ChessCharacter>();
+                            if (character)
+                            {
+                                DestroyImmediate(character.GetHpBar().gameObject);
+                            }
+                            DestroyImmediate(chessTile.gameObject);
                         }
                     }
                 }
@@ -234,8 +233,12 @@ public class GameManager : MonoBehaviour
 
     public void NextRound()
     {
-        if (++currentRound > maxRound)
+        Debug.Log("currentRound : " + currentRound);
+        Debug.Log("maxRound : " + maxRound);
+        currentRound++;
+        if (currentRound > maxRound)
         {
+            Debug.Log("go finish : ");
             currentRound--;
             SaveData();
             SceneManager.LoadScene("ResultScene");
@@ -485,12 +488,6 @@ public class GameManager : MonoBehaviour
             case eCharacter.IMP:
                 name = "Imp";
                 break;
-            case eCharacter.KNIGHT:
-                name = "Knight";
-                break;
-            case eCharacter.LIZARD:
-                name = "Lizard";
-                break;
             case eCharacter.PLASMADRONE:
                 name = "PlasmaDrone";
                 break;
@@ -508,6 +505,12 @@ public class GameManager : MonoBehaviour
                 break;
             case eCharacter.SPACECADET:
                 name = "SpaceCadet";
+                break;
+            case eCharacter.WORM:
+                name = "Worm";
+                break;
+            case eCharacter.DARKKNIGHT:
+                name = "DarkKnight";
                 break;
         }
         return name;
