@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     public static GameManager gameInstance;
 
     public Tilemap tilemap;
+    public GameObject hpbarPanel;
 
     public Button buySlot1;
     public Button buySlot2;
@@ -613,8 +614,8 @@ public class GameManager : MonoBehaviour
         RectTransform canvasRect = canvas.GetComponent<RectTransform>();
 
         //slider transform 세팅
-        GameObject sliderObject = Instantiate(Resources.Load("Prefabs/UI/HpBar")) as GameObject;
-        sliderObject.transform.SetParent(canvas.transform, false);
+        GameObject sliderObject = Instantiate(Resources.Load("Prefabs/UI/HpBar"), hpbarPanel.transform) as GameObject;
+        //sliderObject.transform.SetParent(canvas.transform, false);
 
         Slider slider = sliderObject.GetComponent<Slider>();
         cCharacter.SetHpBar(slider);
