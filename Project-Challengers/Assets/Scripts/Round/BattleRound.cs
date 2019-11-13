@@ -11,6 +11,10 @@ public class BattleRound : Round
     public override void StartState()
     {
         base.StartState();
+        //BGM
+        GameManager.gameInstance.bgm.clip = GameManager.gameInstance.battleBgm;
+        GameManager.gameInstance.bgm.Play();
+
         //UI
         GameManager.gameInstance.roundInfo.text = "전투!";
         GameManager.gameInstance.roundTimer.text = "전투 진행중...";

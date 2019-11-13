@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     public static GameManager gameInstance;
 
     public Tilemap tilemap;
+    public GameObject hpbarPanel;
 
     public Button buySlot1;
     public Button buySlot2;
@@ -58,8 +59,8 @@ public class GameManager : MonoBehaviour
     private eRound _prevRound;
     private Dictionary<eRound, Round> roundMap;
 
-    private AudioSource bgm;
-    public AudioClip waitBgm;
+    public AudioSource bgm, se;
+    public AudioClip waitBgm, battleBgm;
 
     // Start is called before the first frame update
     private void Awake()
@@ -70,10 +71,12 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Debug.Log("Start GameManager!!!");
-        //BGM 오브젝트 읽어오기
-        /*bgm = GameObject.Find("BGM").GetComponent<AudioSource>();
-        bgm.clip = waitBgm;*/
-
+        //BGM, SE 오브젝트 읽어오기
+        bgm = GameObject.Find("BGM").GetComponent<AudioSource>();
+        se = GameObject.Find("SE").GetComponent<AudioSource>();
+        bgm.clip = waitBgm;
+        bgm.Play();
+        
         //타일 객체들 생성(타일 위 오브젝트 관리를 위해서...)
         for (int i = -1; i < 8; i++)    //-1은 체스말 대기 위치
         {
@@ -621,8 +624,8 @@ public class GameManager : MonoBehaviour
         RectTransform canvasRect = canvas.GetComponent<RectTransform>();
 
         //slider transform 세팅
-        GameObject sliderObject = Instantiate(Resources.Load("Prefabs/UI/HpBar")) as GameObject;
-        sliderObject.transform.SetParent(canvas.transform, false);
+        GameObject sliderObject = Instantiate(Resources.Load("Prefabs/UI/HpBar"), hpbarPanel.transform) as GameObject;
+        //sliderObject.transform.SetParent(canvas.transform, false);
 
         Slider slider = sliderObject.GetComponent<Slider>();
         cCharacter.SetHpBar(slider);

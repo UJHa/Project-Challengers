@@ -15,6 +15,10 @@ public class FinishRound : Round
     public override void StartState()
     {
         base.StartState();
+        //BGM
+        GameManager.gameInstance.bgm.clip = GameManager.gameInstance.waitBgm;
+        GameManager.gameInstance.bgm.Play();
+
         //UI
         GameManager.gameInstance.roundInfo.text = "전투 끝!";
         if (GameManager.gameInstance.RoundWin())

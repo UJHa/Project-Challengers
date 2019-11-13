@@ -128,13 +128,16 @@ public class GooglePlayGameServiceManager
     {
         if (status == SavedGameRequestStatus.Success)
         {
-            Debug.Log("TMPBYTES : " + data);
-            Debug.Log("TMPSTRING : " + Encoding.Default.GetString(data));
             string tmpData = Encoding.Default.GetString(data);
+            Debug.Log("TMPSTRING : " + tmpData);
+
             foreach (string saved in tmpData.Split('\n'))
             {
-                string[] tmp = saved.Split(',');
-                Repository.sData.Add(tmp[0], tmp[1]);
+                if (saved != "")
+                {
+                    string[] tmp = saved.Split(',');
+                    Repository.sData.Add(tmp[0], tmp[1]);
+                }
             }
 
             Repository.fLoading = true;
