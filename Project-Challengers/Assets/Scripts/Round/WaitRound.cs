@@ -49,6 +49,6 @@ public class WaitRound : Round
     public override void EndState()
     {
         base.EndState();
-        //GameManager.gameInstance.SaveMyChessCharacters();
+        GameManager.gameInstance.EndInput();
     }
 }

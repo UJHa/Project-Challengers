@@ -453,6 +453,16 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+    public void EndInput()
+    {
+        if (holdTarget != null)
+        {
+            Debug.Log("마우스 클릭 롤백합시다.");
+            mouseDownTile.gameObject = holdTarget;
+            mouseDownTile.gameObject.transform.position = tilemap.layoutGrid.CellToWorld(mouseDownTile.GetTilePosition());
+            holdTarget = null;
+        }
+    }
 
     public void ResetBuyCharacters()
     {
