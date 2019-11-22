@@ -230,7 +230,7 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < lastPlayerNameList.Count; i++)
         {
             sSpawnCharacter sCharacter =  lastPlayerNameList[i];
-            SpawnCharacter("Prefabs/Character/" + sCharacter.character.ToString(), sCharacter.character.ToString() + "(Player)", sCharacter.tileX, sCharacter.tileY, false, sCharacter.character, ChessCharacter.eCharacterType.PLAYER);
+            SpawnCharacter("Prefabs/Character/" + sCharacter.character.ToString(), sCharacter.character.ToString() + "(Player)", sCharacter.tileX, sCharacter.tileY, sCharacter.character, ChessCharacter.eCharacterType.PLAYER);
         }
     }
 
@@ -254,7 +254,7 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < enemyList.Count; i++)
         {
             Debug.Log("name : " + enemyList[i].character);
-            SpawnCharacter("Prefabs/Character/" + enemyList[i].character, enemyList[i].character + "(NPC)", enemyList[i].tileX, enemyList[i].tileY, false, enemyList[i].character, ChessCharacter.eCharacterType.ENEMY);
+            SpawnCharacter("Prefabs/Character/" + enemyList[i].character, enemyList[i].character + "(NPC)", enemyList[i].tileX, enemyList[i].tileY, enemyList[i].character, ChessCharacter.eCharacterType.ENEMY);
         }
     }
 
@@ -399,7 +399,7 @@ public class GameManager : MonoBehaviour
                         if (mouseUpTile.gameObject == null)
                         {
                             ChessWaitCharacter chessWaitCharacter = holdTarget.GetComponent<ChessWaitCharacter>();
-                            SpawnCharacter("Prefabs/Character/" + nameList[1], nameList[1] + "(Player)", mouseUpTile.GetTilePosition().x, mouseUpTile.GetTilePosition().y, false, chessWaitCharacter.GetChessCharacterType(), ChessCharacter.eCharacterType.PLAYER);
+                            SpawnCharacter("Prefabs/Character/" + nameList[1], nameList[1] + "(Player)", mouseUpTile.GetTilePosition().x, mouseUpTile.GetTilePosition().y, chessWaitCharacter.GetChessCharacterType(), ChessCharacter.eCharacterType.PLAYER);
                             Destroy(holdTarget);
                         }
                         else
@@ -602,13 +602,12 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
-    public void SpawnCharacter(string path, string name, int tileX, int tileY, bool isPlayer, eCharacter chessCharacterType, ChessCharacter.eCharacterType characterType)
+    public void SpawnCharacter(string path, string name, int tileX, int tileY, eCharacter chessCharacterType, ChessCharacter.eCharacterType characterType)
     {
         GameObject character = Instantiate(Resources.Load(path)) as GameObject;
         character.name = name;
         ChessCharacter cCharacter = character.GetComponent<ChessCharacter>();
         cCharacter.SetTilePosition(new Vector3Int(tileX, tileY, 0));
-        cCharacter.IsPlayer(isPlayer);
         cCharacter.SetCharacterType(characterType);
         cCharacter.SetChessCharacterType(chessCharacterType);
         Debug.Log("Spawn in GameManager");

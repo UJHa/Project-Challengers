@@ -39,8 +39,6 @@ public class ChessCharacter : MonoBehaviour
 
     protected Tilemap tilemap;
 
-    protected bool canInput = false;
-
     void Awake()
     {
         tilemap = GameManager.gameInstance.tilemap;
@@ -77,16 +75,9 @@ public class ChessCharacter : MonoBehaviour
     protected virtual void InitState()
     {
         stateMap = new Dictionary<eState, State>();
-        if (canInput)
-        {
-            stateMap[eState.IDLE] = new PlayerIdleState();
-            stateMap[eState.MOVE] = new PlayerMoveState();
-        }
-        else
-        {
-            stateMap[eState.IDLE] = new EnemyFindIdleState();
-            stateMap[eState.MOVE] = new PlayerMoveState();
-        }
+        
+        stateMap[eState.IDLE] = new EnemyFindIdleState();
+        stateMap[eState.MOVE] = new PlayerMoveState();
         stateMap[eState.ATTACK] = new AttackState();
         stateMap[eState.DEAD] = new DeadState();
 
@@ -204,11 +195,6 @@ public class ChessCharacter : MonoBehaviour
     public eCharacterType GetCharacterType()
     {
         return _characterType;
-    }
-
-    public void IsPlayer(bool isPlayer)
-    {
-        canInput = isPlayer;
     }
 
     public Vector3Int GetTilePosition()
