@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class EnemyFindIdleState : State
 {
-    private float findTimer;
-
     Queue<ChessTile> findQueue;
 
     public override void InitState(ChessCharacter cCharacter)
@@ -17,7 +15,6 @@ public class EnemyFindIdleState : State
     public override void StartState()
     {
         base.StartState();
-        findTimer = 0.0f;
 
         findQueue.Clear();
         GameManager.gameInstance.ResetTilePath(_cCharacter.name);
@@ -26,33 +23,35 @@ public class EnemyFindIdleState : State
     public override void UpdateState()
     {
         base.UpdateState();
-        if (findTimer >= 1.0f) // 1초에 한번 씩 주변 범위 적 탐색
-        {
-            ChessCharacter attackTargetCharacter = FindAdjacentTarget(_cCharacter._attackRange);
-            if (attackTargetCharacter != null)
-            {
-                _cCharacter.SetAttackTarget(attackTargetCharacter);
-                _cCharacter.SetState(ChessCharacter.eState.ATTACK);
-            }
-            //이동 체크
-            ChessCharacter moveTargetCharacter = FindAdjacentTarget(_cCharacter._findRange);
-            if (moveTargetCharacter != null)
-            {
-                //Debug.Log("["+_cCharacter.name+"]IDLE target : " + moveTargetCharacter.GetTilePosition());
-                _cCharacter.SetTargetTilePosition(moveTargetCharacter.GetTilePosition()/*타일 좌표 0,0~7,7사이*/);
-                _cCharacter.SetState(ChessCharacter.eState.MOVE);
-            }
-
-            findTimer = 0.0f;
-        }
-        findTimer += Time.deltaTime;
+        bool stateChange = ChangeState(_cCharacter._attackRange, ChessCharacter.eState.ATTACK);
+        if (stateChange) return;
+        stateChange = ChangeState(_cCharacter._findRange, ChessCharacter.eState.MOVE);
+        if (stateChange) return;
     }
 
     public override void EndState()
     {
         base.EndState();
-        findTimer = 0.0f;
         GameManager.gameInstance.ResetTilePath(_cCharacter.name);
+    }
+
+    private bool ChangeState(int range, ChessCharacter.eState state)
+    {
+        ChessCharacter targetCharacter = FindAdjacentTarget(range);
+        if (targetCharacter != null)
+        {
+            if (range <= _cCharacter._attackRange)
+            {
+                _cCharacter.SetAttackTarget(targetCharacter);
+            }
+            else
+            {
+                _cCharacter.SetTargetTilePosition(targetCharacter.GetTilePosition()/*타일 좌표 0,0~7,7사이*/);
+            }
+            _cCharacter.SetState(state);
+            return true;
+        }
+        return false;
     }
 
     private ChessCharacter FindAdjacentTarget(int findRange)
