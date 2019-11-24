@@ -46,7 +46,7 @@ public class EnemyFindIdleState : State
             }
             else
             {
-                _cCharacter.SetTargetTilePosition(targetCharacter.GetTilePosition()/*타일 좌표 0,0~7,7사이*/);
+                _cCharacter.SetMoveTarget(targetCharacter);
             }
             _cCharacter.SetState(state);
             return true;

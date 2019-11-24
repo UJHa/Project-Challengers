@@ -35,8 +35,8 @@ public class PlayerMoveState : State
         pathStack.Clear();
         GameManager.gameInstance.ResetTilePath(_cCharacter.name);
 
-        Debug.Log("[" + _cCharacter.name + "]Move target : " + _cCharacter.GetTargetTilePosition());
-        FindPath(_cCharacter.GetTargetTilePosition());
+        Debug.Log("[" + _cCharacter.name + "]Move target : " + _cCharacter.GetMoveTarget().GetTilePosition());
+        FindPath(_cCharacter.GetMoveTarget().GetTilePosition());
     }
     private ChessTile aimTile;
     public override void UpdateState()
@@ -132,7 +132,7 @@ public class PlayerMoveState : State
         base.EndState();
         _cCharacter.GetAnimator().SetBool("isMoving", false);
         GameManager.gameInstance.ResetTilePath(_cCharacter.name);
-        _cCharacter.SetTargetTilePosition(_cCharacter.GetTilePosition());
+        _cCharacter.SetMoveTarget(null);
     }
 
     private void FindPath(Vector3Int targetTilePosition)

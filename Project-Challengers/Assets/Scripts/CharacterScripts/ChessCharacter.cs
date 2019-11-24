@@ -15,8 +15,8 @@ public class ChessCharacter : MonoBehaviour
     public int _attackRange = 1;
     private float _hp;
 
-    protected Vector3 targetPosition;
-    protected Vector3Int mouseTargetTilePosition;
+    private ChessCharacter _moveTarget;
+    private ChessCharacter _attackTarget;
 
     protected Vector3Int tilePosition;
 
@@ -53,7 +53,6 @@ public class ChessCharacter : MonoBehaviour
     protected virtual void InitData()
     {
         // 데이터들 초기 세팅
-        targetPosition = transform.position;
         _battleState = eCharacterBattleState.BATTLE;
         Debug.Log("InitData in ChessCharacter");
 
@@ -61,7 +60,6 @@ public class ChessCharacter : MonoBehaviour
         transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
 
         transform.position = tilemap.layoutGrid.CellToWorld(tilePosition);
-        mouseTargetTilePosition = tilePosition;
         _attackTarget = null;
 
         Debug.Log(this.name + " : Start Position tileX : " + tilePosition.x + " | tileY : " + tilePosition.y);
@@ -239,61 +237,14 @@ public class ChessCharacter : MonoBehaviour
         return true;
     }
 
-    public void MoveRequest(Direction direction)
+    public void SetMoveTarget(ChessCharacter moveTarget)
     {
-        if (eState.IDLE != _state) return;
-
-        Debug.Log("direction : " + direction);
-        SetDirection(direction);
-        Vector3Int nextTilePos = tilePosition + GetDirectionTileNext(direction);
-        if (CanMoveTile(nextTilePos))
-        {
-            Debug.Log(name + " : 이동 성공");
-            tilemap.SetColliderType(tilePosition, Tile.ColliderType.None);
-            GameManager.gameInstance.SetTileObject(tilePosition, null);
-            SetTilePosition(tilePosition + GetDirectionTileNext(direction));
-            MoveStart();
-        }
-        else
-        {
-            Debug.Log(name + " : 이동 실패");
-            SetState(eState.ATTACK);
-        }
+        _moveTarget = moveTarget;
     }
 
-    public void MoveStart()
+    public ChessCharacter GetMoveTarget()
     {
-        targetPosition = tilemap.layoutGrid.CellToWorld(tilePosition);
-        SetState(eState.MOVE);
-    }
-
-    public void MouseMoveStart()
-    {
-        mouseTargetTilePosition = tilemap.layoutGrid.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
-
-        //mouseTargetTilePosition의 x,y가 -1씩 되어 있다 원인은 파악하지 못해서 임시 처리
-        mouseTargetTilePosition.x += 1;
-        mouseTargetTilePosition.y += 1;
-        mouseTargetTilePosition.z = 0;
-
-        //Debug.Log("name : " + this.name);
-        //Debug.Log("Input mouse!2 : " + tilemap.transform.position);
-        SetState(eState.MOVE);
-    }
-
-    public Vector3 GetTargetPosition()
-    {
-        return targetPosition;
-    }
-
-    public void SetTargetTilePosition(Vector3Int targetTilePosition)
-    {
-        mouseTargetTilePosition = targetTilePosition;
-    }
-
-    public Vector3Int GetTargetTilePosition()
-    {
-        return mouseTargetTilePosition;
+        return _moveTarget;
     }
 
     public void SetState(eState state)
@@ -326,7 +277,6 @@ public class ChessCharacter : MonoBehaviour
         }
     }
 
-    private ChessCharacter _attackTarget;
     public void SetAttackTarget(ChessCharacter tileCharacter)
     {
         _attackTarget = tileCharacter;
