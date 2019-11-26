@@ -5,9 +5,6 @@ using UnityEngine.Tilemaps;
 
 public class PlayerMoveState : State
 {
-    Queue<ChessTile> findQueue;
-    Stack<ChessTile> pathStack;
-
     ChessTile targetTile;
     private enum ePathState
     {
@@ -19,8 +16,6 @@ public class PlayerMoveState : State
     public override void InitState(ChessCharacter cCharacter)
     {
         base.InitState(cCharacter);
-        findQueue = new Queue<ChessTile>();
-        pathStack = new Stack<ChessTile>();
     }
 
     public override void StartState()
@@ -31,8 +26,8 @@ public class PlayerMoveState : State
         
         _cCharacter.GetAnimator().SetBool("isMoving", true);
 
-        findQueue.Clear();
-        pathStack.Clear();
+        _cCharacter.ClearPathFindQueue();
+        _cCharacter.ClearPathStack();
         GameManager.gameInstance.ResetTilePath(_cCharacter.name);
 
         Debug.Log("[" + _cCharacter.name + "]Move target : " + _cCharacter.GetMoveTarget().GetTilePosition());
@@ -46,7 +41,8 @@ public class PlayerMoveState : State
         if (pathState == ePathState.PATH_FIND)
         {
             Debug.Log("[" + _cCharacter.name + "]ePathState.PATH_FIND");
-            if (pathStack.Count == 0)
+            // 경로대로 이동 종료
+            if (_cCharacter.GetPathStackCount() == 0)   //###조건을 목표타일로 설정하여 스택의 갯수 데이터 참조하지 않도록 수정하자.
             {
                 Debug.Log("[" + _cCharacter.name + "] count zero");
                 _cCharacter.SetState(ChessCharacter.eState.IDLE);
@@ -60,7 +56,7 @@ public class PlayerMoveState : State
                 return;
             }
             //경로 상의 다음 타일 세팅
-            aimTile = pathStack.Pop();
+            aimTile = _cCharacter.PopPathStackTile();
 
             if (aimTile != null && _cCharacter.CanMoveTile(aimTile.GetTilePosition()))
             {
@@ -131,32 +127,39 @@ public class PlayerMoveState : State
     {
         base.EndState();
         _cCharacter.GetAnimator().SetBool("isMoving", false);
+
         GameManager.gameInstance.ResetTilePath(_cCharacter.name);
         _cCharacter.SetMoveTarget(null);
+
+        _cCharacter.ClearPathFindQueue();
+        _cCharacter.ClearPathStack();
     }
 
     private void FindPath(Vector3Int targetTilePosition)
     {
+        _cCharacter.ClearPathFindQueue();
+        _cCharacter.ClearPathStack();
+        GameManager.gameInstance.ResetTilePath(_cCharacter.name);
+
         ChessTile startTile;
         startTile = GameManager.gameInstance.tilemap.GetTile<ChessTile>(_cCharacter.GetTilePosition());
         startTile.SetPrevPathTileNodeMap(_cCharacter.name, startTile);
-        findQueue.Enqueue(startTile);
-        while (findQueue.Count > 0)
+        _cCharacter.PushPathFindTile(startTile);
+        while (_cCharacter.GetPathFindQueueCount() > 0)
         {
-            ChessTile currentTile = findQueue.Dequeue();
+            ChessTile currentTile = _cCharacter.PopPathFindTile();
             if (currentTile == null)
             {
                 break;
             }
 
+            //목표 타일에 도달하면 반환
             if (currentTile.GetTilePosition() == targetTilePosition)
             {
-                //Debug.Log("-----------[" + _cCharacter.name + "]FindPath() 2");
-                // 현재 탐색 타일이 목적 타일인 경우
                 ChessTile pathTile = currentTile;
                 while (pathTile.GetPrevPathTileNodeMap(_cCharacter.name) != null && pathTile.GetPrevPathTileNodeMap(_cCharacter.name) != pathTile)
                 {
-                    pathStack.Push(pathTile);
+                    _cCharacter.PushPathStackTile(pathTile);
                     pathTile = pathTile.GetPrevPathTileNodeMap(_cCharacter.name);
                     targetTile = pathTile;
                 }
@@ -174,7 +177,7 @@ public class PlayerMoveState : State
                     {
                         nextTile.SetPrevPathTileNodeMap(_cCharacter.name, currentTile);
                         //Debug.Log("nextTile : " + nextTile.position + "direction : " + direction);
-                        findQueue.Enqueue(nextTile);
+                        _cCharacter.PushPathFindTile(nextTile);
                     }
                 }
             }

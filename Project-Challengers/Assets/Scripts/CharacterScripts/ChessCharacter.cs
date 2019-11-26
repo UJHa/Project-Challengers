@@ -39,6 +39,49 @@ public class ChessCharacter : MonoBehaviour
 
     protected Tilemap tilemap;
 
+    private Queue<ChessTile> _pathFindQueue;
+    private Stack<ChessTile> _pathStack;
+
+    public void ClearPathFindQueue()
+    {
+        _pathFindQueue.Clear();
+    }
+
+    public void PushPathFindTile(ChessTile chessTile)
+    {
+        _pathFindQueue.Enqueue(chessTile);
+    }
+
+    public ChessTile PopPathFindTile()
+    {
+        return _pathFindQueue.Dequeue();
+    }
+
+    public int GetPathFindQueueCount()
+    {
+        return _pathFindQueue.Count;
+    }
+
+    public void ClearPathStack()
+    {
+        _pathStack.Clear();
+    }
+
+    public int GetPathStackCount()
+    {
+        return _pathStack.Count;
+    }
+
+    public ChessTile PopPathStackTile()
+    {
+        return _pathStack.Pop();
+    }
+
+    public void PushPathStackTile(ChessTile chessTile)
+    {
+        _pathStack.Push(chessTile);
+    }
+
     void Awake()
     {
         tilemap = GameManager.gameInstance.tilemap;
@@ -60,11 +103,16 @@ public class ChessCharacter : MonoBehaviour
         transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
 
         transform.position = tilemap.layoutGrid.CellToWorld(tilePosition);
+
+        _pathFindQueue = new Queue<ChessTile>();
+        _pathStack = new Stack<ChessTile>();
+
         _attackTarget = null;
 
         Debug.Log(this.name + " : Start Position tileX : " + tilePosition.x + " | tileY : " + tilePosition.y);
         tilemap.SetColliderType(tilePosition, Tile.ColliderType.Grid);
         _hp = maxHp;
+
         animator = GetComponent<Animator>();
         animator.SetBool("isMoving", false);
         animator.SetBool("isDead", false);

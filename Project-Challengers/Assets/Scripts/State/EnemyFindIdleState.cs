@@ -4,19 +4,16 @@ using UnityEngine;
 
 public class EnemyFindIdleState : State
 {
-    Queue<ChessTile> findQueue;
-
     public override void InitState(ChessCharacter cCharacter)
     {
         base.InitState(cCharacter);
-        findQueue = new Queue<ChessTile>();
     }
 
     public override void StartState()
     {
         base.StartState();
 
-        findQueue.Clear();
+        _cCharacter.ClearPathFindQueue();
         GameManager.gameInstance.ResetTilePath(_cCharacter.name);
     }
 
@@ -33,6 +30,7 @@ public class EnemyFindIdleState : State
     {
         base.EndState();
         GameManager.gameInstance.ResetTilePath(_cCharacter.name);
+        _cCharacter.ClearPathFindQueue();
     }
 
     private bool ChangeState(int range, ChessCharacter.eState state)
@@ -56,21 +54,24 @@ public class EnemyFindIdleState : State
 
     private ChessCharacter FindAdjacentTarget(int findRange)
     {
-        findQueue.Clear();
+        _cCharacter.ClearPathFindQueue();
+
         GameManager.gameInstance.ResetTilePath(_cCharacter.name);
 
         ChessTile startTile;
         startTile = GameManager.gameInstance.tilemap.GetTile<ChessTile>(_cCharacter.GetTilePosition());
         startTile.SetPrevPathTileNodeMap(_cCharacter.name, startTile);
-        findQueue.Enqueue(startTile);
-        while (findQueue.Count > 0)
+        _cCharacter.PushPathFindTile(startTile);
+        while (_cCharacter.GetPathFindQueueCount() > 0) //###남은 갯수 체크가 아닌 PopPathFindTile 반환 값으로 판별하도록 개선 가능
         {
-            ChessTile currentTile = findQueue.Dequeue();
+            //ChessTile currentTile = findQueue.Dequeue();
+            ChessTile currentTile = _cCharacter.PopPathFindTile();
             if (currentTile == null)
             {
                 break;
             }
 
+            //가장 인근의 캐릭터 반환
             if (currentTile.gameObject != null && currentTile.GetDistanceWeight() != 0)
             {
                 ChessCharacter targetCharacter = currentTile.gameObject.GetComponent<ChessCharacter>();
@@ -95,7 +96,7 @@ public class EnemyFindIdleState : State
                     {
                         nextTile.SetPrevPathTileNodeMap(_cCharacter.name, currentTile);
                         nextTile.SetDistanceWeight(currentTile.GetDistanceWeight() + 1);
-                        findQueue.Enqueue(nextTile);
+                        _cCharacter.PushPathFindTile(nextTile);
                     }
                 }
             }
