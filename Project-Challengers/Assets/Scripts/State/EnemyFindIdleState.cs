@@ -62,14 +62,11 @@ public class EnemyFindIdleState : State
         startTile = GameManager.gameInstance.tilemap.GetTile<ChessTile>(_cCharacter.GetTilePosition());
         startTile.SetPrevPathTileNodeMap(_cCharacter.name, startTile);
         _cCharacter.PushPathFindTile(startTile);
-        while (_cCharacter.GetPathFindQueueCount() > 0) //###남은 갯수 체크가 아닌 PopPathFindTile 반환 값으로 판별하도록 개선 가능
+
+        ChessTile nextQueueTile = _cCharacter.PopPathFindTile();
+        while (nextQueueTile != null) //###남은 갯수 체크가 아닌 PopPathFindTile 반환 값으로 판별하도록 개선 가능
         {
-            //ChessTile currentTile = findQueue.Dequeue();
-            ChessTile currentTile = _cCharacter.PopPathFindTile();
-            if (currentTile == null)
-            {
-                break;
-            }
+            ChessTile currentTile = nextQueueTile;
 
             //가장 인근의 캐릭터 반환
             if (currentTile.gameObject != null && currentTile.GetDistanceWeight() != 0)
@@ -100,6 +97,8 @@ public class EnemyFindIdleState : State
                     }
                 }
             }
+
+            nextQueueTile = _cCharacter.PopPathFindTile();
         }
         return null;
     }

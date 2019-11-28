@@ -57,19 +57,9 @@ public class ChessCharacter : MonoBehaviour
         return _pathFindQueue.Dequeue();
     }
 
-    public int GetPathFindQueueCount()
-    {
-        return _pathFindQueue.Count;
-    }
-
     public void ClearPathStack()
     {
         _pathStack.Clear();
-    }
-
-    public int GetPathStackCount()
-    {
-        return _pathStack.Count;
     }
 
     public ChessTile PopPathStackTile()

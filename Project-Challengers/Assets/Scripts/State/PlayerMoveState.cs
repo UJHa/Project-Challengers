@@ -42,9 +42,9 @@ public class PlayerMoveState : State
         {
             Debug.Log("[" + _cCharacter.name + "]ePathState.PATH_FIND");
             // 경로대로 이동 종료
-            if (_cCharacter.GetPathStackCount() == 0)   //###조건을 목표타일로 설정하여 스택의 갯수 데이터 참조하지 않도록 수정하자.
+            if (_cCharacter.GetTilePosition() == _cCharacter.GetMoveTarget().GetTilePosition())   //목표 == 현재 내 위치일 때
             {
-                Debug.Log("[" + _cCharacter.name + "] count zero");
+                Debug.Log("[" + _cCharacter.name + "] 목표 도착");
                 _cCharacter.SetState(ChessCharacter.eState.IDLE);
                 return;
             }
@@ -145,13 +145,11 @@ public class PlayerMoveState : State
         startTile = GameManager.gameInstance.tilemap.GetTile<ChessTile>(_cCharacter.GetTilePosition());
         startTile.SetPrevPathTileNodeMap(_cCharacter.name, startTile);
         _cCharacter.PushPathFindTile(startTile);
-        while (_cCharacter.GetPathFindQueueCount() > 0)
+
+        ChessTile nextQueueTile = _cCharacter.PopPathFindTile();
+        while (nextQueueTile != null)
         {
-            ChessTile currentTile = _cCharacter.PopPathFindTile();
-            if (currentTile == null)
-            {
-                break;
-            }
+            ChessTile currentTile = nextQueueTile;
 
             //목표 타일에 도달하면 반환
             if (currentTile.GetTilePosition() == targetTilePosition)
@@ -181,6 +179,7 @@ public class PlayerMoveState : State
                     }
                 }
             }
+            nextQueueTile = _cCharacter.PopPathFindTile();
         }
     }
 }
